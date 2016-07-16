@@ -1,18 +1,25 @@
 package ml.jmoodle.config;
 
+import static org.junit.Assert.assertEquals;
+
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.ExecutorCompletionService;
 
-import static org.mockito.Mockito.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import static org.junit.Assert.*;
-
+/**
+ * 
+ *
+ *
+ * @author Carlos Alexandre S. da Fonseca
+ * @copyrigth © 2016 Carlos Alexandre S. da Fonseca
+ * @license https://opensource.org/licenses/MIT - MIT License
+ *
+ */
 public class MoodleConfigTest {
 
 	@Rule
@@ -35,16 +42,13 @@ public class MoodleConfigTest {
 	}
 
 	@Test
-	public final void MoodleConfigConstructorTest() throws MalformedURLException {
+	public final void MoodleConfigGetURLTest() throws MalformedURLException {
 		URL testUrl = new URL("http://test.com");
-		MoodleConfig config=new MoodleConfig(testUrl);
-		assertEquals(testUrl.toString()+"/webservice/rest/server.php", config.getMoodleURL().toString());
 		
-		
-		MoodleConfig config2=new MoodleConfig("http://test.com");
+		MoodleConfig config2=new MoodleConfig("http://test.com", "3.1.0");
 		assertEquals(testUrl.toString()+"/webservice/rest/server.php", config2.getMoodleURL().toString());
 		
-		MoodleConfig config3=new MoodleConfig("test.com");
+		MoodleConfig config3=new MoodleConfig("test.com", "3.1.0");
 		assertEquals(testUrl.toString()+"/webservice/rest/server.php", config3.getMoodleURL().toString());
 
 
@@ -54,6 +58,15 @@ public class MoodleConfigTest {
 ////		new MoodleConfig("<invaid-           %Wccc fez URL>");
 		
 		
+	}
+	
+	@Test
+	public final void MoodleConfigGetVersionTest() throws MalformedURLException {
+		MoodleConfig config=new MoodleConfig("http://test.com", "3.1.4");
+		assertEquals(3, config.getMajorVersion());
+		assertEquals(1, config.getMinorVersion());
+		assertEquals(4, config.getPatchVersion());
+		assertEquals(3.14, config.getVersion(),0);
 	}
 
 }
