@@ -1,4 +1,4 @@
-package ml.jmoodle.config;
+package ml.jmoodle.configs;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import ml.jmoodle.configs.MoodleConfig;
 
 /**
  * 

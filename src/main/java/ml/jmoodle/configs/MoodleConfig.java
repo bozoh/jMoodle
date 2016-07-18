@@ -1,4 +1,4 @@
-package ml.jmoodle.config;
+package ml.jmoodle.configs;
 
 import java.net.MalformedURLException;
 import java.net.URL;

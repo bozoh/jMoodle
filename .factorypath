@@ -1,0 +1,4 @@
+<factorypath>
+    <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/jMoodle/src/main/resources/ml.jmoodle.annotations.processors.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>

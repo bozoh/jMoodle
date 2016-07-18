@@ -1,8 +1,10 @@
-package ml.jmoodle.authentication;
+package ml.jmoodle.authentications;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import ml.jmoodle.authentications.UsernamePasswordAuthentication;
 
 /**
  * 

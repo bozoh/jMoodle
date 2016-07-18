@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ml.jmoodle.authentication;
+package ml.jmoodle.authentications;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import ml.jmoodle.authentications.TokenAuthentication;
 
 
 /**

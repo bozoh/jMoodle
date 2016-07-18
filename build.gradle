@@ -7,9 +7,26 @@
  * user guide available at https://docs.gradle.org/2.14/userguide/tutorial_java_projects.html
  */
 
+
 // Apply the java plugin to add support for Java
+
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.6"
+  }
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: "net.ltgt.apt"
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -22,5 +39,11 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.+"
+    //For auto-generation classes, wiht the annotations, 
+    //the generated files source code is in  build/generated/source/apt
+    compileOnly files('src/main/resources/ml.jmoodle.annotations.processors.jar')
+    apt files('src/main/resources/ml.jmoodle.annotations.processors.jar')
 }
+
+
 

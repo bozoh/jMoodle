@@ -3,7 +3,7 @@ package ml.jmoodle.tools;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import ml.jmoodle.config.MoodleConfig;
+import ml.jmoodle.configs.MoodleConfig;
 
 /**
  * MoodleTools a set of commons tools

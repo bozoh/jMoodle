@@ -1,4 +1,4 @@
-package ml.jmoodle.authentication;
+package ml.jmoodle.authentications;
 
 
 /**
