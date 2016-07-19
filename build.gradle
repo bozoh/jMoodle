@@ -42,8 +42,8 @@ dependencies {
     testCompile "org.mockito:mockito-core:1.+"
     //For auto-generation classes, wiht the annotations, 
     //the generated files source code is in  build/generated/source/apt
-    compileOnly files('src/main/resources/ml.jmoodle.annotations.processors*.jar')
-    apt files('src/main/resources/ml.jmoodle.annotations.processors*.jar')
+    compileOnly files('src/main/resources/jmoodle-annotations-0.0.1-SNAPSHOT.jar')
+    apt files('src/main/resources/jmoodle-annotations-0.0.1-SNAPSHOT.jar')
 }
 
 task compileAnnotations (dependsOn: 'clean', type: JavaCompile) {
@@ -52,12 +52,19 @@ task compileAnnotations (dependsOn: 'clean', type: JavaCompile) {
     classpath = sourceSets.main.compileClasspath
     destinationDir = sourceSets.main.output.classesDir
 }
-compileAnnotations.options.compilerArgs = ["-sourcepath", "$projectDir/src/main/java"]
+compileAnnotations.options.compilerArgs = ["-sourcepath", "$projectDir/src/main/java", "-source", "1.6"]
 
 task jarAnnotations(dependsOn: 'compileAnnotations', type: Jar) {
-	baseName = 'ml.jmoodle.annotations.processors'
+	baseName = 'jmoodle'
+	appendix = 'annotations'
 	from fileTree(dir: sourceSets.main.output.classesDir).matching { include 'ml/jmoodle/annotations/**' }
 	from fileTree(dir: 'src/main/resources').matching { include 'META-INF/services/*' }
-	destinationDir = file("src/main/resources")
+	doLast{
+        copy {
+            from "${project.buildDir}/libs"
+            into 'src/main/resources'
+            include 'jmoodle-annotations*.jar'
+        }
+    }
 }
 

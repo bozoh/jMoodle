@@ -1,42 +1,24 @@
 package ml.jmoodle.annotations.processors;
 
-import java.awt.dnd.DnDConstants;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 import ml.jmoodle.annotations.MoodleWSFunction;
 
 public class MoodleWSFunctionAnnotationProcessor extends AbstractProcessor {
 
-	private Types typeUtils;
-	private Elements elementUtils;
-	private Filer filer;
-	private Messager messager;
 
-	@Override
-	public synchronized void init(ProcessingEnvironment processingEnv) {
-		super.init(processingEnv);
-		typeUtils = processingEnv.getTypeUtils();
-		elementUtils = processingEnv.getElementUtils();
-		filer = processingEnv.getFiler();
-		messager = processingEnv.getMessager();
-	}
+	private final String PACKAGE_NAME = "ml.jmoodle.functions";
+	private final String CLASS_NAME = "MoodleWSFunctions";
 
 	@Override
 	public Set<String> getSupportedAnnotationTypes() {
@@ -66,19 +48,22 @@ public class MoodleWSFunctionAnnotationProcessor extends AbstractProcessor {
 				} else {
 					codeGen.append(",\n");
 				}
-				codeGen.append(fncName.toUpperCase())
-					.append("(\"")
-					.append(classElement.getQualifiedName())
-					.append("\")");
+				codeGen.append(fncName.toUpperCase()).append("(\"").append(classElement.getQualifiedName())
+						.append("\")");
 			}
 		}
 		try {
-			codeGen.append(";\n}");
-			JavaFileObject jfo = this.filer.createSourceFile("ml.jmoodle.functions.rest.MoodleWSFunctions");
-			BufferedWriter bw = new BufferedWriter(jfo.openWriter());
-			bw.write(codeGen.toString().toCharArray());
-			bw.flush();
-			bw.close();
+			//Prevents javax.annotation.processing.FilerException: Attempt to recreate a file, because 
+			//process is calling more then once
+			if (!first) {
+				codeGen.append(";\n\n");
+				JavaFileObject jfo = processingEnv.getFiler().createSourceFile(PACKAGE_NAME + "." + CLASS_NAME);
+				BufferedWriter bw = new BufferedWriter(jfo.openWriter());
+				bw.write(codeGen.toString().toCharArray());
+				bw.write(getFooter().toCharArray());
+				bw.flush();
+				bw.close();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,12 +75,46 @@ public class MoodleWSFunctionAnnotationProcessor extends AbstractProcessor {
 
 	private StringBuilder getHeader() {
 
-		StringBuilder builder = new StringBuilder("package ml.jmoodle.functions.rest;\n\n");
-		builder.append("import java.io.Serializable;\n\n")
-				.append("public enum MoodleWSFunctions implements Serializable {\n");
+		StringBuilder builder = new StringBuilder("package ");
+		builder.append(PACKAGE_NAME).append(";\n\n")
+			.append("import java.io.Serializable;\n\n")
+			.append("public enum ").append(CLASS_NAME).append(" implements Serializable {\n");
 
-		
 		return builder;
 	}
+
+	private String getFooter() {
+		StringBuilder builder = new StringBuilder("String className;\n\n");
+		builder.append("private ").append(CLASS_NAME).append("(String className) {\n")
+				.append("this.className = className;\n").append("}\n\n").append("private String className() {\n")
+				.append("return this.className;\n").append("}\n\n")
+				.append("public Object getMoodleWSFunction() throws ClassNotFoundException {\n")
+				.append("return Class.forName(className);\n").append("}\n}");
+		return builder.toString();
+	}
+
+	// package ml.jmoodle.functions.rest;
+	//
+	// import java.io.Serializable;
+	//
+	// public enum MoodleWSFunctions implements Serializable {
+	// JUST_A_TEST("ml.jmoodle.functions.rest.AddUser"),
+	// JUST_A_TST("ml.jmoodle.functions.rest.AddUser"),
+	// MOD_WIKI_OVERRIDELOCK("mod/wiki:overridelock");
+	//
+	// String className;
+	//
+	// private MoodleWSFunctions(String className) {
+	// this.className = className;
+	// }
+	//
+	// private String className() {
+	// return this.className;
+	// }
+	//
+	// public Object getMoodleWSFunction() throws ClassNotFoundException {
+	// return Class.forName(className);
+	// }
+	// }
 
 }
