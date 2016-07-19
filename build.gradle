@@ -26,6 +26,7 @@ apply plugin: 'eclipse'
 apply plugin: "net.ltgt.apt"
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
+version = '0.0.1-SNAPSHOT'
 
 
 // In this section you declare where to find the dependencies of your project
@@ -41,9 +42,22 @@ dependencies {
     testCompile "org.mockito:mockito-core:1.+"
     //For auto-generation classes, wiht the annotations, 
     //the generated files source code is in  build/generated/source/apt
-    compileOnly files('src/main/resources/ml.jmoodle.annotations.processors.jar')
-    apt files('src/main/resources/ml.jmoodle.annotations.processors.jar')
+    compileOnly files('src/main/resources/ml.jmoodle.annotations.processors*.jar')
+    apt files('src/main/resources/ml.jmoodle.annotations.processors*.jar')
 }
 
+task compileAnnotations (dependsOn: 'clean', type: JavaCompile) {
+    source = sourceSets.main.java.srcDirs
+    include 'ml/jmoodle/annotations/**'
+    classpath = sourceSets.main.compileClasspath
+    destinationDir = sourceSets.main.output.classesDir
+}
+compileAnnotations.options.compilerArgs = ["-sourcepath", "$projectDir/src/main/java"]
 
+task jarAnnotations(dependsOn: 'compileAnnotations', type: Jar) {
+	baseName = 'ml.jmoodle.annotations.processors'
+	from fileTree(dir: sourceSets.main.output.classesDir).matching { include 'ml/jmoodle/annotations/**' }
+	from fileTree(dir: 'src/main/resources').matching { include 'META-INF/services/*' }
+	destinationDir = file("src/main/resources")
+}
 

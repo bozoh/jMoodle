@@ -1,5 +1,6 @@
 package ml.jmoodle.annotations.processors;
 
+import java.awt.dnd.DnDConstants;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -51,61 +52,50 @@ public class MoodleWSFunctionAnnotationProcessor extends AbstractProcessor {
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-		// TODO Auto-generated method stub
+		StringBuilder codeGen = getHeader();
 
-		JavaFileObject jfo = null;
-		BufferedWriter bw = null;
-		try {
-			for (Element e : roundEnv.getElementsAnnotatedWith(MoodleWSFunction.class)) {
-				if (e.getKind() == ElementKind.CLASS) {
-					if (jfo == null) {
-						jfo = this.filer.createSourceFile("ml.jmoodle.functions.rest.Observer");
+		boolean first = true;
 
-						bw = new BufferedWriter(jfo.openWriter());
-						bw.write(getHeader());
-					}
-					this.messager.printMessage(Diagnostic.Kind.NOTE, e.getSimpleName());
+		for (Element e : roundEnv.getElementsAnnotatedWith(MoodleWSFunction.class)) {
+			TypeElement classElement = (TypeElement) e;
+			MoodleWSFunction mdlWsFnc = e.getAnnotation(MoodleWSFunction.class);
 
-					MoodleWSFunction mdlWsFnc = e.getAnnotation(MoodleWSFunction.class);
-
-					TypeElement classElement = (TypeElement) e;
-					bw.append("this.functions.put(\"");
-					bw.append(mdlWsFnc.name());
-					bw.append("\", \"");
-					bw.append(classElement.getQualifiedName());
-					bw.append("\");");
-					bw.newLine();
+			for (String fncName : mdlWsFnc.names()) {
+				if (first) {
+					first = false;
+				} else {
+					codeGen.append(",\n");
 				}
-
+				codeGen.append(fncName.toUpperCase())
+					.append("(\"")
+					.append(classElement.getQualifiedName())
+					.append("\")");
 			}
-			if (bw != null) {
-				bw.append("}");
-				bw.append("}");
-				bw.flush();
-				bw.close();
-			}
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
-
-		// TODO Auto-generated method stub
+		try {
+			codeGen.append(";\n}");
+			JavaFileObject jfo = this.filer.createSourceFile("ml.jmoodle.functions.rest.MoodleWSFunctions");
+			BufferedWriter bw = new BufferedWriter(jfo.openWriter());
+			bw.write(codeGen.toString().toCharArray());
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return true;
 
-		// return false;
 	}
 
-	private char[] getHeader() {
-		
-		
+	private StringBuilder getHeader() {
 
-		StringBuilder builder = new StringBuilder("package ml.jmoodle.functions.rest;");
-		builder.append("\n\nimport java.util.HashMap;\n").append("import java.util.Map;")
-				.append("\n\npublic class Observer {\n")
-				.append("Map<String, String> functions=new HashMap<String, String>();\n\n")
-				.append("public Observer() {\n");
-		return builder.toString().toCharArray();
+		StringBuilder builder = new StringBuilder("package ml.jmoodle.functions.rest;\n\n");
+		builder.append("import java.io.Serializable;\n\n")
+				.append("public enum MoodleWSFunctions implements Serializable {\n");
+
+		
+		return builder;
 	}
 
 }
