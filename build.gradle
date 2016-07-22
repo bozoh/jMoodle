@@ -40,6 +40,8 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.+"
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
     //For auto-generation classes, wiht the annotations, 
     //the generated files source code is in  build/generated/source/apt
     compileOnly files('src/main/resources/jmoodle-annotations-0.0.1-SNAPSHOT.jar')

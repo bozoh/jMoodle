@@ -10,3 +10,4 @@ target
 .project
 .gradle
 /gradle.properties
+/.apt_generated/

@@ -20,7 +20,8 @@ package ml.jmoodle.commons;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * 
@@ -62,9 +63,10 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private String interests;
 	private Date firstaccess;
 	private Date lastaccess;
-	private String auth;
+	private String auth = "manual";
 	private boolean confirmed;
-	private String lang;
+	private String lang = "en";
+	private String calendartype="gregorian";
 	private String theme;
 	private String timezone;
 	private int mailformat;
@@ -75,9 +77,35 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private String country;
 	private String profileimageurlsmall;
 	private String profileimageurl;
-	private List<CustomField> customfields;
-	private List<Preference> preferences;
-	private List<Warning> warnings;
+	private Set<CustomField> customfields;
+	private Set<Preference> preferences;
+	private Set<Warning> warnings;
+
+	
+	public MoodleUser() {
+		this.customfields=new LinkedHashSet<CustomField>();
+		this.preferences =  new LinkedHashSet<Preference>();
+		this.warnings = new LinkedHashSet<Warning>();
+	}
+	
+	public MoodleUser(Long id) {
+		this();
+		this.id = id;
+		
+	}
+	
+	
+	
+	public MoodleUser(String username, String password, String firstname, String lastname, String email) {
+		this();
+		this.username = username;
+		this.password = password;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.email = email;
+	}
+
+
 
 	/**
 	 * @return the id
@@ -438,6 +466,15 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	public void setFirstaccess(Date firstaccess) {
 		this.firstaccess = firstaccess;
 	}
+	
+	
+	/**
+	 * @param firstaccess
+	 *            the firstaccess to set
+	 */
+	public void setFirstaccess(Long firstaccess) {
+		this.firstaccess = new Date(firstaccess.longValue());
+	}
 
 	/**
 	 * @return the lastaccess
@@ -452,6 +489,14 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 */
 	public void setLastaccess(Date lastaccess) {
 		this.lastaccess = lastaccess;
+	}
+	
+	/**
+	 * @param lastaccess
+	 *            the lastaccess to set
+	 */
+	public void setLastaccess(Long lastaccess) {
+		this.lastaccess = new Date(lastaccess.longValue());
 	}
 
 	/**
@@ -489,6 +534,22 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 */
 	public String getLang() {
 		return lang;
+	}
+
+	/**
+	 * @param lang
+	 *            the calendar type to set
+	 */
+	public void setCalendartype(String calendartype) {
+		this.calendartype = calendartype;
+	}
+	
+	
+	/**
+	 * @return the calendar type
+	 */
+	public String getCalendartype() {
+		return calendartype;
 	}
 
 	/**
@@ -563,7 +624,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @return the descriptionformat
 	 */
 	public int getDescriptionformat() {
-		return descriptionformat;
+			return descriptionformat;
 	}
 
 	/**
@@ -652,37 +713,41 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	/**
 	 * @return the customfields
 	 */
-	public List<CustomField> getCustomfields() {
+	public Set<CustomField> getCustomfields() {
 		return customfields;
 	}
 
 	/**
-	 * @param customfields
-	 *            the customfields to set
+	 * 
+	 * @param type
+	 * @param value
+	 * @param name
+	 * @param shortname
 	 */
-	public void setCustomfields(List<CustomField> customfields) {
-		this.customfields = customfields;
+	public void addCustomfields(String type, String value, String name, String shortname) {
+		this.customfields.add(new CustomField(type, value, name, shortname));
 	}
 
 	/**
 	 * @return the preferences
 	 */
-	public List<Preference> getPreferences() {
+	public Set<Preference> getPreferences() {
 		return preferences;
 	}
 
 	/**
-	 * @param preferences
-	 *            the preferences to set
+	 * 
+	 * @param name
+	 * @param value
 	 */
-	public void setPreferences(List<Preference> preferences) {
-		this.preferences = preferences;
+	public void addPreferences(String name, String value) {
+		this.preferences.add(new Preference(name, value));
 	}
 
 	/**
 	 * @return the warnings
 	 */
-	public List<Warning> getWarnings() {
+	public Set<Warning> getWarnings() {
 		return warnings;
 	}
 
@@ -690,8 +755,13 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param warnings
 	 *            the warnings to set
 	 */
-	public void setWarnings(List<Warning> warnings) {
-		this.warnings = warnings;
+	public void addWarnings(String item, Long itemid, String warningcode, String message) {
+		this.warnings.add(new Warning(item, itemid, warningcode, message));
+	}
+	
+	
+	public boolean hasWarnings() {
+		return !this.warnings.isEmpty();
 	}
 
 	/*
@@ -1158,5 +1228,39 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 			this.message = message;
 		}
 	}
-
+	
+	public enum DescriptionFormat {
+		//(1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
+		
+		MOODLE(0),
+		HTML(1),
+		PLAIN(2),
+		MARKDOWN(4);
+		
+		int value;
+		private DescriptionFormat(int value) {
+			this.value=value;
+		}
+		
+		public int getValue() {
+			return value;
+		}
+	}
+	
+	public enum EmailFormat {
+		//(1 = HTML, 0  = PLAIN )
+		
+		PLAIN(0),
+		HTML(1);
+		
+		int value;
+		private EmailFormat(int value) {
+			this.value=value;
+		}
+		
+		public int getValue() {
+			return value;
+		}
+	}
+	
 }

@@ -86,10 +86,10 @@ public class MoodleWSFunctionAnnotationProcessor extends AbstractProcessor {
 	private String getFooter() {
 		StringBuilder builder = new StringBuilder("String className;\n\n");
 		builder.append("private ").append(CLASS_NAME).append("(String className) {\n")
-				.append("this.className = className;\n").append("}\n\n").append("private String className() {\n")
-				.append("return this.className;\n").append("}\n\n")
-				.append("public Object getMoodleWSFunction() throws ClassNotFoundException {\n")
-				.append("return Class.forName(className);\n").append("}\n}");
+				.append("this.className = className;\n").append("}\n\n").append("public String getValue() {\n")
+				.append("return this.className;\n").append("}\n}\n");
+//				.append("public Object getMoodleWSFunction() throws ClassNotFoundException {\n")
+//				.append("return Class.forName(className);\n").append("}\n}");
 		return builder.toString();
 	}
 

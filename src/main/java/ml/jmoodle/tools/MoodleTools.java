@@ -25,4 +25,15 @@ public class MoodleTools {
 	public static String encode (String value) throws UnsupportedEncodingException {
 		return URLEncoder.encode(value, MoodleConfig.DEFAULT_ENCODING);
 	}
+
+	/**
+	 *  Compare 2 version
+	 * @param v1
+	 * @param v2
+	 * @return  - if v1<v2 , 0 if v1=v2, + if v1>v2
+	 */
+	public static int compareVersion(String v1, String v2) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
