@@ -30,7 +30,7 @@ import ml.jmoodle.tools.MoodleTools;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ MoodleTools.class })
+@PrepareForTest({ MoodleConfig.class })
 public class MoodleConfigTest {
 
 	@Rule
@@ -48,8 +48,8 @@ public class MoodleConfigTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PowerMockito.mockStatic(MoodleTools.class);
-		PowerMockito.when(MoodleTools.verifyVersion(anyString())).thenReturn(true);
+		PowerMockito.spy(MoodleConfig.class);
+		PowerMockito.doReturn(true).when(MoodleConfig.class, "verifyVersion", anyString());
 	}
 
 	public void tearDown() throws Exception {
@@ -64,13 +64,6 @@ public class MoodleConfigTest {
 
 		MoodleConfig config3 = new MoodleConfig("test.com", "3.1.0");
 		assertEquals(testUrl.toString() + "/webservice/rest/server.php", config3.getMoodleURL().toString());
-
-		// Will never throw MalformedURLException because the proctocol is
-		// always secified.
-		// exception.expect(java.net.MalformedURLException.class);
-		// new URL("http");
-		//// new MoodleConfig("<invaid- %Wccc fez URL>");
-
 	}
 
 	@Test
@@ -80,16 +73,22 @@ public class MoodleConfigTest {
 	}
 
 	@Test
-	public final void MoodleConfigVerifyMoodleVersionIsCalledTest() throws Exception {
+	public final void MoodleConfigVerifyVersionIsCalledTest() throws Exception {
 		MoodleConfig config = new MoodleConfig("http://test.com", "3.1.1");
 		PowerMockito.verifyStatic();
-		MoodleTools.verifyVersion(eq("3.1.1"));
+		MoodleConfig.verifyVersion(eq("3.1.1"));
 	}
 
 	@Test(expected = MoodleConfigException.class)
-	public final void MoodleConfigSetInvalidMoodleVersionTest() throws MoodleConfigException {
-		PowerMockito.when(MoodleTools.verifyVersion(anyString())).thenReturn(false);
-		MoodleConfig config = new MoodleConfig("http://test.com", "3.1");
+	public final void MoodleConfigVerifyVersionInvalidMoodleVersionTest() throws MoodleConfigException {
+		PowerMockito.when(MoodleConfig.verifyVersion(anyString())).thenCallRealMethod();
+		MoodleConfig.verifyVersion("3.1-RC");
+	}
+	
+	
+	public final void MoodleConfigVerifyVersionTest() throws MoodleConfigException {
+		PowerMockito.when(MoodleConfig.verifyVersion(anyString())).thenCallRealMethod();
+		assert MoodleConfig.verifyVersion("3.1.1");
 	}
 
 }

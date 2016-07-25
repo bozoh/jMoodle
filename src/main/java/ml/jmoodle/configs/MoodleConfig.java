@@ -2,9 +2,10 @@ package ml.jmoodle.configs;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ml.jmoodle.configs.expections.MoodleConfigException;
-import ml.jmoodle.tools.MoodleTools;
 
 /**
  * Hold the basic configuration for sending WS request to Moodle WS API
@@ -18,10 +19,10 @@ import ml.jmoodle.tools.MoodleTools;
 public class MoodleConfig {
 	public static final String MOODLE_REST_ENDPOINT = "/webservice/rest/server.php";
 	public static final String DEFAULT_ENCODING = "UTF-8";
+	public static final String MOODLE_VERSION_PATTERN = "^(\\d+)\\.(\\d+)\\.(\\d+)$";
 
 	private StringBuilder moodleURL = new StringBuilder();
 	private String version;
-
 
 	/**
 	 * 
@@ -36,11 +37,9 @@ public class MoodleConfig {
 	 */
 
 	public MoodleConfig(String moodleURL, String moodleVersion) throws MoodleConfigException {
-		if (!MoodleTools.verifyVersion(moodleVersion)) {
-			throw new MoodleConfigException("Invalid Moodle Version [" + moodleVersion + "]");
-		}
-		this.version=moodleVersion;
-		
+		MoodleConfig.verifyVersion(moodleVersion);
+		this.version = moodleVersion;
+
 		if (!(moodleURL.trim().toLowerCase().startsWith("http://")
 				|| moodleURL.trim().toLowerCase().startsWith("https://"))) {
 			this.moodleURL.append("http://");
@@ -55,7 +54,6 @@ public class MoodleConfig {
 		return this.version;
 	}
 
-
 	/**
 	 * @return the Moodle site root URL with rest endpoint
 	 * 
@@ -64,4 +62,16 @@ public class MoodleConfig {
 	public URL getMoodleURL() throws MalformedURLException {
 		return new URL(this.moodleURL.toString());
 	}
+
+	public static boolean verifyVersion(String mdlVersion) throws MoodleConfigException {
+		Pattern versionPattern = Pattern.compile(MoodleConfig.MOODLE_VERSION_PATTERN);
+		Matcher matcher = versionPattern.matcher(mdlVersion);
+		boolean haveMatch = matcher.matches();
+		if (!(haveMatch && matcher.groupCount() == 3)) {
+			throw new MoodleConfigException("Invalid moodle version [" + mdlVersion + "]");
+		}
+
+		return true;
+	}
+
 }
