@@ -2,6 +2,7 @@ package ml.jmoodle.functions;
 
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.tools.MoodleTools;
+import ml.jmoodle.tools.exceptions.MoodleToolsException;
 
 /**
  * 
@@ -27,9 +28,10 @@ public abstract class MoodleWSFunction {
 	 * @param moodleVersion Moodle Version
 	 * @return
 	 * @throws MoodleWSFucntionException
+	 * @throws MoodleToolsException 
 	 */
 	public static final MoodleWSFunction getFunction(MoodleWSFunctions functionName, String moodleVersion)
-			throws MoodleWSFucntionException {
+			throws MoodleWSFucntionException, MoodleToolsException {
 
 		try {
 			MoodleWSFunction.mdlVersion = moodleVersion;
@@ -53,13 +55,13 @@ public abstract class MoodleWSFunction {
 	
 	public MoodleWSFunction(){}
 	
-	public MoodleWSFunction (String moodleVersion) throws MoodleWSFucntionException {
+	public MoodleWSFunction (String moodleVersion) throws MoodleWSFucntionException, MoodleToolsException {
 		MoodleWSFunction.mdlVersion=moodleVersion;
 		MoodleWSFunction.checkVersion(getFunctionName(), moodleVersion, getAddedVersion());
 	}
 
 	 
-	private static void checkVersion(String functionName, String moodleVersion, String functionAddedVersion) throws MoodleWSFucntionException {
+	private static void checkVersion(String functionName, String moodleVersion, String functionAddedVersion) throws MoodleWSFucntionException, MoodleToolsException {
 		if (MoodleTools.compareVersion(moodleVersion, functionAddedVersion) < 0) {
 			throw new MoodleWSFucntionException("The function [" + functionName + "] is only added in version ["
 					+ functionAddedVersion + "], but your moodle version is [" + moodleVersion + "]");

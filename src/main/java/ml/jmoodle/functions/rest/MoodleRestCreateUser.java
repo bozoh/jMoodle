@@ -7,12 +7,13 @@ import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.exceptions.MoodleToolsException;
 
 @MoodleWSFunction(names = { "core_user_create_users", "moodle_user_create_users" })
 public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction {
 	private MoodleRestUserFunctionsTools userFuntionsTools  = new MoodleRestUserFunctionsTools();
 	
-	public MoodleRestCreateUser(String moodleVersion) throws MoodleWSFucntionException {
+	public MoodleRestCreateUser(String moodleVersion) throws MoodleWSFucntionException, MoodleToolsException {
 		super(moodleVersion);
 	}
 

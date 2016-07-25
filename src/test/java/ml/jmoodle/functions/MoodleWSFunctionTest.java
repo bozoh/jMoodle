@@ -74,32 +74,32 @@ public class MoodleWSFunctionTest {
 	}
 
 	@Test
-	public void testGetAddedVersionIsCalled() throws MoodleWSFucntionException {
+	public void testGetAddedVersionIsCalled() throws Exception {
 		MoodleWSFunction.getFunction(classNameMock, moodleVersion);
 		verify(mdlFnctionMock).getAddedVersion();
 	}
 
 	@Test
-	public void testMoodleToolsCompareVersionIsCalled() throws MoodleWSFucntionException {
+	public void testMoodleToolsCompareVersionIsCalled() throws Exception {
 		MoodleWSFunction.getFunction(classNameMock, moodleVersion);
 		PowerMockito.verifyStatic();
 		MoodleTools.compareVersion(eq(moodleVersion), eq(functionVersion));
 	}
 
 	@Test
-	public void testGetFunctionWithMoodleVersionBiggerThenFunctionVersion() throws MoodleWSFucntionException {
+	public void testGetFunctionWithMoodleVersionBiggerThenFunctionVersion() throws Exception {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(1);
 		assert (mdlFnctionMock.equals(MoodleWSFunction.getFunction(classNameMock, moodleVersion)));
 	}
 
 	@Test
-	public void testGetFunctionWithMoodleVersionEquasThenFunctionVersion() throws MoodleWSFucntionException {
+	public void testGetFunctionWithMoodleVersionEquasThenFunctionVersion() throws Exception {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(0);
 		assert (mdlFnctionMock.equals(MoodleWSFunction.getFunction(classNameMock, moodleVersion)));
 	}
 
 	@Test(expected = MoodleWSFucntionException.class)
-	public void testGetFunctionWithMoodleVersionLowerThenFunctionVersion() throws MoodleWSFucntionException {
+	public void testGetFunctionWithMoodleVersionLowerThenFunctionVersion() throws Exception {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
 		MoodleWSFunction.getFunction(classNameMock, moodleVersion);
 	}
