@@ -1,5 +1,7 @@
 package ml.jmoodle.functions;
 
+import java.lang.reflect.InvocationTargetException;
+
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.tools.MoodleTools;
@@ -24,54 +26,58 @@ public abstract class MoodleWSFunction {
 	/**
 	 * WS function factory
 	 * 
-	 * @param functionName  Use the MoodleWSFunctions to get the right function class name
-	 * @param moodleVersion Moodle Version
+	 * @param functionName
+	 *            Use the MoodleWSFunctions to get the right function class name
+	 * @param moodleVersion
+	 *            Moodle Version
 	 * @return
 	 * @throws MoodleWSFucntionException
-	 * @throws MoodleConfigException 
-	 * @throws MoodleToolsException 
+	 * @throws MoodleConfigException
+	 * @throws MoodleToolsException
 	 */
 	public static final MoodleWSFunction getFunction(MoodleWSFunctions functionName, String moodleVersion)
 			throws MoodleWSFucntionException, MoodleConfigException {
-
+		MoodleWSFunction.mdlVersion = moodleVersion;
 		try {
-			MoodleWSFunction.mdlVersion = moodleVersion;
 			MoodleWSFunction function = factory(functionName.getValue());
-			checkVersion(function.getFunctionName(), moodleVersion, function.getAddedVersion());
-
+			// checkVersion(function.getFunctionName(), moodleVersion,
+			// function.getAddedVersion());
 			return function;
-		} catch (InstantiationException e) {
-			throw new MoodleWSFucntionException(e);
-		} catch (IllegalAccessException e) {
-			throw new MoodleWSFucntionException(e);
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			throw new MoodleWSFucntionException(e);
 		}
 
 	}
-	private static MoodleWSFunction factory(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+
+	private static MoodleWSFunction factory(String className)
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException,
+			SecurityException, InvocationTargetException, NoSuchMethodException {
+
 		Class<? extends MoodleWSFunction> clazz = (Class<? extends MoodleWSFunction>) Class.forName(className);
-		return clazz.newInstance();
-	}
-	
-	public MoodleWSFunction(){}
-	
-	public MoodleWSFunction (String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
-		MoodleWSFunction.mdlVersion=moodleVersion;
-		MoodleWSFunction.checkVersion(getFunctionName(), moodleVersion, getAddedVersion());
+		return clazz.getConstructor(String.class).newInstance(mdlVersion);
 	}
 
-	 
-	private static void checkVersion(String functionName, String moodleVersion, String functionAddedVersion) throws MoodleWSFucntionException, MoodleConfigException {
-		if (MoodleTools.compareVersion(moodleVersion, functionAddedVersion) < 0) {
-			throw new MoodleWSFucntionException("The function [" + functionName + "] is only added in version ["
-					+ functionAddedVersion + "], but your moodle version is [" + moodleVersion + "]");
-		}
-		
+	public MoodleWSFunction() {
 	}
+
+	public MoodleWSFunction(String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
+		mdlVersion = moodleVersion;
+		String addVersion = getAddedVersion();
+		if (MoodleTools.compareVersion(moodleVersion, addVersion) < 0) {
+			throw new MoodleWSFucntionException("The function [" + getFunctionName() + "] is only added in version ["
+					+ addVersion + "], but your moodle version is [" + moodleVersion + "]");
+		}
+	}
+
+	private static void checkVersion(String functionName, String moodleVersion, String functionAddedVersion)
+			throws MoodleWSFucntionException, MoodleConfigException {
+
+	}
+
 	public abstract String getFunctionStr();
 
 	public abstract String getAddedVersion();
-	public abstract String getFunctionName();
+
+	public abstract String getFunctionName() throws MoodleConfigException;
 
 }

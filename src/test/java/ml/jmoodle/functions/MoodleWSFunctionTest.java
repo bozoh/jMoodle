@@ -73,19 +73,7 @@ public class MoodleWSFunctionTest {
 		PowerMockito.verifyPrivate(MoodleWSFunction.class).invoke("factory", anyString());
 	}
 
-	@Test
-	public void testGetAddedVersionIsCalled() throws Exception {
-		MoodleWSFunction.getFunction(classNameMock, moodleVersion);
-		verify(mdlFnctionMock).getAddedVersion();
-	}
-
-	@Test
-	public void testMoodleToolsCompareVersionIsCalled() throws Exception {
-		MoodleWSFunction.getFunction(classNameMock, moodleVersion);
-		PowerMockito.verifyStatic();
-		MoodleTools.compareVersion(eq(moodleVersion), eq(functionVersion));
-	}
-
+	
 	@Test
 	public void testGetFunctionWithMoodleVersionBiggerThenFunctionVersion() throws Exception {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(1);
@@ -96,12 +84,6 @@ public class MoodleWSFunctionTest {
 	public void testGetFunctionWithMoodleVersionEquasThenFunctionVersion() throws Exception {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(0);
 		assert (mdlFnctionMock.equals(MoodleWSFunction.getFunction(classNameMock, moodleVersion)));
-	}
-
-	@Test(expected = MoodleWSFucntionException.class)
-	public void testGetFunctionWithMoodleVersionLowerThenFunctionVersion() throws Exception {
-		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
-		MoodleWSFunction.getFunction(classNameMock, moodleVersion);
 	}
 
 }

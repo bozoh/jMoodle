@@ -8,13 +8,16 @@ import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleTools;
 
 @MoodleWSFunction(names = { "core_user_create_users", "moodle_user_create_users" })
 public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction {
-	private MoodleRestUserFunctionsTools userFuntionsTools  = new MoodleRestUserFunctionsTools();
-	
+	private MoodleRestUserFunctionsTools userFuntionsTools = new MoodleRestUserFunctionsTools();
+	private boolean isLegacy;
+
 	public MoodleRestCreateUser(String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
 		super(moodleVersion);
+		isLegacy=(MoodleTools.compareVersion(moodleVersion, "2.2.0") < 0);
 	}
 
 	private String addedVersion = "2.0.0";
@@ -34,12 +37,13 @@ public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction 
 	}
 
 	/**
-	 * @param users the users to set
+	 * @param users
+	 *            the users to set
 	 */
 	public void setUsers(Set<MoodleUser> users) {
 		this.users = users;
 	}
-	
+
 	public void addUser(MoodleUser user) {
 		this.users.add(user);
 	}
@@ -49,13 +53,17 @@ public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction 
 		return addedVersion;
 	}
 
+	/**
+	 * Get the right function name, this funtcions changes the name in 2.2.0
+	 * 
+	 * @throws MoodleConfigException
+	 */
 	@Override
-	public String getFunctionName() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getFunctionName() throws MoodleConfigException {
+		// this funtcions changes the name in 2.2.0 
+		if (isLegacy)
+			return "moodle_user_create_users";
+		return "core_user_create_users";
 	}
-
-	
-	
 
 }
