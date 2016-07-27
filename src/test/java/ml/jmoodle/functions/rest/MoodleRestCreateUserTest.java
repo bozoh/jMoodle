@@ -1,6 +1,6 @@
 package ml.jmoodle.functions.rest;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,14 +54,14 @@ public class MoodleRestCreateUserTest {
 	public final void testIfReturnTheRightAddedVersion() throws Exception {
 		// This function id added in 2.0.0
 		MoodleRestCreateUser createUser = new MoodleRestCreateUser(configMck.getVersion());
-		assert (createUser.getAddedVersion().equals("2.0.0"));
+		assertEquals("2.0.0", createUser.getSinceVersion());
 	}
 
 	@Test(expected = MoodleWSFucntionException.class)
 	public final void testIfThrowExceptionIfWrongMoodleVersionInConstructor()
 			throws MoodleWSFucntionException, MoodleConfigException {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
-		MoodleRestCreateUser createUser = new MoodleRestCreateUser("1.4.0");
+		new MoodleRestCreateUser("1.4.0");
 
 	}
 
@@ -69,8 +69,7 @@ public class MoodleRestCreateUserTest {
 	public final void testIfThrowExceptionIfWrongMoodleVersionInFactory()
 			throws MoodleWSFucntionException, MoodleConfigException {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
-		MoodleWSFunction function1 = MoodleWSFunction.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS,
-				configMck.getVersion());
+		MoodleWSFunction.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck.getVersion());
 
 	}
 
@@ -86,12 +85,11 @@ public class MoodleRestCreateUserTest {
 		MoodleRestCreateUser mdlfnc22 = (MoodleRestCreateUser) MoodleWSFunction
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck.getVersion());
 		MoodleRestCreateUser mdlfnc20 = new MoodleRestCreateUser("2.1.0");
-		String fnc22Name=mdlfnc22.getFunctionName();
-		String fnc20Name=mdlfnc20.getFunctionName();
+		String fnc22Name = mdlfnc22.getFunctionName();
+		String fnc20Name = mdlfnc20.getFunctionName();
 
-		assert (mdlfnc22.getFunctionName().equals("core_user_create_users"));
-		assert (mdlfnc20.getFunctionName().equals("moodle_user_create_users"));
+		assertEquals("core_user_create_users", fnc22Name);
+		assertEquals("moodle_user_create_users", fnc20Name);
 
 	}
-
 }

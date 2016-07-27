@@ -1,8 +1,6 @@
 package ml.jmoodle.functions;
 
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -19,7 +17,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.tools.MoodleTools;
 
 @RunWith(PowerMockRunner.class)
@@ -52,7 +49,7 @@ public class MoodleWSFunctionTest {
 		PowerMockito.spy(MoodleWSFunction.class);
 		PowerMockito.doReturn(mdlFnctionMock).when(MoodleWSFunction.class, "factory", anyString());
 		// Normal Spy
-		Mockito.doReturn(functionVersion).when(mdlFnctionMock).getAddedVersion();
+		Mockito.doReturn(functionVersion).when(mdlFnctionMock).getSinceVersion();
 
 		// Mock an enum, must use powermock
 		PowerMockito.when(classNameMock.getValue()).thenReturn("Doesn't matter");

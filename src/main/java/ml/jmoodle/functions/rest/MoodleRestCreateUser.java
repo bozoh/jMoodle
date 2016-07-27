@@ -14,14 +14,15 @@ import ml.jmoodle.tools.MoodleTools;
 public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction {
 	private MoodleRestUserFunctionsTools userFuntionsTools = new MoodleRestUserFunctionsTools();
 	private boolean isLegacy;
+	private static final String SINCE_VERSION = "2.0.0";
+	private Set<MoodleUser> users = new LinkedHashSet<MoodleUser>();
 
 	public MoodleRestCreateUser(String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
 		super(moodleVersion);
 		isLegacy=(MoodleTools.compareVersion(moodleVersion, "2.2.0") < 0);
 	}
 
-	private String addedVersion = "2.0.0";
-	private Set<MoodleUser> users = new LinkedHashSet<MoodleUser>();
+	
 
 	@Override
 	public String getFunctionStr() {
@@ -49,8 +50,8 @@ public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction 
 	}
 
 	@Override
-	public String getAddedVersion() {
-		return addedVersion;
+	public String getSinceVersion() {
+		return SINCE_VERSION;
 	}
 
 	/**

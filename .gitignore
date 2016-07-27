@@ -9,5 +9,6 @@ target
 .classpath
 .project
 .gradle
-/gradle.properties
-/.apt_generated/
+gradle.properties
+.apt_generated
+.factorypath

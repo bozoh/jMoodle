@@ -62,21 +62,16 @@ public abstract class MoodleWSFunction {
 
 	public MoodleWSFunction(String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
 		mdlVersion = moodleVersion;
-		String addVersion = getAddedVersion();
-		if (MoodleTools.compareVersion(moodleVersion, addVersion) < 0) {
+		String since = getSinceVersion();
+		if (MoodleTools.compareVersion(moodleVersion,  getSinceVersion()) < 0) {
 			throw new MoodleWSFucntionException("The function [" + getFunctionName() + "] is only added in version ["
-					+ addVersion + "], but your moodle version is [" + moodleVersion + "]");
+					+ since + "], but your moodle version is [" + moodleVersion + "]");
 		}
-	}
-
-	private static void checkVersion(String functionName, String moodleVersion, String functionAddedVersion)
-			throws MoodleWSFucntionException, MoodleConfigException {
-
 	}
 
 	public abstract String getFunctionStr();
 
-	public abstract String getAddedVersion();
+	public abstract String getSinceVersion();
 
 	public abstract String getFunctionName() throws MoodleConfigException;
 
