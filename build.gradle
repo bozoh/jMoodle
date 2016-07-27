@@ -29,6 +29,14 @@ targetCompatibility = 1.6
 version = '0.0.1-SNAPSHOT'
 
 
+test {
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+		jvmArgs '-Xdebug',
+            '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006'
+    }
+}
+
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use 'jcenter' for resolving your dependencies.

@@ -80,6 +80,7 @@ public class MoodleRestCreateUserTest {
 
 	@Test
 	public final void testIfGetTheRightFunctionNameByMoodleVersion() throws Exception {
+		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenCallRealMethod();
 		// "core_user_create_users", "moodle_user_create_users"
 		// This function chages name in moodle 2.2
 		MoodleRestCreateUser mdlfnc22 = (MoodleRestCreateUser) MoodleWSFunction
