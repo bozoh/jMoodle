@@ -1,28 +1,39 @@
 package ml.jmoodle.functions.rest.tools;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 public class MoodleRestUserFunctionsToolsTest  {
-
+	@Rule
+	public MockitoRule rule = MockitoJUnit.rule();
+	
+	@Mock
+	MoodleRestUserFunctionsTools usrFnctTools;
+		
 	@Test
 	public final void testSerializeUsers() {
-		Assert.fail("not implemented");
+		fail("not implemented");
 	}
 	
 	@Test
 	public final void testSerializeUser() {
-		Assert.fail("not implemented");
+		fail("not implemented");
 	}
 	
 	@Test
 	public final void testUnSerializeUsers() {
-		Assert.fail("not implemented");
+		fail("not implemented");
 	}
 	
 	@Test
 	public final void testUnSerializeUser() {
-		Assert.fail("not implemented");
+		fail("not implemented");
 	}
 
 }

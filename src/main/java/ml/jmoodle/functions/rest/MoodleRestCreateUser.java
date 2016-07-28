@@ -13,16 +13,13 @@ import ml.jmoodle.tools.MoodleTools;
 @MoodleWSFunction(names = { "core_user_create_users", "moodle_user_create_users" })
 public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction {
 	private MoodleRestUserFunctionsTools userFuntionsTools = new MoodleRestUserFunctionsTools();
-	private boolean isLegacy;
 	private static final String SINCE_VERSION = "2.0.0";
 	private Set<MoodleUser> users = new LinkedHashSet<MoodleUser>();
 
 	public MoodleRestCreateUser(String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
 		super(moodleVersion);
-		isLegacy=(MoodleTools.compareVersion(moodleVersion, "2.2.0") < 0);
-	}
 
-	
+	}
 
 	@Override
 	public String getFunctionStr() {
@@ -61,9 +58,10 @@ public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction 
 	 */
 	@Override
 	public String getFunctionName() throws MoodleConfigException {
-		// this funtcions changes the name in 2.2.0 
-		if (isLegacy)
+		// this funtcions changes the name in 2.2.0
+		if ((MoodleTools.compareVersion(mdlVersion, "2.2.0") < 0))
 			return "moodle_user_create_users";
+		
 		return "core_user_create_users";
 	}
 

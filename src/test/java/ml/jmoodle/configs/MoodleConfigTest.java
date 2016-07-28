@@ -18,7 +18,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import ml.jmoodle.configs.expections.MoodleConfigException;
-import ml.jmoodle.tools.MoodleTools;
 
 /**
  * 
@@ -84,11 +83,10 @@ public class MoodleConfigTest {
 		PowerMockito.when(MoodleConfig.verifyVersion(anyString())).thenCallRealMethod();
 		MoodleConfig.verifyVersion("3.1-RC");
 	}
-	
-	
+
 	public final void MoodleConfigVerifyVersionTest() throws MoodleConfigException {
 		PowerMockito.when(MoodleConfig.verifyVersion(anyString())).thenCallRealMethod();
-		assert MoodleConfig.verifyVersion("3.1.1");
+		assert (MoodleConfig.verifyVersion("3.1.1") != null);
 	}
 
 }
