@@ -24,25 +24,25 @@ public class MoodleRestUserFunctionsTools {
 				returnData.append(MoodleTools.encode("users[" + i + "][id]")).append("=")
 						.append(MoodleTools.encode(String.valueOf(moodleUsers[i].getId()))).append("&");
 			}
-			if (moodleUsers[i].getUsername() != null && moodleUsers[i].getUsername().trim().isEmpty()) {
+			if (moodleUsers[i].getUsername() != null && !moodleUsers[i].getUsername().trim().isEmpty()) {
 				returnData.append(MoodleTools.encode("users[" + i + "][username]")).append("=")
 						.append(MoodleTools.encode(String.valueOf(moodleUsers[i].getUsername()))).append("&");
 			}
-			if (moodleUsers[i].getPassword() != null && moodleUsers[i].getPassword().trim().isEmpty()) {
-				returnData.append(MoodleTools.encode("users[" + i + "][username]")).append("=")
+			if (moodleUsers[i].getPassword() != null && !moodleUsers[i].getPassword().trim().isEmpty()) {
+				returnData.append(MoodleTools.encode("users[" + i + "][password]")).append("=")
 						.append(MoodleTools.encode(String.valueOf(moodleUsers[i].getPassword()))).append("&");
 			}
-			if (moodleUsers[i].getFirstname() != null && moodleUsers[i].getFirstname().trim().isEmpty()) {
+			if (moodleUsers[i].getFirstname() != null && !moodleUsers[i].getFirstname().trim().isEmpty()) {
 				returnData.append(MoodleTools.encode("users[" + i + "][firstname]")).append("=")
 						.append(MoodleTools.encode(moodleUsers[i].getFirstname())).append("&");
 			}
 
-			if (moodleUsers[i].getLastname() != null && moodleUsers[i].getLastname().trim().isEmpty()) {
+			if (moodleUsers[i].getLastname() != null && !moodleUsers[i].getLastname().trim().isEmpty()) {
 				returnData.append(MoodleTools.encode("users[" + i + "][lastname]")).append("=")
 						.append(MoodleTools.encode(moodleUsers[i].getLastname())).append("&");
 			}
 
-			if (moodleUsers[i].getEmail() != null && moodleUsers[i].getEmail().trim().isEmpty()) {
+			if (moodleUsers[i].getEmail() != null && !moodleUsers[i].getEmail().trim().isEmpty()) {
 				returnData.append(MoodleTools.encode("users[" + i + "][email]")).append("=")
 						.append(MoodleTools.encode(moodleUsers[i].getEmail())).append("&");
 			}
