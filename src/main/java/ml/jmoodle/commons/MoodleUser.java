@@ -66,7 +66,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private String auth = "manual";
 	private boolean confirmed;
 	private String lang = "en";
-	private String calendartype="gregorian";
+	private String calendartype = "gregorian";
 	private String theme;
 	private String timezone;
 	private int mailformat;
@@ -81,21 +81,18 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private Set<Preference> preferences;
 	private Set<Warning> warnings;
 
-	
 	public MoodleUser() {
-		this.customfields=new LinkedHashSet<CustomField>();
-		this.preferences =  new LinkedHashSet<Preference>();
+		this.customfields = new LinkedHashSet<CustomField>();
+		this.preferences = new LinkedHashSet<Preference>();
 		this.warnings = new LinkedHashSet<Warning>();
 	}
-	
+
 	public MoodleUser(Long id) {
 		this();
 		this.id = id;
-		
+
 	}
-	
-	
-	
+
 	public MoodleUser(String username, String password, String firstname, String lastname, String email) {
 		this();
 		this.username = username;
@@ -104,8 +101,6 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		this.lastname = lastname;
 		this.email = email;
 	}
-
-
 
 	/**
 	 * @return the id
@@ -466,8 +461,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	public void setFirstaccess(Date firstaccess) {
 		this.firstaccess = firstaccess;
 	}
-	
-	
+
 	/**
 	 * @param firstaccess
 	 *            the firstaccess to set
@@ -490,7 +484,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	public void setLastaccess(Date lastaccess) {
 		this.lastaccess = lastaccess;
 	}
-	
+
 	/**
 	 * @param lastaccess
 	 *            the lastaccess to set
@@ -543,8 +537,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	public void setCalendartype(String calendartype) {
 		this.calendartype = calendartype;
 	}
-	
-	
+
 	/**
 	 * @return the calendar type
 	 */
@@ -624,7 +617,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @return the descriptionformat
 	 */
 	public int getDescriptionformat() {
-			return descriptionformat;
+		return descriptionformat;
 	}
 
 	/**
@@ -758,8 +751,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	public void addWarnings(String item, Long itemid, String warningcode, String message) {
 		this.warnings.add(new Warning(item, itemid, warningcode, message));
 	}
-	
-	
+
 	public boolean hasWarnings() {
 		return !this.warnings.isEmpty();
 	}
@@ -1066,14 +1058,40 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		return this.id.intValue() - o.getId().intValue();
 	}
 
-	
-	
 	public class CustomField {
-		//TODO  evalute the type,  base on moodle customfileds types
+		// TODO evalute the type, base on moodle customfileds types
 		private String type;
 		private String value;
 		private String name;
 		private String shortname;
+
+		/**
+		 * @param type the type to set
+		 */
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		/**
+		 * @param value the value to set
+		 */
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		/**
+		 * @param name the name to set
+		 */
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		/**
+		 * @param shortname the shortname to set
+		 */
+		public void setShortname(String shortname) {
+			this.shortname = shortname;
+		}
 
 		public CustomField(String type, String value, String name, String shortname) {
 			this.type = type;
@@ -1228,39 +1246,37 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 			this.message = message;
 		}
 	}
-	
+
 	public enum DescriptionFormat {
-		//(1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
-		
-		MOODLE(0),
-		HTML(1),
-		PLAIN(2),
-		MARKDOWN(4);
-		
+		// (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
+
+		MOODLE(0), HTML(1), PLAIN(2), MARKDOWN(4);
+
 		int value;
+
 		private DescriptionFormat(int value) {
-			this.value=value;
+			this.value = value;
 		}
-		
+
 		public int getValue() {
 			return value;
 		}
 	}
-	
+
 	public enum EmailFormat {
-		//(1 = HTML, 0  = PLAIN )
-		
-		PLAIN(0),
-		HTML(1);
-		
+		// (1 = HTML, 0 = PLAIN )
+
+		PLAIN(0), HTML(1);
+
 		int value;
+
 		private EmailFormat(int value) {
-			this.value=value;
+			this.value = value;
 		}
-		
+
 		public int getValue() {
 			return value;
 		}
 	}
-	
+
 }

@@ -116,6 +116,18 @@ public class MoodleRestUserFunctionsTools {
 						.append(MoodleTools.encode(moodleUsers[i].getAlternatename())).append("&");
 			}
 
+			Set<MoodleUser.CustomField> customFields = moodleUsers[i].getCustomfields();
+			if (customFields != null && !customFields.isEmpty()) {
+				MoodleUser.CustomField[] fields = customFields.toArray(new MoodleUser.CustomField[customFields.size()]);
+				for (int j = 0; j < fields.length; j++) {
+					returnData.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][type]")).append("=")
+							.append(MoodleTools.encode(fields[i].getName())).append("&")
+							.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][value]")).append("=")
+							.append(MoodleTools.encode(fields[i].getValue())).append("&");
+				}
+				customFields=null;
+			}
+			
 			Set<MoodleUser.Preference> preferences = moodleUsers[i].getPreferences();
 			if (preferences != null && !preferences.isEmpty()) {
 				MoodleUser.Preference[] prefs = preferences.toArray(new MoodleUser.Preference[preferences.size()]);
@@ -127,16 +139,7 @@ public class MoodleRestUserFunctionsTools {
 				}
 			}
 
-			Set<MoodleUser.CustomField> customFields = moodleUsers[i].getCustomfields();
-			if (customFields != null && !customFields.isEmpty()) {
-				MoodleUser.CustomField[] fields = customFields.toArray(new MoodleUser.CustomField[customFields.size()]);
-				for (int j = 0; j < fields.length; j++) {
-					returnData.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][type]")).append("=")
-							.append(MoodleTools.encode(fields[i].getName())).append("&")
-							.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][value]")).append("=")
-							.append(MoodleTools.encode(fields[i].getValue())).append("&");
-				}
-			}
+			
 		}
 
 		// Extra Param for create

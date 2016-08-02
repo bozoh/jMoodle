@@ -31,7 +31,7 @@ public class UsersFixture implements TemplateLoader{
 			add("middlename", lastName());
 			add("alternatename", name());
 			add("preferences", has(2).of(MoodleUser.Preference.class,"MoodleRestUserFunctionsToolsTestUser1Preferences"));
-			add("customfields", has(2).of(MoodleUser.Preference.class,"MoodleRestUserFunctionsToolsTestUser1Preferences"));
+			add("customfields", has(2).of(MoodleUser.CustomField.class,"MoodleRestUserFunctionsToolsTestUser1CustomFields"));
             		
 		}});
 		
@@ -40,7 +40,7 @@ public class UsersFixture implements TemplateLoader{
 			add("value", random("1","4", "5"));
 		}});
 		
-		Fixture.of(MoodleUser.Preference.class).addTemplate("MoodleRestUserFunctionsToolsTestUser1CustomFields", new Rule(){{
+		Fixture.of(MoodleUser.CustomField.class).addTemplate("MoodleRestUserFunctionsToolsTestUser1CustomFields", new Rule(){{
 		    add("name", random("brithday", "borndate", "aniversário"));
 		    add("shortname", random("bd", "brn", "niver"));
 		    add("type", "string");
