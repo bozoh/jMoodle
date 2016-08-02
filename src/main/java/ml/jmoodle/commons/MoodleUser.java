@@ -717,8 +717,18 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param name
 	 * @param shortname
 	 */
-	public void addCustomfields(String type, String value, String name, String shortname) {
+	public void addCustomfields(CustomFieldType type, String value, String name, String shortname) {
 		this.customfields.add(new CustomField(type, value, name, shortname));
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 * @param name
+	 * @param shortname
+	 */
+	public void addCustomfields(Date value, String name, String shortname) {
+		this.customfields.add(new CustomField(value, name, shortname));
 	}
 
 	/**
@@ -1059,43 +1069,21 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	}
 
 	public class CustomField {
-		// TODO evalute the type, base on moodle customfileds types
-		private String type;
+		private CustomFieldType type;
 		private String value;
 		private String name;
 		private String shortname;
 
-		/**
-		 * @param type the type to set
-		 */
-		public void setType(String type) {
+		public CustomField(CustomFieldType type, String value, String name, String shortname) {
 			this.type = type;
-		}
-
-		/**
-		 * @param value the value to set
-		 */
-		public void setValue(String value) {
 			this.value = value;
-		}
-
-		/**
-		 * @param name the name to set
-		 */
-		public void setName(String name) {
 			this.name = name;
-		}
-
-		/**
-		 * @param shortname the shortname to set
-		 */
-		public void setShortname(String shortname) {
 			this.shortname = shortname;
 		}
 
-		public CustomField(String type, String value, String name, String shortname) {
-			this.type = type;
-			this.value = value;
+		public CustomField(Date value, String name, String shortname) {
+			this.type = CustomFieldType.DATETIME;
+			this.value = String.valueOf(value.getTime() / 1000l);
 			this.name = name;
 			this.shortname = shortname;
 		}
@@ -1104,7 +1092,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		 * @return the type
 		 */
 		public String getType() {
-			return type;
+			return type.getValue();
 		}
 
 		/**
@@ -1148,26 +1136,10 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		}
 
 		/**
-		 * @param name
-		 *            the name to set
-		 */
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		/**
 		 * @return the value
 		 */
 		public String getValue() {
 			return value;
-		}
-
-		/**
-		 * @param value
-		 *            the value to set
-		 */
-		public void setValue(String value) {
-			this.value = value;
 		}
 
 	}
@@ -1194,26 +1166,10 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		}
 
 		/**
-		 * @param item
-		 *            the item to set
-		 */
-		public void setItem(String item) {
-			this.item = item;
-		}
-
-		/**
 		 * @return the itemid
 		 */
 		public Long getItemid() {
 			return itemid;
-		}
-
-		/**
-		 * @param itemid
-		 *            the itemid to set
-		 */
-		public void setItemid(Long itemid) {
-			this.itemid = itemid;
 		}
 
 		/**
@@ -1224,26 +1180,26 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		}
 
 		/**
-		 * @param warningcode
-		 *            the warningcode to set
-		 */
-		public void setWarningcode(String warningcode) {
-			this.warningcode = warningcode;
-		}
-
-		/**
 		 * @return the message
 		 */
 		public String getMessage() {
 			return message;
 		}
+	}
 
-		/**
-		 * @param message
-		 *            the message to set
-		 */
-		public void setMessage(String message) {
-			this.message = message;
+	public enum CustomFieldType {
+		// checkbox, text, datetime, menu, textarea
+
+		CHECKBOX("checkbox"), TEXT("text"), DATETIME("datetime"), MENU("menu"), TEXTAREA("textarea");
+
+		String value;
+
+		private CustomFieldType(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
 		}
 	}
 
