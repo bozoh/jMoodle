@@ -42,7 +42,7 @@ public class UsersFixture implements TemplateLoader{
 		Fixture.of(MoodleUser.CustomField.class).addTemplate("MoodleRestUserFunctionsToolsTestUser1CustomFields", new Rule(){{
 		    add("name", random("brithday", "borndate", "aniversário"));
 		    add("shortname", random("bd", "brn", "niver"));
-		    add("type", "string");
+		    add("type",  MoodleUser.CustomFieldType.TEXT.getValue());
 		    add("value", random("10101010","100100010", "533122112"));
 		}});
 		

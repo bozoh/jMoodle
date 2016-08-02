@@ -718,7 +718,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param shortname
 	 */
 	public void addCustomfields(CustomFieldType type, String value, String name, String shortname) {
-		this.customfields.add(new CustomField(type, value, name, shortname));
+		this.customfields.add(new CustomField(type.getValue(), value, name, shortname));
 	}
 	
 	/**
@@ -1069,12 +1069,12 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	}
 
 	public class CustomField {
-		private CustomFieldType type;
+		private String type;
 		private String value;
 		private String name;
 		private String shortname;
 
-		public CustomField(CustomFieldType type, String value, String name, String shortname) {
+		public CustomField(String type, String value, String name, String shortname) {
 			this.type = type;
 			this.value = value;
 			this.name = name;
@@ -1082,7 +1082,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		}
 
 		public CustomField(Date value, String name, String shortname) {
-			this.type = CustomFieldType.DATETIME;
+			this.type = CustomFieldType.DATETIME.getValue();
 			this.value = String.valueOf(value.getTime() / 1000l);
 			this.name = name;
 			this.shortname = shortname;
@@ -1092,7 +1092,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		 * @return the type
 		 */
 		public String getType() {
-			return type.getValue();
+			return type;
 		}
 
 		/**
