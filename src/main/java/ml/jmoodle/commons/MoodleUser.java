@@ -1069,7 +1069,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	
 	
 	public class CustomField {
-
+		//TODO  evalute the type,  base on moodle customfileds types
 		private String type;
 		private String value;
 		private String name;

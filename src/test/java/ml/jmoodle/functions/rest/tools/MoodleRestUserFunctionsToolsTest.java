@@ -2,13 +2,21 @@ package ml.jmoodle.functions.rest.tools;
 
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import br.com.six2six.fixturefactory.Fixture;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleRestUserFunctionsToolsTest {
 	private MoodleRestUserFunctionsTools uft = new MoodleRestUserFunctionsTools();
+	
+	@BeforeClass
+	public static void setUp() {
+	    FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
+	}
 
 	@Test
 	public final void testSerializeUsers() {
@@ -17,13 +25,7 @@ public class MoodleRestUserFunctionsToolsTest {
 
 	@Test
 	public final void testSerializeUser() throws Exception {
-		MoodleUser moodleUser = new MoodleUser();
-		moodleUser.setId(33l);
-		moodleUser.setUsername("asas");
-		moodleUser.setFirstname("eeee");
-		moodleUser.setLastname("wwww");
-		moodleUser.setPassword("1212121");
-		moodleUser.setEmail("as2Asss@as.xom");
+		MoodleUser moodleUser =  Fixture.from(MoodleUser.class).gimme("MoodleRestUserFunctionsToolsTestUser1");
 		
 		String userStr = uft.serializeUser(moodleUser);
 		Assert.assertThat(userStr, containsString(MoodleTools.encode("users[0][id]")+"="+MoodleTools.encode(String.valueOf(moodleUser.getId()))));
