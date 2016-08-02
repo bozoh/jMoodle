@@ -63,7 +63,15 @@ public class MoodleConfig {
 		return new URL(this.moodleURL.toString());
 	}
 
-	public static boolean verifyVersion(String mdlVersion) throws MoodleConfigException {
+	/**
+	 * Verify the moodle version and return the moodle version regexp matcher
+	 * throw an Exception if it is a invalid moodle version
+	 * 
+	 * @param mdlVersion
+	 * @return the moodle version regexp matcher
+	 * @throws MoodleConfigException
+	 */
+	public static Matcher verifyVersion(String mdlVersion) throws MoodleConfigException {
 		Pattern versionPattern = Pattern.compile(MoodleConfig.MOODLE_VERSION_PATTERN);
 		Matcher matcher = versionPattern.matcher(mdlVersion);
 		boolean haveMatch = matcher.matches();
@@ -71,7 +79,7 @@ public class MoodleConfig {
 			throw new MoodleConfigException("Invalid moodle version [" + mdlVersion + "]");
 		}
 
-		return true;
+		return matcher;
 	}
 
 }

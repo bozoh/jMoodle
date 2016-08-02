@@ -29,6 +29,14 @@ targetCompatibility = 1.6
 version = '0.0.1-SNAPSHOT'
 
 
+test {
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+		jvmArgs '-Xdebug',
+            '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006'
+    }
+}
+
+
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use 'jcenter' for resolving your dependencies.
@@ -42,6 +50,7 @@ dependencies {
     testCompile "org.mockito:mockito-core:1.10.19"
     testCompile 'org.powermock:powermock-module-junit4:1.6.5'
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+    testCompile 'br.com.six2six:fixture-factory:3.1.0'
     //For auto-generation classes, wiht the annotations, 
     //the generated files source code is in  build/generated/source/apt
     compileOnly files('src/main/resources/jmoodle-annotations-0.0.1-SNAPSHOT.jar')

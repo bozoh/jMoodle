@@ -82,10 +82,13 @@ public class MoodleRestCreateUserTest {
 	public final void testIfGetTheRightFunctionNameByMoodleVersion() throws Exception {
 		// "core_user_create_users", "moodle_user_create_users"
 		// This function chages name in moodle 2.2
+		
 		MoodleRestCreateUser mdlfnc22 = (MoodleRestCreateUser) MoodleWSFunction
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck.getVersion());
-		MoodleRestCreateUser mdlfnc20 = new MoodleRestCreateUser("2.1.0");
 		String fnc22Name = mdlfnc22.getFunctionName();
+		
+		MoodleRestCreateUser mdlfnc20 = new MoodleRestCreateUser("2.1.0");
+		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
 		String fnc20Name = mdlfnc20.getFunctionName();
 
 		assertEquals("core_user_create_users", fnc22Name);

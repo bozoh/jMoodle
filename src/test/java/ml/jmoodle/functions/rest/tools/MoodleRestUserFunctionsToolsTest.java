@@ -1,8 +1,5 @@
 package ml.jmoodle.functions.rest.tools;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.Assert;
 import org.junit.Test;
