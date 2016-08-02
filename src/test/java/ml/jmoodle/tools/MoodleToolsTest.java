@@ -1,9 +1,12 @@
 package ml.jmoodle.tools;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.*;
+
+import static org.mockito.Matchers.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
+
+import java.util.regex.Matcher;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +40,8 @@ public class MoodleToolsTest {
 	@Test
 	public void MoodleToolsCompareVersionCallVerifyVersionTest() throws Exception {
 		PowerMockito.spy(MoodleConfig.class);
-		PowerMockito.doReturn(true).when(MoodleConfig.class, "verifyVersion", anyString());
-				
 		String mdlVersion = "4.1.8";
+		//PowerMockito.doReturn(true).when(MoodleConfig.class, "verifyVersion", anyString());
 		
 		// Verify if verifyVersion is Called
 		MoodleTools.compareVersion(mdlVersion, mdlVersion);
@@ -48,9 +50,6 @@ public class MoodleToolsTest {
 	}
 	@Test
 	public void MoodleToolsCompareVersionTest() throws Exception {
-		PowerMockito.spy(MoodleConfig.class);
-		PowerMockito.doReturn(true).when(MoodleConfig.class, "verifyVersion", anyString());
-
 
 		String bigestMdlVersion = "4.1.9";
 		String mdlVersion = "4.1.8";

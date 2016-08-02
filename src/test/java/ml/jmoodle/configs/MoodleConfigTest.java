@@ -1,16 +1,23 @@
 package ml.jmoodle.configs;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.hamcrest.CoreMatchers.*;
 
 import java.net.URL;
+import java.util.regex.Matcher;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.IsNull;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.api.mockito.PowerMockito;
@@ -38,6 +45,8 @@ public class MoodleConfigTest {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 
+	
+
 	public static void setUpBeforeClass() throws Exception {
 		// MockitoAnnotations.initMocks(MoodleConfigTest.class);
 	}
@@ -47,8 +56,11 @@ public class MoodleConfigTest {
 
 	@Before
 	public void setUp() throws Exception {
+		Matcher matcherMck = PowerMockito.mock(Matcher.class);
 		PowerMockito.spy(MoodleConfig.class);
-		PowerMockito.doReturn(true).when(MoodleConfig.class, "verifyVersion", anyString());
+		PowerMockito.doReturn(matcherMck).when(MoodleConfig.class, "verifyVersion", anyString());
+
+		
 	}
 
 	public void tearDown() throws Exception {
@@ -86,7 +98,7 @@ public class MoodleConfigTest {
 
 	public final void MoodleConfigVerifyVersionTest() throws MoodleConfigException {
 		PowerMockito.when(MoodleConfig.verifyVersion(anyString())).thenCallRealMethod();
-		assert (MoodleConfig.verifyVersion("3.1.1") != null);
+		Assert.assertThat(MoodleConfig.verifyVersion("3.1.1"), isA(Matcher.class));
 	}
 
 }
