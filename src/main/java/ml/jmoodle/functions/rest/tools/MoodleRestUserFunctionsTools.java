@@ -1,6 +1,7 @@
 package ml.jmoodle.functions.rest.tools;
 
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import ml.jmoodle.commons.MoodleUser;
@@ -121,11 +122,10 @@ public class MoodleRestUserFunctionsTools {
 				MoodleUser.CustomField[] fields = customFields.toArray(new MoodleUser.CustomField[customFields.size()]);
 				for (int j = 0; j < fields.length; j++) {
 					returnData.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][type]")).append("=")
-							.append(MoodleTools.encode(fields[i].getName())).append("&")
+							.append(MoodleTools.encode(fields[j].getName())).append("&")
 							.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][value]")).append("=")
-							.append(MoodleTools.encode(fields[i].getValue())).append("&");
+							.append(MoodleTools.encode(fields[j].getValue())).append("&");
 				}
-				customFields=null;
 			}
 			
 			Set<MoodleUser.Preference> preferences = moodleUsers[i].getPreferences();
@@ -133,9 +133,9 @@ public class MoodleRestUserFunctionsTools {
 				MoodleUser.Preference[] prefs = preferences.toArray(new MoodleUser.Preference[preferences.size()]);
 				for (int j = 0; j < prefs.length; j++) {
 					returnData.append(MoodleTools.encode("users[" + i + "][preferences][" + j + "][type]")).append("=")
-							.append(MoodleTools.encode(prefs[i].getName())).append("&")
+							.append(MoodleTools.encode(prefs[j].getName())).append("&")
 							.append(MoodleTools.encode("users[" + i + "][preferences][" + j + "][value]")).append("=")
-							.append(MoodleTools.encode(prefs[i].getValue())).append("&");
+							.append(MoodleTools.encode(prefs[j].getValue())).append("&");
 				}
 			}
 
@@ -148,5 +148,7 @@ public class MoodleRestUserFunctionsTools {
 		//Removing the lats char (&)
 		return returnData.substring(0, returnData.length() - 1);
 	}
+
+	
 
 }

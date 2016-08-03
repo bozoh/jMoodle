@@ -69,7 +69,7 @@ public abstract class MoodleWSFunction {
 		}
 	}
 
-	public abstract String getFunctionStr();
+	public abstract String getFunctionStr() throws MoodleWSFucntionException;
 
 	public abstract String getSinceVersion();
 
