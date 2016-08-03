@@ -1,6 +1,9 @@
 package ml.jmoodle.functions;
 
 import static org.mockito.Matchers.anyString;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -10,25 +13,29 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.tools.MoodleTools;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ MoodleWSFunction.class, MoodleTools.class, MoodleWSFunctions.class })
-public class MoodleWSFunctionTest {
+@PrepareForTest({ MoodleWSFunctionFactory.class, MoodleTools.class, MoodleWSFunctions.class })
+public class MoodleWSFunctionFactoryTest {
 
+	
+	@Rule
+	public MockitoRule rule = MockitoJUnit.rule();
 	// @Mock
 	// Class clazzMock;
 	final String moodleVersion = "2.3.1";
 	final String functionVersion = "3.1.0";
 
-	@Spy
+	@Mock
 	MoodleWSFunction mdlFnctionMock;
 	//
 
@@ -46,14 +53,14 @@ public class MoodleWSFunctionTest {
 	@Before
 	public void setUp() throws Exception {
 		// Spy Static
-		PowerMockito.spy(MoodleWSFunction.class);
-		PowerMockito.doReturn(mdlFnctionMock).when(MoodleWSFunction.class, "factory", anyString());
-		// Normal Spy
-		Mockito.doReturn(functionVersion).when(mdlFnctionMock).getSinceVersion();
+		PowerMockito.spy(MoodleWSFunctionFactory.class);
+		PowerMockito.doReturn(mdlFnctionMock).when(MoodleWSFunctionFactory.class, "factory", anyString(), anyString());
+		
+		when(mdlFnctionMock.getSinceVersion()).thenReturn(functionVersion);
 
 		// Mock an enum, must use powermock
 		PowerMockito.when(classNameMock.getValue()).thenReturn("Doesn't matter");
-		
+
 		PowerMockito.mockStatic(MoodleTools.class);
 	}
 
@@ -65,22 +72,25 @@ public class MoodleWSFunctionTest {
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Test
-	public void testFactoryMethodIsCalled() throws Exception {
-		MoodleWSFunction.getFunction(classNameMock, moodleVersion);
-		PowerMockito.verifyPrivate(MoodleWSFunction.class).invoke("factory", anyString());
+	public void testGetFunctionCallFactoryMethod() throws Exception {
+		MoodleWSFunctionFactory.getFunction(classNameMock, moodleVersion);
+		PowerMockito.verifyPrivate(MoodleWSFunctionFactory.class).invoke("factory", anyString(), anyString());
 	}
 
-	
 	@Test
 	public void testGetFunctionWithMoodleVersionBiggerThenFunctionVersion() throws Exception {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(1);
-		assert (mdlFnctionMock.equals(MoodleWSFunction.getFunction(classNameMock, moodleVersion)));
+		MoodleWSFunction function = (MoodleWSFunction) MoodleWSFunctionFactory.getFunction(classNameMock,
+				moodleVersion);
+		assertThat(function, sameInstance(mdlFnctionMock));
 	}
 
 	@Test
 	public void testGetFunctionWithMoodleVersionEquasThenFunctionVersion() throws Exception {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(0);
-		assert (mdlFnctionMock.equals(MoodleWSFunction.getFunction(classNameMock, moodleVersion)));
+		MoodleWSFunction function = (MoodleWSFunction) MoodleWSFunctionFactory.getFunction(classNameMock,
+				moodleVersion);
+		assertThat(function, sameInstance(mdlFnctionMock));
 	}
 
 }

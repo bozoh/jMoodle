@@ -7,15 +7,16 @@ import java.util.Set;
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.expections.MoodleConfigException;
+import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleRestCreateUserException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
 @MoodleWSFunction(names = { "core_user_create_users", "moodle_user_create_users" })
-public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction {
-	private MoodleRestUserFunctionsTools userFuntionsTools;
+public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	private static final String SINCE_VERSION = "2.0.0";
+	private MoodleRestUserFunctionsTools userFuntionsTools;
 	private Set<MoodleUser> users;
 
 	public MoodleRestCreateUser(String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
@@ -35,8 +36,6 @@ public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction 
 					.append("&").append(getUserFuntionsTools().serliazeUsers(getUsers()));
 			return retVal.toString();
 		} catch (UnsupportedEncodingException e) {
-			throw new MoodleRestCreateUserException(e);
-		} catch (MoodleConfigException e) {
 			throw new MoodleRestCreateUserException(e);
 		}
 
@@ -71,17 +70,28 @@ public class MoodleRestCreateUser extends ml.jmoodle.functions.MoodleWSFunction 
 	}
 
 	/**
-	 * Get the right function name, this funtcions changes the name in 2.2.0
+	 * Get the right function name, this functions changes the name in 2.2.0
+	 * 
+	 * @throws MoodleRestCreateUserException
 	 * 
 	 * @throws MoodleConfigException
 	 */
 	@Override
-	public String getFunctionName() throws MoodleConfigException {
+	public String getFunctionName() throws MoodleRestCreateUserException {
 		// this funtcions changes the name in 2.2.0
-		if ((MoodleTools.compareVersion(mdlVersion, "2.2.0") < 0))
-			return "moodle_user_create_users";
-
+		try {
+			if ((MoodleTools.compareVersion(mdlVersion, "2.2.0") < 0))
+				return "moodle_user_create_users";
+		} catch (MoodleConfigException e) {
+			throw new MoodleRestCreateUserException(e);
+		}
 		return "core_user_create_users";
+	}
+
+	@Override
+	public Object processResponse(String respnse) throws MoodleRestCreateUserException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
