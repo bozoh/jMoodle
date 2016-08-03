@@ -149,6 +149,11 @@ public class MoodleRestUserFunctionsTools {
 		return returnData.substring(0, returnData.length() - 1);
 	}
 
+	public Set<MoodleUser> unSerializeUsers(String response) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

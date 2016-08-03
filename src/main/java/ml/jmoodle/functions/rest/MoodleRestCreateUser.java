@@ -88,9 +88,16 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 		return "core_user_create_users";
 	}
 
+	
+	/**
+	 * Process Create User Response
+	 * 
+	 * @param response Moodle Server Respone in REST Format
+	 * @return A set of MoodleUser
+	 */
 	@Override
-	public Object processResponse(String respnse) throws MoodleRestCreateUserException {
-		// TODO Auto-generated method stub
+	public Object processResponse(String response) throws MoodleRestCreateUserException {
+		//TODO
 		return null;
 	}
 
