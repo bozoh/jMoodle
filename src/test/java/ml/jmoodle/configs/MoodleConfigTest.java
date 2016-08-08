@@ -1,16 +1,14 @@
 package ml.jmoodle.configs;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.hamcrest.CoreMatchers.isA;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.hamcrest.CoreMatchers.*;
+import static org.mockito.Mockito.when;
 
 import java.net.URL;
 import java.util.regex.Matcher;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,6 +22,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import ml.jmoodle.authentications.MoodleAuthentication;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 
 /**
@@ -44,6 +43,9 @@ public class MoodleConfigTest {
 
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
+	
+	@Mock
+	MoodleAuthentication mdlAuthMock;
 
 	
 
@@ -56,6 +58,7 @@ public class MoodleConfigTest {
 
 	@Before
 	public void setUp() throws Exception {
+		when(mdlAuthMock.getAuthentication()).thenReturn("?wstoken=MYTOKEN");
 		Matcher matcherMck = PowerMockito.mock(Matcher.class);
 		PowerMockito.spy(MoodleConfig.class);
 		PowerMockito.doReturn(matcherMck).when(MoodleConfig.class, "verifyVersion", anyString());
@@ -70,22 +73,22 @@ public class MoodleConfigTest {
 	public final void MoodleConfigGetURLTest() throws Exception {
 		URL testUrl = new URL("http://test.com");
 
-		MoodleConfig config2 = new MoodleConfig("http://test.com", "3.1.0");
-		assertEquals(testUrl.toString() + "/webservice/rest/server.php", config2.getMoodleURL().toString());
+		MoodleConfig config2 = new MoodleConfig("http://test.com", mdlAuthMock,"3.1.0");
+		assertEquals(testUrl.toString() + "/webservice/rest/server.php?wstoken=MYTOKEN", config2.getMoodleURL().toString());
 
-		MoodleConfig config3 = new MoodleConfig("test.com", "3.1.0");
-		assertEquals(testUrl.toString() + "/webservice/rest/server.php", config3.getMoodleURL().toString());
+		MoodleConfig config3 = new MoodleConfig("test.com", mdlAuthMock,"3.1.0");
+		assertEquals(testUrl.toString() + "/webservice/rest/server.php?wstoken=MYTOKEN", config3.getMoodleURL().toString());
 	}
 
 	@Test
 	public final void MoodleConfigGetVersionTest() throws Exception {
-		MoodleConfig config = new MoodleConfig("http://test.com", "3.1.4");
+		MoodleConfig config = new MoodleConfig("http://test.com",mdlAuthMock, "3.1.4");
 		assertEquals("3.1.4", config.getVersion());
 	}
 
 	@Test
 	public final void MoodleConfigVerifyVersionIsCalledTest() throws Exception {
-		MoodleConfig config = new MoodleConfig("http://test.com", "3.1.1");
+		MoodleConfig config = new MoodleConfig("http://test.com",mdlAuthMock, "3.1.1");
 		PowerMockito.verifyStatic();
 		MoodleConfig.verifyVersion(eq("3.1.1"));
 	}
