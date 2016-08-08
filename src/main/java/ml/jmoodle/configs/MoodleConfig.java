@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import ml.jmoodle.authentications.MoodleAuthentication;
 
 import ml.jmoodle.configs.expections.MoodleConfigException;
 
@@ -22,6 +23,7 @@ public class MoodleConfig {
 	public static final String MOODLE_VERSION_PATTERN = "^(\\d+)\\.(\\d+)\\.(\\d+)$";
 
 	private StringBuilder moodleURL = new StringBuilder();
+	private MoodleAuthentication mdlAuth;
 	private String version;
 
 	/**
@@ -36,10 +38,10 @@ public class MoodleConfig {
 	 * @throws MoodleConfigException
 	 */
 
-	public MoodleConfig(String moodleURL, String moodleVersion) throws MoodleConfigException {
+	public MoodleConfig(String moodleURL, MoodleAuthentication mdlAuth, String moodleVersion) throws MoodleConfigException {
 		MoodleConfig.verifyVersion(moodleVersion);
 		this.version = moodleVersion;
-
+		this.mdlAuth=mdlAuth; 
 		if (!(moodleURL.trim().toLowerCase().startsWith("http://")
 				|| moodleURL.trim().toLowerCase().startsWith("https://"))) {
 			this.moodleURL.append("http://");
@@ -60,6 +62,7 @@ public class MoodleConfig {
 	 */
 
 	public URL getMoodleURL() throws MalformedURLException {
+		this.moodleURL.append(this.mdlAuth.getAuthentication());
 		return new URL(this.moodleURL.toString());
 	}
 

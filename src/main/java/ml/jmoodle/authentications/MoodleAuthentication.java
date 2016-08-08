@@ -10,7 +10,7 @@ package ml.jmoodle.authentications;
  * @license https://opensource.org/licenses/MIT - MIT License
  *
  */
-interface MoodleAuthentication {
+public interface MoodleAuthentication {
 	/**
 	 * Get the authentication string
 	 * @return Authentication String

@@ -4,7 +4,7 @@ import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 public interface MoodleWSFunction {
 
-	public String getFunctionStr() throws MoodleWSFucntionException;
+	public String getFunctionData() throws MoodleWSFucntionException;
 
 	public String getSinceVersion() throws MoodleWSFucntionException;
 

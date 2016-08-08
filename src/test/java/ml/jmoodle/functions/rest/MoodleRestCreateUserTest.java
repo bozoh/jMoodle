@@ -92,7 +92,7 @@ public class MoodleRestCreateUserTest {
 		MoodleRestCreateUser function1 = (MoodleRestCreateUser) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck.getVersion());
 
-		function1.getFunctionStr();
+		function1.getFunctionData();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -109,7 +109,7 @@ public class MoodleRestCreateUserTest {
 		PowerMockito.doReturn(userFunctionsTools).when(function1, "getUserFuntionsTools");
 
 		function1.setUsers(mdlUsers);
-		function1.getFunctionStr();
+		function1.getFunctionData();
 
 		verify(userFunctionsTools).serliazeUsers(mdlUsers);
 	}
@@ -133,7 +133,7 @@ public class MoodleRestCreateUserTest {
 				.append(MoodleTools.encode(MoodleWSFunctions.CORE_USER_CREATE_USERS.getValue())).append("&")
 				.append(serializedUser);
 		function1.setUsers(mdlUsers);
-		assertThat(function1.getFunctionStr(), equalTo(expectedStr.toString()));
+		assertThat(function1.getFunctionData(), equalTo(expectedStr.toString()));
 
 		expectedStr.delete(0, expectedStr.length());
 
@@ -146,7 +146,7 @@ public class MoodleRestCreateUserTest {
 				.append(MoodleTools.encode(MoodleWSFunctions.MOODLE_USER_CREATE_USERS.getValue())).append("&")
 				.append(serializedUser);
 		function2.setUsers(mdlUsers);
-		assertThat(function2.getFunctionStr(), equalTo(expectedStr.toString()));
+		assertThat(function2.getFunctionData(), equalTo(expectedStr.toString()));
 	}
 
 	@Test
