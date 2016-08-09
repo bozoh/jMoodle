@@ -1,7 +1,6 @@
 package ml.jmoodle.functions.rest.tools;
 
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import ml.jmoodle.commons.MoodleUser;
@@ -117,6 +116,12 @@ public class MoodleRestUserFunctionsTools {
 						.append(MoodleTools.encode(moodleUsers[i].getAlternatename())).append("&");
 			}
 
+			// Extra Param for create, not part of MoodleUser Entity
+			if (moodleUsers[i].isCreatePassword().booleanValue()) {
+				returnData.append(MoodleTools.encode("users[" + i + "][createpassword]")).append("=")
+						.append(MoodleTools.encode("1")).append("&");
+			}
+
 			Set<MoodleUser.CustomField> customFields = moodleUsers[i].getCustomfields();
 			if (customFields != null && !customFields.isEmpty()) {
 				MoodleUser.CustomField[] fields = customFields.toArray(new MoodleUser.CustomField[customFields.size()]);
@@ -141,9 +146,6 @@ public class MoodleRestUserFunctionsTools {
 
 			
 		}
-
-		// Extra Param for create
-		// users[0][createpassword]= int
 
 		//Removing the lats char (&)
 		return returnData.substring(0, returnData.length() - 1);

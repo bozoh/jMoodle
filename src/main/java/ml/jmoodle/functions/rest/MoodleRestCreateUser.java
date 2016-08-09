@@ -1,15 +1,32 @@
 package ml.jmoodle.functions.rest;
 
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
+import ml.jmoodle.functions.MoodleWSFunctionCall;
 import ml.jmoodle.functions.exceptions.MoodleRestCreateUserException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
+import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -17,11 +34,12 @@ import ml.jmoodle.tools.MoodleTools;
 public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	private static final String SINCE_VERSION = "2.0.0";
 	private MoodleRestUserFunctionsTools userFuntionsTools;
-	private Set<MoodleUser> users;
+	// Using map insted a set to set the Users ids
+	private Map<String, MoodleUser> users;
 
-	public MoodleRestCreateUser(String moodleVersion) throws MoodleWSFucntionException, MoodleConfigException {
-		super(moodleVersion);
-		this.users = new LinkedHashSet<MoodleUser>();
+	public MoodleRestCreateUser(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
+		super(moodleConfig);
+		this.users = new TreeMap<String, MoodleUser>();
 		this.userFuntionsTools = new MoodleRestUserFunctionsTools();
 	}
 
@@ -49,19 +67,31 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	 * @return the users
 	 */
 	public Set<MoodleUser> getUsers() {
-		return users;
+		return new HashSet<MoodleUser>(users.values());
 	}
 
 	/**
 	 * @param users
 	 *            the users to set
+	 * @throws MoodleRestCreateUserException
 	 */
-	public void setUsers(Set<MoodleUser> users) {
-		this.users = users;
+	public void setUsers(Set<MoodleUser> users) throws MoodleRestCreateUserException {
+		for (Iterator<MoodleUser> iterator = users.iterator(); iterator.hasNext();) {
+			MoodleUser moodleUser = (MoodleUser) iterator.next();
+			addUser(moodleUser);
+		}
 	}
 
-	public void addUser(MoodleUser user) {
-		this.users.add(user);
+	/**
+	 * 
+	 * @param user
+	 * @throws MoodleRestCreateUserException
+	 *             If a user is already added
+	 */
+	public void addUser(MoodleUser user) throws MoodleRestCreateUserException {
+		if (users.containsKey(user.getUsername()))
+			throw new MoodleRestCreateUserException("User is already added:\n" + user.toString());
+		this.users.put(user.getUsername(), user);
 	}
 
 	@Override
@@ -80,7 +110,7 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	public String getFunctionName() throws MoodleRestCreateUserException {
 		// this funtcions changes the name in 2.2.0
 		try {
-			if ((MoodleTools.compareVersion(mdlVersion, "2.2.0") < 0))
+			if ((MoodleTools.compareVersion(mdlConfig.getVersion(), "2.2.0") < 0))
 				return "moodle_user_create_users";
 		} catch (MoodleConfigException e) {
 			throw new MoodleRestCreateUserException(e);
@@ -88,17 +118,54 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 		return "core_user_create_users";
 	}
 
-	
 	/**
-	 * Process Create User Response
+	 * Call Create User WS Function
 	 * 
-	 * @param response Moodle Server Respone in REST Format
 	 * @return A set of MoodleUser
+	 * @throws MoodleWSFunctionCallException
 	 */
 	@Override
-	public Object processResponse(String response) throws MoodleRestCreateUserException {
-		//TODO
-		return null;
+	public Set<MoodleUser> doCall() throws MoodleRestCreateUserException {
+		MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
+		try {
+			return processResponse(wsFunctionCall.call(this));
+		} catch (MoodleWSFunctionCallException e) {
+			throw new MoodleRestCreateUserException(e);
+		}
+	}
+
+	private Set<MoodleUser> processResponse(Document response) throws MoodleRestCreateUserException {
+		try {
+			//
+			// <?xml version="1.0" encoding="UTF-8" ?>
+			// <RESPONSE>
+			// <MULTIPLE>
+			// <SINGLE>
+			// <KEY name="id">
+			// <VALUE>int</VALUE>
+			// </KEY>
+			// <KEY name="username">
+			// <VALUE>string</VALUE>
+			// </KEY>
+			// </SINGLE>
+			// </MULTIPLE>
+			// </RESPONSE>
+
+			XPath xPath = XPathFactory.newInstance().newXPath();
+			NodeList nodeList = (NodeList) xPath.compile("/RESPONSE/MULTIPLE/SINGLE").evaluate(response,
+					XPathConstants.NODESET);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node singleNode = nodeList.item(i);
+				Map<String, String> singleValuesMap=MoodleRestFunctionTools.getSingleAttributes(singleNode);
+				MoodleUser moodleUser = users.get(singleValuesMap.get("username"));
+				moodleUser.setId(Long.parseLong(singleValuesMap.get("id")));
+			}
+
+		} catch (XPathExpressionException e) {
+			throw new MoodleRestCreateUserException("Erro processing the response:\n" + response.toString());
+		}
+
+		return getUsers();
 	}
 
 }

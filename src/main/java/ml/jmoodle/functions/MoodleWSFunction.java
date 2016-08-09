@@ -10,6 +10,6 @@ public interface MoodleWSFunction {
 
 	public String getFunctionName() throws MoodleWSFucntionException;
 
-	public Object processResponse(String response) throws MoodleWSFucntionException;
+	public Object doCall() throws MoodleWSFucntionException;
 
 }

@@ -23,6 +23,13 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 
+/**
+ *  Classe the coodinates WS function calls
+ * 
+ * @author Carlos Alexandre S. da Fonseca
+ * @copyrigth © 2016 Carlos Alexandre S. da Fonseca
+ * @license https://opensource.org/licenses/MIT - MIT License 
+ */
 public class MoodleWSFunctionCall {
 	private MoodleConfig moodleConfig;
 	private static MoodleWSFunctionCall mfc;
@@ -38,12 +45,12 @@ public class MoodleWSFunctionCall {
 		}
 		return mfc;
 	}
-
+	
 	public Document call(MoodleWSFunction moodleWSFunction) throws MoodleWSFunctionCallException {
 		try {
 			URL mdlURL = moodleConfig.getMoodleURL();
 			String mdlFunction = moodleWSFunction.getFunctionData();
-			String response = doCall(mdlURL, mdlFunction);
+			String response = getResponse(mdlURL, mdlFunction);
 			// Check if it is an empty response
 			if (response.trim().startsWith(CHARACTER_MNEMONIC_ENTITIES))
 				return null;
@@ -51,6 +58,7 @@ public class MoodleWSFunctionCall {
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
 			Document xmlResponse = builder.parse(new ByteArrayInputStream(response.getBytes()));
+			xmlResponse.getDocumentElement().normalize();
 
 			// Will throws an expection if is ErroResponse
 			isErrorResponse(xmlResponse);
@@ -70,7 +78,7 @@ public class MoodleWSFunctionCall {
 
 	}
 
-	private String doCall(URL moodleURL, String functionData) throws IOException {
+	private String getResponse(URL moodleURL, String functionData) throws IOException {
 
 		HttpURLConnection connection = (HttpURLConnection) moodleURL.openConnection();
 		connection.setRequestMethod("POST");

@@ -97,7 +97,7 @@ public class MoodleWSFunctionCallTest {
 		when(mdlAuthMock.getAuthentication()).thenReturn("?wstoken=MYTOKEN");
 		fcntCall = PowerMockito.spy(MoodleWSFunctionCall.getInstance(cfgMock));
 		//The CHARACTER_MNEMONIC_ENTITIES is always injected
-		PowerMockito.doReturn("\n"+CHARACTER_MNEMONIC_ENTITIES).when(fcntCall, "doCall", any(URL.class), anyString());
+		PowerMockito.doReturn("\n"+CHARACTER_MNEMONIC_ENTITIES).when(fcntCall, "getResponse", any(URL.class), anyString());
 
 	}
 
@@ -122,7 +122,7 @@ public class MoodleWSFunctionCallTest {
 	@Test
 	public final void testCallWithResponse() throws Exception {
 		
-		PowerMockito.doReturn(DEFAULT_RESPONSE).when(fcntCall, "doCall", any(URL.class), anyString());
+		PowerMockito.doReturn(DEFAULT_RESPONSE).when(fcntCall, "getResponse", any(URL.class), anyString());
 		Document response = fcntCall.call(fncMock);
 
 		assertEquals(response.getElementsByTagName("RESPONSE").getLength(), 1);
@@ -138,7 +138,7 @@ public class MoodleWSFunctionCallTest {
 	@Test(expected = MoodleWSFunctionCallException.class)
 	public final void testIfErroResponseThrowsException() throws MoodleWSFunctionCallException {
 		try {
-			PowerMockito.doReturn(ERROR_RESPONSE_WITH_DEBUG_INFO).when(fcntCall, "doCall", any(URL.class), anyString());
+			PowerMockito.doReturn(ERROR_RESPONSE_WITH_DEBUG_INFO).when(fcntCall, "getResponse", any(URL.class), anyString());
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		} 
@@ -148,7 +148,7 @@ public class MoodleWSFunctionCallTest {
 
 	public final void testIfErroResponseExceptionHaveTheRightMessage() {
 		try {
-			PowerMockito.doReturn(ERROR_RESPONSE_WITH_DEBUG_INFO).when(fcntCall, "doCall", any(URL.class), anyString());
+			PowerMockito.doReturn(ERROR_RESPONSE_WITH_DEBUG_INFO).when(fcntCall, "getResponse", any(URL.class), anyString());
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

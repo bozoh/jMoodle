@@ -63,10 +63,10 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private String interests;
 	private Date firstaccess;
 	private Date lastaccess;
-	private String auth = "manual";
+	private String auth;
 	private boolean confirmed;
-	private String lang = "en";
-	private String calendartype = "gregorian";
+	private String lang;
+	private String calendartype;
 	private String theme;
 	private String timezone;
 	private int mailformat;
@@ -77,14 +77,25 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private String country;
 	private String profileimageurlsmall;
 	private String profileimageurl;
+
 	private Set<CustomField> customfields;
 	private Set<Preference> preferences;
+
+	// This is not part of moodle entity, but to get some WS functions
+	// easier to implement
+	private Boolean createpassword;
 	private Set<Warning> warnings;
 
 	public MoodleUser() {
 		this.customfields = new LinkedHashSet<CustomField>();
 		this.preferences = new LinkedHashSet<Preference>();
 		this.warnings = new LinkedHashSet<Warning>();
+
+		// Defualt values
+		this.createpassword = new Boolean(false);
+		this.calendartype = "gregorian";
+		this.lang = "en";
+		this.auth = "manual";
 	}
 
 	public MoodleUser(Long id) {
@@ -704,6 +715,23 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	}
 
 	/**
+	 * 
+	 * @return
+	 */
+	public Boolean isCreatePassword() {
+		return this.createpassword;
+	}
+
+	/**
+	 * Set a random password genereation
+	 * 
+	 * @param createPassword
+	 */
+	public void setCreatePassword(boolean createPassword) {
+		this.createpassword = new Boolean(createPassword);
+	}
+
+	/**
 	 * @return the customfields
 	 */
 	public Set<CustomField> getCustomfields() {
@@ -720,7 +748,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	public void addCustomfields(CustomFieldType type, String value, String name, String shortname) {
 		this.customfields.add(new CustomField(type.getValue(), value, name, shortname));
 	}
-	
+
 	/**
 	 * 
 	 * @param value
