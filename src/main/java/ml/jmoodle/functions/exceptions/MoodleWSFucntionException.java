@@ -23,6 +23,11 @@ public class MoodleWSFucntionException extends Exception {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
+
+	public static String errorProcessingResponseMsg(String responseStr) {
+		
+		return "Erro Processing Response:\n"+responseStr;
+	}
 	
 	
 	

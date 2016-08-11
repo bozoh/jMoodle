@@ -27,7 +27,7 @@ public class MoodleRestUserFunctionsToolsTest {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public final void testSerializeUsers() throws Exception {
-		List users= Fixture.from(MoodleUser.class).gimme(3, "MoodleRestUserFunctionsToolsTestUser1");
+		List users= Fixture.from(MoodleUser.class).gimme(3, "MoodleRestUpdateUserFunction");
 		String usersStr = uft.serliazeUsers(new LinkedHashSet<MoodleUser>(users));
 		int index=0;
 		for (Iterator iterator = users.iterator(); iterator.hasNext();) {
@@ -41,7 +41,7 @@ public class MoodleRestUserFunctionsToolsTest {
 
 	@Test
 	public final void testSerializeUser() throws Exception {
-		MoodleUser moodleUser =  Fixture.from(MoodleUser.class).gimme("MoodleRestUserFunctionsToolsTestUser1");
+		MoodleUser moodleUser =  Fixture.from(MoodleUser.class).gimme("MoodleRestUpdateUserFunction");
 		
 		String userStr = uft.serializeUser(moodleUser);
 		assertsUser(userStr, moodleUser, 0);

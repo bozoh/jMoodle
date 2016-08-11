@@ -5,7 +5,6 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.tools.MoodleTools;
 
-
 /**
  * 
  * Base class to create functions
@@ -21,6 +20,7 @@ import ml.jmoodle.tools.MoodleTools;
 public abstract class MoodleWSBaseFunction implements MoodleWSFunction {
 
 	protected static MoodleConfig mdlConfig;
+	protected static final String MOODLE_FUNTION_NAME_PARAM = "wsfunction";
 
 	public MoodleWSBaseFunction(MoodleConfig moodleConfig) throws MoodleWSFucntionException {
 		mdlConfig = moodleConfig;
