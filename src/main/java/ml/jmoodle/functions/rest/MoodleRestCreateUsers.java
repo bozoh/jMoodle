@@ -22,7 +22,7 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.MoodleWSFunctionCall;
-import ml.jmoodle.functions.exceptions.MoodleRestCreateUserException;
+import ml.jmoodle.functions.exceptions.MoodleRestCreateUsersException;
 import ml.jmoodle.functions.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
@@ -40,22 +40,22 @@ import ml.jmoodle.tools.MoodleTools;
  *
  */
 @MoodleWSFunction(names = { "core_user_create_users", "moodle_user_create_users" })
-public class MoodleRestCreateUser extends MoodleWSBaseFunction {
+public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 	private static final String SINCE_VERSION = "2.0.0";
 	private MoodleRestUserFunctionsTools userFuntionsTools;
 	// Using map insted a set to set the Users ids
 	private Map<String, MoodleUser> users;
 
-	public MoodleRestCreateUser(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
+	public MoodleRestCreateUsers(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
 		super(moodleConfig);
 		this.users = new TreeMap<String, MoodleUser>();
 		this.userFuntionsTools = new MoodleRestUserFunctionsTools();
 	}
 
 	@Override
-	public String getFunctionData() throws MoodleRestCreateUserException {
+	public String getFunctionData() throws MoodleRestCreateUsersException {
 		if (getUsers().isEmpty()) {
-			throw new MoodleRestCreateUserException(MoodleRestUsersCommonsErrorMessages.NO_USER_IS_SET_ERROR);
+			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.NO_USER_IS_SET_ERROR);
 		}
 		try {
 			StringBuilder retVal = new StringBuilder();
@@ -64,7 +64,7 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 					.append(getUserFuntionsTools().serliazeUsers(getUsers()));
 			return retVal.toString();
 		} catch (UnsupportedEncodingException e) {
-			throw new MoodleRestCreateUserException(e);
+			throw new MoodleRestCreateUsersException(e);
 		}
 
 	}
@@ -83,9 +83,9 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	/**
 	 * @param users
 	 *            the users to set
-	 * @throws MoodleRestCreateUserException
+	 * @throws MoodleRestCreateUsersException
 	 */
-	public void setUsers(Set<MoodleUser> users) throws MoodleRestCreateUserException {
+	public void setUsers(Set<MoodleUser> users) throws MoodleRestCreateUsersException {
 		for (Iterator<MoodleUser> iterator = users.iterator(); iterator.hasNext();) {
 			MoodleUser moodleUser = (MoodleUser) iterator.next();
 			addUser(moodleUser);
@@ -95,24 +95,24 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	/**
 	 * 
 	 * @param user
-	 * @throws MoodleRestCreateUserException
+	 * @throws MoodleRestCreateUsersException
 	 *             If a user is already added
 	 */
-	public void addUser(MoodleUser user) throws MoodleRestCreateUserException {
+	public void addUser(MoodleUser user) throws MoodleRestCreateUsersException {
 		if (user.getUsername() == null || user.getUsername().trim().isEmpty())
-			throw new MoodleRestCreateUserException(MoodleRestUsersCommonsErrorMessages.mustHave("username", user));
+			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("username", user));
 
 		if (user.getFirstname() == null || user.getFirstname().trim().isEmpty())
-			throw new MoodleRestCreateUserException(MoodleRestUsersCommonsErrorMessages.mustHave("First Name", user));
+			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("First Name", user));
 
 		if (user.getLastname() == null || user.getLastname().trim().isEmpty())
-			throw new MoodleRestCreateUserException(MoodleRestUsersCommonsErrorMessages.mustHave("Last Name", user));
+			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("Last Name", user));
 
 		if (user.getEmail() == null || user.getEmail().trim().isEmpty())
-			throw new MoodleRestCreateUserException(
+			throw new MoodleRestCreateUsersException(
 					MoodleRestUsersCommonsErrorMessages.mustHave("Email address", user));
 		if (users.containsKey(user.getUsername()))
-			throw new MoodleRestCreateUserException("User is already added:\n" + user.toString());
+			throw new MoodleRestCreateUsersException("User is already added:\n" + user.toString());
 
 		this.users.put(user.getUsername(), user);
 	}
@@ -125,18 +125,18 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	/**
 	 * Get the right function name, this functions changes the name in 2.2.0
 	 * 
-	 * @throws MoodleRestCreateUserException
+	 * @throws MoodleRestCreateUsersException
 	 * 
 	 * @throws MoodleConfigException
 	 */
 	@Override
-	public String getFunctionName() throws MoodleRestCreateUserException {
+	public String getFunctionName() throws MoodleRestCreateUsersException {
 		// this funtcions changes the name in 2.2.0
 		try {
 			if ((MoodleTools.compareVersion(mdlConfig.getVersion(), "2.2.0") < 0))
 				return "moodle_user_create_users";
 		} catch (MoodleConfigException e) {
-			throw new MoodleRestCreateUserException(e);
+			throw new MoodleRestCreateUsersException(e);
 		}
 		return "core_user_create_users";
 	}
@@ -148,16 +148,16 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 	 * @throws MoodleWSFunctionCallException
 	 */
 	@Override
-	public Set<MoodleUser> doCall() throws MoodleRestCreateUserException {
+	public Set<MoodleUser> doCall() throws MoodleRestCreateUsersException {
 		MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
 		try {
 			return processResponse(wsFunctionCall.call(this));
 		} catch (MoodleWSFunctionCallException e) {
-			throw new MoodleRestCreateUserException(e);
+			throw new MoodleRestCreateUsersException(e);
 		}
 	}
 
-	private Set<MoodleUser> processResponse(Document response) throws MoodleRestCreateUserException {
+	private Set<MoodleUser> processResponse(Document response) throws MoodleRestCreateUsersException {
 		try {
 			//
 			// <?xml version="1.0" encoding="UTF-8" ?>
@@ -185,7 +185,7 @@ public class MoodleRestCreateUser extends MoodleWSBaseFunction {
 			}
 
 		} catch (XPathExpressionException e) {
-			throw new MoodleRestCreateUserException(
+			throw new MoodleRestCreateUsersException(
 					MoodleWSFucntionException.errorProcessingResponseMsg(response.toString()));
 		}
 

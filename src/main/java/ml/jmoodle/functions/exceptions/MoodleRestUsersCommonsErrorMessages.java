@@ -10,7 +10,7 @@ public class MoodleRestUsersCommonsErrorMessages {
 
 	public static final String NO_USER_IS_SET_ERROR = "No users is set";
 
-	public static final String mustHave(String name, MoodleUser mdlUser) {
+	public static final String mustHave(String name, Object obj) {
 		StringBuilder msg = new StringBuilder();
 		msg.append("User MUST HAVE a");
 		if (name.toLowerCase().charAt(0) == 'a' || name.toLowerCase().charAt(0) == 'e'
@@ -18,7 +18,7 @@ public class MoodleRestUsersCommonsErrorMessages {
 				|| name.toLowerCase().charAt(0) == 'u') {
 			msg.append("n");
 		}
-		msg.append(" ").append(name).append(":\n").append(mdlUser.toString());
+		msg.append(" ").append(name).append(":\n").append(obj.toString());
 
 		return msg.toString();
 	}

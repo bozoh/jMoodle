@@ -35,14 +35,14 @@ import ml.jmoodle.functions.MoodleWSFunction;
 import ml.jmoodle.functions.MoodleWSFunctionCall;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
-import ml.jmoodle.functions.exceptions.MoodleRestUpdateUserException;
+import ml.jmoodle.functions.exceptions.MoodleRestUpdateUsersException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.fixtures.UsersFixture;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ MoodleTools.class, MoodleRestUpdateUser.class, MoodleWSFunctionCall.class })
+@PrepareForTest({ MoodleTools.class, MoodleRestUpdateUsers.class, MoodleWSFunctionCall.class })
 public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 	URL mdlUrl;
 
@@ -72,14 +72,14 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 				configMck);
 		MoodleWSFunction function2 = MoodleWSFunctionFactory.getFunction(MoodleWSFunctions.MOODLE_USER_UPDATE_USERS,
 				configMck);
-		assertThat(function1, instanceOf(MoodleRestUpdateUser.class));
-		assertThat(function2, instanceOf(MoodleRestUpdateUser.class));
+		assertThat(function1, instanceOf(MoodleRestUpdateUsers.class));
+		assertThat(function2, instanceOf(MoodleRestUpdateUsers.class));
 	}
 
 	@Test
 	public final void testIfReturnTheRightAddedVersion() throws Exception {
 		// This function id added in 2.0.0
-		MoodleRestUpdateUser createUser = new MoodleRestUpdateUser(configMck);
+		MoodleRestUpdateUsers createUser = new MoodleRestUpdateUsers(configMck);
 		assertEquals("2.0.0", createUser.getSinceVersion());
 	}
 
@@ -88,7 +88,7 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 			 {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
 		when(configMck.getVersion()).thenReturn("1.4.0");
-		new MoodleRestUpdateUser(configMck);
+		new MoodleRestUpdateUsers(configMck);
 
 	}
 	
@@ -101,27 +101,27 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 		user1.setId(null);
 		user2.setId(0l);
 
-		MoodleRestUpdateUser function1 = (MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers function1 = (MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck);
 
 		try {
 			function1.addUser(user1);
-		} catch (MoodleRestUpdateUserException e) {
-			assertThat(e, instanceOf(MoodleRestUpdateUserException.class));
+		} catch (MoodleRestUpdateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestUpdateUsersException.class));
 		}
 
 		try {
 			function1.addUser(user2);
-		} catch (MoodleRestUpdateUserException e) {
-			assertThat(e, instanceOf(MoodleRestUpdateUserException.class));
+		} catch (MoodleRestUpdateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestUpdateUsersException.class));
 		}
 	}
 
-	@Test(expected = MoodleRestUpdateUserException.class)
+	@Test(expected = MoodleRestUpdateUsersException.class)
 	public final void testIfGetFunctionDataThrowExceptionWhenNoUsersIsSet()
 			throws MoodleWSFucntionException, MoodleConfigException {
 
-		MoodleRestUpdateUser function1 = (MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers function1 = (MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck);
 
 		function1.getFunctionData();
@@ -135,7 +135,7 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 				Fixture.from(MoodleUser.class).gimme(3, "MoodleRestUpdateUserFunction"));
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
 
-		MoodleRestUpdateUser function1 = PowerMockito.spy((MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers function1 = PowerMockito.spy((MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck));
 
 		PowerMockito.doReturn(userFunctionsTools).when(function1, "getUserFuntionsTools");
@@ -154,7 +154,7 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
 		when(userFunctionsTools.serliazeUsers(anySet())).thenReturn(serializedUser);
 
-		MoodleRestUpdateUser function1 = PowerMockito.spy((MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers function1 = PowerMockito.spy((MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck));
 		// PowerMockito.doReturn(mdlUsers).when(function1, "getUsers");
 		PowerMockito.doReturn(userFunctionsTools).when(function1, "getUserFuntionsTools");
@@ -169,7 +169,7 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 		expectedStr.delete(0, expectedStr.length());
 
 		when(configMck.getVersion()).thenReturn("2.1.3");
-		MoodleRestUpdateUser function2 = PowerMockito.spy((MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers function2 = PowerMockito.spy((MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck));
 		// PowerMockito.doReturn(mdlUsers).when(function2, "getUsers");
 		PowerMockito.doReturn(userFunctionsTools).when(function2, "getUserFuntionsTools");
@@ -188,12 +188,12 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 		// "core_user_create_users", "moodle_user_create_users"
 		// This function chages name in moodle 2.2
 
-		MoodleRestUpdateUser mdlfnc22 = (MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers mdlfnc22 = (MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck);
 		String fnc22Name = mdlfnc22.getFunctionName();
 
 		when(configMck.getVersion()).thenReturn("2.1.0");
-		MoodleRestUpdateUser mdlfnc20 = new MoodleRestUpdateUser(configMck);
+		MoodleRestUpdateUsers mdlfnc20 = new MoodleRestUpdateUsers(configMck);
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
 		String fnc20Name = mdlfnc20.getFunctionName();
 
@@ -211,7 +211,7 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
 		PowerMockito.when(MoodleWSFunctionCall.getInstance(any(MoodleConfig.class))).thenReturn(wsFunctionCallMck);
 
-		MoodleRestUpdateUser mdlfnc = (MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers mdlfnc = (MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck);
 		
 		
@@ -238,7 +238,7 @@ public class MoodleRestUpdateUserTest implements MoodleRestFunctionsCommonsTest{
 		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
 		PowerMockito.when(MoodleWSFunctionCall.getInstance(any(MoodleConfig.class))).thenReturn(wsFunctionCallMck);
 
-		MoodleRestUpdateUser mdlfnc = (MoodleRestUpdateUser) MoodleWSFunctionFactory
+		MoodleRestUpdateUsers mdlfnc = (MoodleRestUpdateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_UPDATE_USERS, configMck);
 
 		

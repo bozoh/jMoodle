@@ -35,14 +35,14 @@ import ml.jmoodle.functions.MoodleWSFunction;
 import ml.jmoodle.functions.MoodleWSFunctionCall;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
-import ml.jmoodle.functions.exceptions.MoodleRestCreateUserException;
+import ml.jmoodle.functions.exceptions.MoodleRestCreateUsersException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.fixtures.UsersFixture;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ MoodleTools.class, MoodleRestCreateUser.class, MoodleWSFunctionCall.class })
+@PrepareForTest({ MoodleTools.class, MoodleRestCreateUsers.class, MoodleWSFunctionCall.class })
 public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest {
 	URL mdlUrl;
 
@@ -72,14 +72,14 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 				configMck);
 		MoodleWSFunction function2 = MoodleWSFunctionFactory.getFunction(MoodleWSFunctions.MOODLE_USER_CREATE_USERS,
 				configMck);
-		assertThat(function1, instanceOf(MoodleRestCreateUser.class));
-		assertThat(function2, instanceOf(MoodleRestCreateUser.class));
+		assertThat(function1, instanceOf(MoodleRestCreateUsers.class));
+		assertThat(function2, instanceOf(MoodleRestCreateUsers.class));
 	}
 
 	@Test
 	public final void testIfReturnTheRightAddedVersion() throws Exception {
 		// This function id added in 2.0.0
-		MoodleRestCreateUser createUser = new MoodleRestCreateUser(configMck);
+		MoodleRestCreateUsers createUser = new MoodleRestCreateUsers(configMck);
 		assertEquals("2.0.0", createUser.getSinceVersion());
 	}
 
@@ -88,15 +88,15 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 			throws MoodleConfigException, MoodleWSFucntionException {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
 		when(configMck.getVersion()).thenReturn("1.4.0");
-		new MoodleRestCreateUser(configMck);
+		new MoodleRestCreateUsers(configMck);
 
 	}
 
-	@Test(expected = MoodleRestCreateUserException.class)
+	@Test(expected = MoodleRestCreateUsersException.class)
 	public final void testIfGetFunctionStrThrowExceptionWhenNoUsersIsSet()
 			throws MoodleWSFucntionException, MoodleConfigException {
 
-		MoodleRestCreateUser function1 = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		function1.getFunctionData();
@@ -110,7 +110,7 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 				Fixture.from(MoodleUser.class).gimme(3, "MoodleRestCreateUserFunctionUser"));
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
 
-		MoodleRestCreateUser function1 = PowerMockito.spy((MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = PowerMockito.spy((MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck));
 
 		PowerMockito.doReturn(userFunctionsTools).when(function1, "getUserFuntionsTools");
@@ -129,7 +129,7 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
 		when(userFunctionsTools.serliazeUsers(anySet())).thenReturn(serializedUser);
 
-		MoodleRestCreateUser function1 = PowerMockito.spy((MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = PowerMockito.spy((MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck));
 		// PowerMockito.doReturn(mdlUsers).when(function1, "getUsers");
 		PowerMockito.doReturn(userFunctionsTools).when(function1, "getUserFuntionsTools");
@@ -144,7 +144,7 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		expectedStr.delete(0, expectedStr.length());
 
 		when(configMck.getVersion()).thenReturn("2.1.3");
-		MoodleRestCreateUser function2 = PowerMockito.spy((MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function2 = PowerMockito.spy((MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck));
 		// PowerMockito.doReturn(mdlUsers).when(function2, "getUsers");
 		PowerMockito.doReturn(userFunctionsTools).when(function2, "getUserFuntionsTools");
@@ -156,12 +156,12 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		assertThat(function2.getFunctionData(), equalTo(expectedStr.toString()));
 	}
 
-	@Test(expected = MoodleRestCreateUserException.class)
+	@Test(expected = MoodleRestCreateUsersException.class)
 	public final void testIfAddDuplicateUserThrowsExecpiton() throws MoodleWSFucntionException, MoodleConfigException {
 		MoodleUser user1 = Fixture.from(MoodleUser.class).gimme("MoodleRestCreateUserFunctionUser");
 		MoodleUser user2 = Fixture.from(MoodleUser.class).gimme("MoodleRestCreateUserFunctionUser");
 
-		MoodleRestCreateUser function1 = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		function1.addUser(user2);
@@ -178,19 +178,19 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		user1.setUsername(null);
 		user2.setUsername("");
 
-		MoodleRestCreateUser function1 = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		try {
 			function1.addUser(user1);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 
 		try {
 			function1.addUser(user2);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 	}
 
@@ -203,19 +203,19 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		user1.setFirstname(null);
 		user2.setFirstname("");
 
-		MoodleRestCreateUser function1 = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		try {
 			function1.addUser(user1);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 
 		try {
 			function1.addUser(user2);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 	}
 
@@ -228,19 +228,19 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		user1.setLastname(null);
 		user2.setLastname("");
 
-		MoodleRestCreateUser function1 = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		try {
 			function1.addUser(user1);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 
 		try {
 			function1.addUser(user2);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 	}
 
@@ -253,19 +253,19 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		user1.setEmail(null);
 		user2.setEmail("");
 
-		MoodleRestCreateUser function1 = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers function1 = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		try {
 			function1.addUser(user1);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 
 		try {
 			function1.addUser(user2);
-		} catch (MoodleRestCreateUserException e) {
-			assertThat(e, instanceOf(MoodleRestCreateUserException.class));
+		} catch (MoodleRestCreateUsersException e) {
+			assertThat(e, instanceOf(MoodleRestCreateUsersException.class));
 		}
 	}
 
@@ -274,12 +274,12 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 		// "core_user_create_users", "moodle_user_create_users"
 		// This function chages name in moodle 2.2
 
-		MoodleRestCreateUser mdlfnc22 = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers mdlfnc22 = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 		String fnc22Name = mdlfnc22.getFunctionName();
 
 		when(configMck.getVersion()).thenReturn("2.1.0");
-		MoodleRestCreateUser mdlfnc20 = new MoodleRestCreateUser(configMck);
+		MoodleRestCreateUsers mdlfnc20 = new MoodleRestCreateUsers(configMck);
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
 		String fnc20Name = mdlfnc20.getFunctionName();
 
@@ -292,13 +292,13 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 	public final void testIfDoCallMethodCallsMoodleWSFunctionCallCallMethod() throws Exception {
 
 		UsersFixture usersFixture=Fixture.from(UsersFixture.class).gimme("MoodleRestCreateUserResponse");
-		Document userResponse = usersFixture.getRespone();
+		Document userResponse = usersFixture.getAddUsersRespone();
 		MoodleWSFunctionCall wsFunctionCallMck = mock(MoodleWSFunctionCall.class);
 		when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(userResponse);
 		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
 		PowerMockito.when(MoodleWSFunctionCall.getInstance(any(MoodleConfig.class))).thenReturn(wsFunctionCallMck);
 
-		MoodleRestCreateUser mdlfnc = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers mdlfnc = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		mdlfnc.setUsers(usersFixture.getMdlUsers());
@@ -317,13 +317,13 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 	public final void testIfDoCallRetunrsMoodleUserColletion() throws Exception {
 
 		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestCreateUserResponse");
-		Document userResponse = usersFixture.getRespone();
+		Document userResponse = usersFixture.getAddUsersRespone();
 		MoodleWSFunctionCall wsFunctionCallMck = mock(MoodleWSFunctionCall.class);
 		when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(userResponse);
 		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
 		PowerMockito.when(MoodleWSFunctionCall.getInstance(any(MoodleConfig.class))).thenReturn(wsFunctionCallMck);
 
-		MoodleRestCreateUser mdlfnc = (MoodleRestCreateUser) MoodleWSFunctionFactory
+		MoodleRestCreateUsers mdlfnc = (MoodleRestCreateUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		Set<MoodleUser> usersToAdd = usersFixture.getMdlUsers();

@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.functions.rest.MoodleRestGetUsers;
+//import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleRestUserFunctionsTools {
@@ -132,7 +134,7 @@ public class MoodleRestUserFunctionsTools {
 							.append(MoodleTools.encode(fields[j].getValue())).append("&");
 				}
 			}
-			
+
 			Set<MoodleUser.Preference> preferences = moodleUsers[i].getPreferences();
 			if (preferences != null && !preferences.isEmpty()) {
 				MoodleUser.Preference[] prefs = preferences.toArray(new MoodleUser.Preference[preferences.size()]);
@@ -144,10 +146,9 @@ public class MoodleRestUserFunctionsTools {
 				}
 			}
 
-			
 		}
 
-		//Removing the lats char (&)
+		// Removing the lats char (&)
 		return returnData.substring(0, returnData.length() - 1);
 	}
 
@@ -156,6 +157,23 @@ public class MoodleRestUserFunctionsTools {
 		return null;
 	}
 
-	
+	public String serliazeCriterias(Set<MoodleRestGetUsers.Criteria> criterias) throws UnsupportedEncodingException {
+		return serliazeCriterias(criterias.toArray(new MoodleRestGetUsers.Criteria[criterias.size()]));
+
+	}
+
+	// criteria[0][key]= string
+	// criteria[0][value]= string
+	private String serliazeCriterias(MoodleRestGetUsers.Criteria[] criterias) throws UnsupportedEncodingException {
+		StringBuilder returnData = new StringBuilder();
+		for (int i = 0; i < criterias.length; i++) {
+			returnData.append(MoodleTools.encode("criteria[")).append(i).append(MoodleTools.encode("][key]"))
+					.append("=").append(MoodleTools.encode(criterias[i].getName())).append("&")
+					.append(MoodleTools.encode("criteria[")).append(i).append(MoodleTools.encode("][value]"))
+					.append("=").append(MoodleTools.encode(criterias[i].getValue())).append("&");
+		}
+
+		return returnData.substring(0, returnData.length() - 1);
+	}
 
 }
