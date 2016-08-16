@@ -24,7 +24,7 @@ public class MoodleRestFunctionTools {
 			Node key = keysNode.item(i);
 			if (key.getNodeName().equals("KEY")) {
 				Element nodeKey = (Element) key;
-				returnMap.put(nodeKey.getAttribute("name"), key.getFirstChild().getNodeValue());
+				returnMap.put(nodeKey.getAttribute("name"), key.getFirstChild().getFirstChild().getNodeValue());
 			}
 
 		}
