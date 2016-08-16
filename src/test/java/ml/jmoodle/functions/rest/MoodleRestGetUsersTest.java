@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -37,13 +38,14 @@ import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleRestGetUsersException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.functions.rest.fixtures.UsersFixture;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ MoodleTools.class, MoodleRestGetUsers.class, MoodleWSFunctionCall.class })
-public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
+public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 	URL mdlUrl;
 
 	MoodleConfig configMck;
@@ -64,16 +66,17 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 
 		PowerMockito.mockStatic(MoodleTools.class);
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(0);
+		PowerMockito.when(MoodleTools.encode(anyString())).thenCallRealMethod();
 	}
 
 	@Test
 	public final void testIfGetTheRightClassUsingFactory() throws Exception {
-	 
+
 		MoodleWSFunction function = MoodleWSFunctionFactory.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS,
 				configMck);
-		
+
 		assertThat(function, instanceOf(MoodleRestGetUsers.class));
-		
+
 	}
 
 	@Test
@@ -84,20 +87,23 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 	}
 
 	@Test(expected = MoodleWSFucntionException.class)
-	public final void testIfThrowExceptionIfWrongMoodleVersionInConstructor() throws MoodleConfigException, MoodleWSFucntionException
-			 {
+	public final void testIfThrowExceptionIfWrongMoodleVersionInConstructor()
+			throws MoodleConfigException, MoodleWSFucntionException {
 		PowerMockito.when(MoodleTools.compareVersion(anyString(), anyString())).thenReturn(-1);
 		when(configMck.getVersion()).thenReturn("1.4.0");
 		new MoodleRestGetUsers(configMck);
 
 	}
-	
+
 	@Test
-	public final void testIfAddCriteriaWithoutKeyThrowsExecpiton() throws MoodleWSFucntionException, MoodleConfigException
-			{
-		MoodleRestGetUsers.Criteria criteria1 = Fixture.from(MoodleRestGetUsers.Criteria.class).gimme("MoodleRestGetUsersCriteria");
-		MoodleRestGetUsers.Criteria criteria2 = Fixture.from(MoodleRestGetUsers.Criteria.class).gimme("MoodleRestGetUsersCriteria");
-		
+	public final void testIfAddCriteriaWithoutKeyThrowsExecpiton()
+			throws Exception {
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+		Set<Criteria> criterias = usersFixture.getCriterias();
+		Iterator<Criteria> i = criterias.iterator();
+		MoodleRestGetUsers.Criteria criteria1 = i.next();
+		MoodleRestGetUsers.Criteria criteria2 = i.next();
+
 		criteria1.setName(null);
 		criteria1.setName("");
 
@@ -131,8 +137,9 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 	@Test
 	public final void testIfGetFunctionDataCallMoodleRestUserFunctioTooleSerializeCriterias() throws Exception {
 
-		Set<MoodleRestGetUsers.Criteria> criterias = new LinkedHashSet(
-				Fixture.from(MoodleRestGetUsers.Criteria.class).gimme(3, "MoodleRestGetUsersCriteria"));
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+
+		Set<MoodleRestGetUsers.Criteria> criterias = usersFixture.getCriterias();
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
 
 		MoodleRestGetUsers function1 = PowerMockito.spy((MoodleRestGetUsers) MoodleWSFunctionFactory
@@ -149,8 +156,9 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public final void testIfGetTheRightFunctionStrByMoodleVersion() throws Exception {
-		Set<MoodleRestGetUsers.Criteria> criterias = new LinkedHashSet(
-				Fixture.from(MoodleRestGetUsers.Criteria.class).gimme(3, "MoodleRestGetUsersCriteria"));
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+
+		Set<MoodleRestGetUsers.Criteria> criterias = usersFixture.getCriterias();
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
 		when(userFunctionsTools.serliazeUsers(anySet())).thenReturn(serializedCriterias);
 
@@ -168,8 +176,6 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 
 	}
 
-	
-
 	@Test
 	public final void testIfGetTheRightFunctionNameByMoodleVersion() throws Exception {
 		// "core_user_create_users", "moodle_user_create_users"
@@ -179,7 +185,6 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck);
 		String fncName = mdlfnc.getFunctionName();
 
-		
 		assertEquals("core_user_get_users", fncName);
 	}
 
@@ -194,11 +199,11 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 
 		MoodleRestGetUsers mdlfnc = (MoodleRestGetUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck);
-		
-		
+
+		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUserResponse");
+
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		Set<MoodleRestGetUsers.Criteria> criterias = new LinkedHashSet(
-				Fixture.from(MoodleRestGetUsers.Criteria.class).gimme(3, "MoodleRestGetUsersCriteria"));
+		Set<MoodleRestGetUsers.Criteria> criterias = fixture.getCriterias();
 
 		mdlfnc.setCriterias(criterias);
 		try {
@@ -213,7 +218,6 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 	@Test
 	public final void testIfDoCallRetunrsUsersSet() throws Exception {
 
-		
 		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
 		Document userResponse = usersFixture.getGetUsersRespone();
 		MoodleWSFunctionCall wsFunctionCallMck = mock(MoodleWSFunctionCall.class);
@@ -234,20 +238,17 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest{
 			assertThat(moodleUser, instanceOf(MoodleUser.class));
 			assertThat(expetedUserResponse, hasItem(moodleUser));
 		}
-		
 
 	}
-	
-	public static void main(String args[]) throws UnsupportedEncodingException, MoodleWSFucntionException, MoodleConfigException {
+
+	public static void main(String args[])
+			throws UnsupportedEncodingException, MoodleWSFucntionException, MoodleConfigException {
 		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
-		UsersFixture fixture=Fixture.from(UsersFixture.class).gimme("MoodleRestGetUserResponse");
+		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUserResponse");
 		Set<MoodleRestGetUsers.Criteria> criterias = fixture.getCriterias();
-		MoodleRestUserFunctionsTools tools= new MoodleRestUserFunctionsTools();
+		MoodleRestUserFunctionsTools tools = new MoodleRestUserFunctionsTools();
 		System.out.println(tools.serliazeCriterias(criterias));
-		
-		
+
 	}
 
-	
-	
 }
