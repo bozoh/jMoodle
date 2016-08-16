@@ -1,15 +1,17 @@
 package ml.jmoodle.functions.exceptions;
 
-import ml.jmoodle.commons.MoodleUser;
-
 public class MoodleRestUsersCommonsErrorMessages {
 
 	public MoodleRestUsersCommonsErrorMessages() {
 
 	}
 
-	public static final String NO_USER_IS_SET_ERROR = "No users is set";
-
+	public static final String notSet(String name) {
+		StringBuilder msg = new StringBuilder();
+		msg.append("No ").append(name).append(" is set");
+		return msg.toString();
+	}
+	
 	public static final String mustHave(String name, Object obj) {
 		StringBuilder msg = new StringBuilder();
 		msg.append("User MUST HAVE a");

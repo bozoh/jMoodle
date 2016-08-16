@@ -1,5 +1,6 @@
 package ml.jmoodle.functions.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import ml.jmoodle.functions.exceptions.MoodleRestGetUsersException;
 import ml.jmoodle.functions.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleTools;
 
 /**
  * Get User function by criteria
@@ -51,8 +53,18 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
-		// TODO Auto-generated method stub
-		return null;
+		if (getCriterias().isEmpty()) {
+			throw new MoodleRestGetUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Criteria"));
+		}
+		try {
+			StringBuilder returnData = new StringBuilder();
+			returnData.append(MoodleTools.encode("wsfunction")).append("=")
+					.append(MoodleTools.encode(getFunctionName())).append("&")
+					.append(getUserFuntionsTools().serliazeCriterias(getCriterias()));
+			return returnData.toString();
+		} catch (UnsupportedEncodingException e) {
+			throw new MoodleRestGetUsersException(e);
+		}
 	}
 
 	@Override
@@ -62,8 +74,7 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 
 	@Override
 	public String getFunctionName() throws MoodleWSFucntionException {
-		// TODO Auto-generated method stub
-		return null;
+		return "core_user_get_users";
 	}
 
 	@Override
@@ -73,7 +84,7 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 	}
 
 	public void addCriteria(Criteria criteria) throws MoodleRestGetUsersException {
-		if (criteria == null || criteria.getName() == null | criteria.getName().trim().isEmpty())
+		if (criteria == null || criteria.getName() == null || criteria.getName().trim().isEmpty())
 			throw new MoodleRestGetUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("name", criteria));
 		this.criterias.add(criteria);
 	}

@@ -160,7 +160,7 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 
 		Set<MoodleRestGetUsers.Criteria> criterias = usersFixture.getCriterias();
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
-		when(userFunctionsTools.serliazeUsers(anySet())).thenReturn(serializedCriterias);
+		when(userFunctionsTools.serliazeCriterias(anySet())).thenReturn(serializedCriterias);
 
 		MoodleRestGetUsers function1 = PowerMockito.spy((MoodleRestGetUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck));
@@ -169,7 +169,7 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 
 		StringBuilder expectedStr = new StringBuilder();
 		expectedStr.append(MoodleTools.encode("wsfunction")).append("=")
-				.append(MoodleTools.encode(MoodleWSFunctions.CORE_USER_GET_USERS.getValue())).append("&")
+				.append(MoodleTools.encode("core_user_get_users")).append("&")
 				.append(serializedCriterias);
 		function1.setCriterias(criterias);
 		assertThat(function1.getFunctionData(), equalTo(expectedStr.toString()));
@@ -200,7 +200,7 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 		MoodleRestGetUsers mdlfnc = (MoodleRestGetUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck);
 
-		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUserResponse");
+		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Set<MoodleRestGetUsers.Criteria> criterias = fixture.getCriterias();

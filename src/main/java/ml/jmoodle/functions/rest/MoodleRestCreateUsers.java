@@ -55,7 +55,7 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 	@Override
 	public String getFunctionData() throws MoodleRestCreateUsersException {
 		if (getUsers().isEmpty()) {
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.NO_USER_IS_SET_ERROR);
+			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.notSet("user"));
 		}
 		try {
 			StringBuilder retVal = new StringBuilder();
