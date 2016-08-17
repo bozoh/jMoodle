@@ -1,9 +1,21 @@
 package ml.jmoodle.functions.rest.tools;
 
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.commons.MoodleUser.CustomFieldType;
 import ml.jmoodle.functions.rest.MoodleRestGetUsers;
 //import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.tools.MoodleTools;
@@ -152,9 +164,140 @@ public class MoodleRestUserFunctionsTools {
 		return returnData.substring(0, returnData.length() - 1);
 	}
 
-	public Set<MoodleUser> unSerializeUsers(String response) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<MoodleUser> unSerializeUsers(Document response) throws XPathExpressionException {
+		// <RESPONSE>").append("<SINGLE>")
+		// .append("<KEY name=\"users\">").append("<MULTIPLE>
+		Set<MoodleUser> result = new LinkedHashSet<MoodleUser>();
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		NodeList nodeList = (NodeList) xPath.compile("/RESPONSE/SINGLE/KEY[@name=\"users\"]/MULTIPLE/SINGLE")
+				.evaluate(response, XPathConstants.NODESET);
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node singleNode = nodeList.item(i);
+			Map<String, Object> singleValuesMap = MoodleRestFunctionTools.getSingleAttributes(singleNode);
+			result.add(map2user(singleValuesMap));
+		}
+
+		// TODO Process warnings, but not in this method
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	private MoodleUser map2user(Map<String, Object> valuesMap) {
+		if (valuesMap == null || valuesMap.isEmpty())
+			return null;
+
+		MoodleUser user = new MoodleUser();
+		// Must Have attributes
+		user.setId(Long.valueOf((String) valuesMap.get("id")));
+		user.setUsername((String) valuesMap.get("username"));
+		user.setFirstname((String) valuesMap.get("firstname"));
+		user.setLastname((String) valuesMap.get("lastname"));
+		user.setEmail((String) valuesMap.get("email"));
+
+		// Optional Values
+		if (valuesMap.containsKey("address"))
+			user.setAddress((String) valuesMap.get("address"));
+
+		if (valuesMap.containsKey("aim"))
+			user.setAim((String) valuesMap.get("aim"));
+
+		if (valuesMap.containsKey("alternatename"))
+			user.setAlternatename((String) valuesMap.get("alternatename"));
+
+		if (valuesMap.containsKey("auth"))
+			user.setAuth((String) valuesMap.get("auth"));
+		else
+			user.setAuth("manual");
+
+		if (valuesMap.containsKey("calendartype"))
+			user.setCalendartype((String) valuesMap.get("calendartype"));
+
+		if (valuesMap.containsKey("city"))
+			user.setCity((String) valuesMap.get("city"));
+		if (valuesMap.containsKey("confirmed"))
+			user.setConfirmed(((String) valuesMap.get("confirmed")).equals("1"));
+		else
+			user.setConfirmed(new Boolean(true));
+
+		if (valuesMap.containsKey("country"))
+			user.setCountry((String) valuesMap.get("country"));
+		if (valuesMap.containsKey("department"))
+			user.setDepartment((String) valuesMap.get("department"));
+		if (valuesMap.containsKey("description"))
+			user.setDescription((String) valuesMap.get("description"));
+		if (valuesMap.containsKey("descriptionformat"))
+			user.setDescriptionformat(Integer.parseInt((String) valuesMap.get("descriptionformat")));
+		if (valuesMap.containsKey("firstaccess"))
+			user.setFirstaccess(Long.valueOf((String) valuesMap.get("firstaccess")));
+
+		if (valuesMap.containsKey("firstnamephonetic"))
+			user.setFirstnamephonetic((String) valuesMap.get("firstnamephonetic"));
+		if (valuesMap.containsKey("fullname"))
+			user.setFullname((String) valuesMap.get("fullname"));
+		else
+			user.setFullname(user.getFirstname() + " " + user.getLastname());
+
+		if (valuesMap.containsKey("icq"))
+			user.setIcq((String) valuesMap.get("icq"));
+		if (valuesMap.containsKey("idnumber"))
+			user.setIdnumber((String) valuesMap.get("idnumber"));
+		if (valuesMap.containsKey("institution"))
+			user.setInstitution((String) valuesMap.get("institution"));
+		if (valuesMap.containsKey("interests"))
+			user.setInterests((String) valuesMap.get("interests"));
+		if (valuesMap.containsKey("lang"))
+			user.setLang((String) valuesMap.get("lang"));
+		else
+			user.setLang("en");
+
+		if (valuesMap.containsKey("lastaccess"))
+			user.setLastaccess(Long.valueOf((String) valuesMap.get("lastaccess")));
+		if (valuesMap.containsKey("lastnamephonetic"))
+			user.setLastnamephonetic((String) valuesMap.get("lastnamephonetic"));
+		if (valuesMap.containsKey("mailformat"))
+			user.setMailformat(Integer.parseInt((String) valuesMap.get("mailformat")));
+		if (valuesMap.containsKey("middlename"))
+			user.setMiddlename((String) valuesMap.get("middlename"));
+		if (valuesMap.containsKey("msn"))
+			user.setMsn((String) valuesMap.get("msn"));
+		if (valuesMap.containsKey("password"))
+			user.setPassword((String) valuesMap.get("password"));
+		if (valuesMap.containsKey("phone1"))
+			user.setPhone1((String) valuesMap.get("phone1"));
+		if (valuesMap.containsKey("phone2"))
+			user.setPhone1((String) valuesMap.get("phone2"));
+		if (valuesMap.containsKey("profileimageurl"))
+			user.setPhone1((String) valuesMap.get("profileimageurl"));
+		if (valuesMap.containsKey("profileimageurlsmall"))
+			user.setProfileimageurlsmall((String) valuesMap.get("profileimageurlsmall"));
+		if (valuesMap.containsKey("skype"))
+			user.setSkype((String) valuesMap.get("skype"));
+		if (valuesMap.containsKey("theme"))
+			user.setTheme((String) valuesMap.get("theme"));
+		if (valuesMap.containsKey("timezone"))
+			user.setTimezone((String) valuesMap.get("timezone"));
+		if (valuesMap.containsKey("url"))
+			user.setUrl((String) valuesMap.get("url"));
+		if (valuesMap.containsKey("yahoo"))
+			user.setUrl((String) valuesMap.get("yahoo"));
+
+		///The Multiple values
+		if (valuesMap.containsKey("preferences")) {
+			Set<Map<String, Object>> preferences = (Set<Map<String, Object>>) valuesMap.get("preferences");
+			for (Map<String, Object> preference : preferences) {
+				user.addPreferences((String) preference.get("name"), (String) preference.get("value"));
+			}
+		}
+		if (valuesMap.containsKey("customfields")) {
+			Set<Map<String, Object>> customfields = (Set<Map<String, Object>>) valuesMap.get("customfields");
+			for (Map<String, Object> customfield : customfields) {
+				String type = (String) customfield.get("type");
+				user.addCustomfields(CustomFieldType.valueOf(type), (String) customfield.get("value"),
+						(String) customfield.get("name"), (String) customfield.get("shortname"));
+			}
+		}
+
+		return user;
 	}
 
 	public String serliazeCriterias(Set<MoodleRestGetUsers.Criteria> criterias) throws UnsupportedEncodingException {

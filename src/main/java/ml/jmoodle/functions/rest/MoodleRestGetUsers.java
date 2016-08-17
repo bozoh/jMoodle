@@ -4,13 +4,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
+import ml.jmoodle.functions.MoodleWSFunctionCall;
 import ml.jmoodle.functions.exceptions.MoodleRestGetUsersException;
 import ml.jmoodle.functions.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -79,8 +83,15 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 
 	@Override
 	public Set<MoodleUser> doCall() throws MoodleWSFucntionException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
+			return getUserFuntionsTools().unSerializeUsers(wsFunctionCall.call(this));
+		} catch (MoodleWSFunctionCallException e) {
+			throw new MoodleRestGetUsersException(e);
+		} catch (XPathExpressionException e) {
+			throw new MoodleRestGetUsersException(e);
+		}
+
 	}
 
 	public void addCriteria(Criteria criteria) throws MoodleRestGetUsersException {

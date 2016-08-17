@@ -216,30 +216,37 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 	}
 
 	@Test
-	public final void testIfDoCallRetunrsUsersSet() throws Exception {
+	public final void testIfDoCallMethodCallsMoodleRestUserFunctionToolsUnserializeUsersMethod() throws Exception {
 
-		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
-		Document userResponse = usersFixture.getGetUsersRespone();
+		// Document userResponse = usersFixture.getRespone();
 		MoodleWSFunctionCall wsFunctionCallMck = mock(MoodleWSFunctionCall.class);
-		when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(userResponse);
+		when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(null);
 		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
 		PowerMockito.when(MoodleWSFunctionCall.getInstance(any(MoodleConfig.class))).thenReturn(wsFunctionCallMck);
 
-		MoodleRestGetUsers mdlfnc = (MoodleRestGetUsers) MoodleWSFunctionFactory
-				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck);
+		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
+		MoodleRestGetUsers mdlfnc = PowerMockito.spy((MoodleRestGetUsers) MoodleWSFunctionFactory
+				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck));
+		// PowerMockito.doReturn(mdlUsers).when(function1, "getUsers");
+		PowerMockito.doReturn(userFunctionsTools).when(mdlfnc, "getUserFuntionsTools");
+		
 
-		Set<MoodleUser> expetedUserResponse = usersFixture.getMdlUsers();
+		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
 
-		mdlfnc.setCriterias(usersFixture.getCriterias());
-		Set<MoodleUser> response = mdlfnc.doCall();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Set<MoodleRestGetUsers.Criteria> criterias = fixture.getCriterias();
 
-		assertThat(response.size(), equalTo(3));
-		for (MoodleUser moodleUser : response) {
-			assertThat(moodleUser, instanceOf(MoodleUser.class));
-			assertThat(expetedUserResponse, hasItem(moodleUser));
+		mdlfnc.setCriterias(criterias);
+		try {
+			mdlfnc.doCall();
+		} catch (NullPointerException e) {
+			// Null poiter is excpeted since wsFunctionCall is a mock
 		}
 
+		verify(userFunctionsTools).unSerializeUsers(null);
 	}
+	
+
 
 	public static void main(String args[])
 			throws UnsupportedEncodingException, MoodleWSFucntionException, MoodleConfigException {

@@ -1,6 +1,8 @@
 package ml.jmoodle.functions.rest.tools;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.junit.Assert.assertThat;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -11,6 +13,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.w3c.dom.Document;
 
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
@@ -45,7 +48,7 @@ public class MoodleRestUserFunctionsToolsTest {
 
 	@Test
 	public final void testSerializeCtriterias() throws Exception {
-		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUserResponse");
+		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
 		Set<MoodleRestGetUsers.Criteria> criterias = fixture.getCriterias();
 		String criteriaStr = uft.serliazeCriterias(criterias);
 		int index = 0;
@@ -74,9 +77,15 @@ public class MoodleRestUserFunctionsToolsTest {
 	}
 
 	@Test
-	public final void testUnSerializeUsers() throws Exception {
-		Assert.fail("not implemented");
-
+	public final void testIfUnSerializeUsersReturnsUsersSet() throws Exception {
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+		Document response = usersFixture.getGetUsersRespone();
+		
+		Set<MoodleUser> testSet = uft.unSerializeUsers(response);
+		Set<MoodleUser> expected = usersFixture.getMdlUsers();
+		for (MoodleUser moodleUser : expected) {
+			assertThat(testSet, hasItem(moodleUser));
+		}
 	}
 
 	public static void assertsUser(String userStr, MoodleUser moodleUser, int index)
@@ -156,10 +165,7 @@ public class MoodleRestUserFunctionsToolsTest {
 		// users[0][customfields][0][value]= string
 	}
 
-	@Test
-	public final void testUnSerializeUser() {
-		Assert.fail("not implemented");
-	}
+
 
 	// public static void main(String[] args) throws Exception {
 	// FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");

@@ -253,7 +253,7 @@ public class UsersFixture implements TemplateLoader {
 		}
 
 		usrResponse.append("</MULTIPLE></KEY>");
-		if (!warnings.isEmpty()) {
+		if (warnings!=null && !warnings.isEmpty()) {
 			usrResponse.append("<KEY name=\"warnings\">").append("<MULTIPLE>");
 			for (Warning warning : warnings) {
 				usrResponse.append("<SINGLE>").append("<KEY name=\"item\">").append("<VALUE>").append(warning.getItem())

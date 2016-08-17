@@ -179,9 +179,9 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 					XPathConstants.NODESET);
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node singleNode = nodeList.item(i);
-				Map<String, String> singleValuesMap = MoodleRestFunctionTools.getSingleAttributes(singleNode);
+				Map<String, Object> singleValuesMap = MoodleRestFunctionTools.getSingleAttributes(singleNode);
 				MoodleUser moodleUser = users.get(singleValuesMap.get("username"));
-				moodleUser.setId(Long.parseLong(singleValuesMap.get("id")));
+				moodleUser.setId(Long.parseLong((String)singleValuesMap.get("id")));
 			}
 
 		} catch (XPathExpressionException e) {
