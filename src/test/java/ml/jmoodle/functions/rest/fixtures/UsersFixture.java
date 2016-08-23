@@ -62,7 +62,7 @@ public class UsersFixture implements TemplateLoader {
 
 			}
 		});
-		
+
 		Fixture.of(MoodleUser.class).addTemplate("MoodleRestDeleteUsersFunction", new Rule() {
 			{
 				add("id", regex("\\d{3,5}"));
@@ -207,7 +207,14 @@ public class UsersFixture implements TemplateLoader {
 		Fixture.of(this.getClass()).addTemplate("MoodleRestGetUsersResponse", new Rule() {
 			{
 				add("mdlUsers", has(3).of(MoodleUser.class, "MoodleRestGetUserFunctionUser"));
-				//add("warnings", has(3).of(MoodleUser.Warning.class, "MoodleUserWarnings"));
+				// add("warnings", has(3).of(MoodleUser.Warning.class,
+				// "MoodleUserWarnings"));
+			}
+		});
+
+		Fixture.of(this.getClass()).addTemplate("MoodleRestGetUsersByFieldsResponse", new Rule() {
+			{
+				add("mdlUsers", has(3).of(MoodleUser.class, "MoodleRestGetUserFunctionUser"));
 			}
 		});
 
@@ -221,41 +228,53 @@ public class UsersFixture implements TemplateLoader {
 				.append("<KEY name=\"users\">").append("<MULTIPLE>");
 
 		for (MoodleUser moodleUser : mdlUsers) {
-			usrResponse.append("<SINGLE>").append("<KEY name=\"id\">").append("<VALUE>").append(moodleUser.getId()).append("</VALUE></KEY>")
-			.append("<KEY name=\"username\">").append("<VALUE>").append(moodleUser.getUsername()).append("</VALUE></KEY>")
-			.append("<KEY name=\"firstname\">").append("<VALUE>").append(moodleUser.getFirstname()).append("</VALUE></KEY>")
-			.append("<KEY name=\"lastname\">").append("<VALUE>").append(moodleUser.getLastname()).append("</VALUE></KEY>")
-			.append("<KEY name=\"fullname\">").append("<VALUE>").append(moodleUser.getFullname()).append("</VALUE></KEY>")
-			.append("<KEY name=\"email\">").append("<VALUE>").append(moodleUser.getEmail()).append("</VALUE></KEY>")
-			.append("<KEY name=\"address\">").append("<VALUE>").append(moodleUser.getAddress()).append("</VALUE></KEY>")
-			.append("<KEY name=\"phone1\">").append("<VALUE>").append(moodleUser.getPhone1()).append("</VALUE></KEY>")
-			.append("<KEY name=\"phone2\">").append("<VALUE>").append(moodleUser.getPhone2()).append("</VALUE></KEY>")
-			.append("<KEY name=\"icq\">").append("<VALUE>").append(moodleUser.getIcq()).append("</VALUE></KEY>")
-			.append("<KEY name=\"skype\">").append("<VALUE>").append(moodleUser.getSkype()).append("</VALUE></KEY>")
-			.append("<KEY name=\"yahoo\">").append("<VALUE>").append(moodleUser.getYahoo()).append("</VALUE></KEY>")
-			.append("<KEY name=\"aim\">").append("<VALUE>").append(moodleUser.getAim()).append("</VALUE></KEY>")
-			.append("<KEY name=\"msn\">").append("<VALUE>").append(moodleUser.getMsn()).append("</VALUE></KEY>")
-			.append("<KEY name=\"department\">").append("<VALUE>").append(moodleUser.getDepartment()).append("</VALUE></KEY>")
-			.append("<KEY name=\"institution\">").append("<VALUE>").append(moodleUser.getInstitution()).append("</VALUE></KEY>")
-			.append("<KEY name=\"idnumber\">").append("<VALUE>").append(moodleUser.getIdnumber()).append("</VALUE></KEY>")
-			.append("<KEY name=\"interests\">").append("<VALUE>").append(moodleUser.getInterests()).append("</VALUE></KEY>")
-			.append("<KEY name=\"firstaccess\">").append("<VALUE>").append(moodleUser.getFirstaccess().getTime()/1000l).append("</VALUE></KEY>")
-			.append("<KEY name=\"lastaccess\">").append("<VALUE>").append(moodleUser.getLastaccess().getTime()/1000l).append("</VALUE></KEY>")
-			.append("<KEY name=\"auth\">").append("<VALUE>").append(moodleUser.getAuth()).append("</VALUE></KEY>")
-			.append("<KEY name=\"confirmed\">").append("<VALUE>").append(moodleUser.isConfirmed()?"1":"0").append("</VALUE></KEY>")
-			.append("<KEY name=\"lang\">").append("<VALUE>").append(moodleUser.getLang()).append("</VALUE></KEY>")
-			.append("<KEY name=\"calendartype\">").append("<VALUE>").append(moodleUser.getCalendartype()).append("</VALUE></KEY>")
-			.append("<KEY name=\"theme\">").append("<VALUE>").append(moodleUser.getTheme()).append("</VALUE></KEY>")
-			.append("<KEY name=\"timezone\">").append("<VALUE>").append(moodleUser.getTimezone()).append("</VALUE></KEY>")
-			.append("<KEY name=\"mailformat\">").append("<VALUE>").append(moodleUser.getMailformat()).append("</VALUE></KEY>")
-			.append("<KEY name=\"description\">").append("<VALUE>").append(moodleUser.getDescription()).append("</VALUE></KEY>")
-			.append("<KEY name=\"descriptionformat\">").append("<VALUE>").append(moodleUser.getDescriptionformat()).append("</VALUE></KEY>")
-			.append("<KEY name=\"city\">").append("<VALUE>").append(moodleUser.getCity()).append("</VALUE></KEY>")
-			.append("<KEY name=\"url\">").append("<VALUE>").append(moodleUser.getUrl()).append("</VALUE></KEY>")
-			.append("<KEY name=\"country\">").append("<VALUE>").append(moodleUser.getCountry()).append("</VALUE></KEY>")
-			.append("<KEY name=\"profileimageurlsmall\">").append("<VALUE>").append(moodleUser.getProfileimageurlsmall()).append("</VALUE></KEY>")
-			.append("<KEY name=\"profileimageurl\">").append("<VALUE>").append(moodleUser.getProfileimageurl()).append("</VALUE></KEY>")
-			.append("<KEY name=\"customfields\">").append("<MULTIPLE>");
+			usrResponse.append("<SINGLE>").append("<KEY name=\"id\">").append("<VALUE>").append(moodleUser.getId())
+					.append("</VALUE></KEY>").append("<KEY name=\"username\">").append("<VALUE>")
+					.append(moodleUser.getUsername()).append("</VALUE></KEY>").append("<KEY name=\"firstname\">")
+					.append("<VALUE>").append(moodleUser.getFirstname()).append("</VALUE></KEY>")
+					.append("<KEY name=\"lastname\">").append("<VALUE>").append(moodleUser.getLastname())
+					.append("</VALUE></KEY>").append("<KEY name=\"fullname\">").append("<VALUE>")
+					.append(moodleUser.getFullname()).append("</VALUE></KEY>").append("<KEY name=\"email\">")
+					.append("<VALUE>").append(moodleUser.getEmail()).append("</VALUE></KEY>")
+					.append("<KEY name=\"address\">").append("<VALUE>").append(moodleUser.getAddress())
+					.append("</VALUE></KEY>").append("<KEY name=\"phone1\">").append("<VALUE>")
+					.append(moodleUser.getPhone1()).append("</VALUE></KEY>").append("<KEY name=\"phone2\">")
+					.append("<VALUE>").append(moodleUser.getPhone2()).append("</VALUE></KEY>")
+					.append("<KEY name=\"icq\">").append("<VALUE>").append(moodleUser.getIcq()).append("</VALUE></KEY>")
+					.append("<KEY name=\"skype\">").append("<VALUE>").append(moodleUser.getSkype())
+					.append("</VALUE></KEY>").append("<KEY name=\"yahoo\">").append("<VALUE>")
+					.append(moodleUser.getYahoo()).append("</VALUE></KEY>").append("<KEY name=\"aim\">")
+					.append("<VALUE>").append(moodleUser.getAim()).append("</VALUE></KEY>").append("<KEY name=\"msn\">")
+					.append("<VALUE>").append(moodleUser.getMsn()).append("</VALUE></KEY>")
+					.append("<KEY name=\"department\">").append("<VALUE>").append(moodleUser.getDepartment())
+					.append("</VALUE></KEY>").append("<KEY name=\"institution\">").append("<VALUE>")
+					.append(moodleUser.getInstitution()).append("</VALUE></KEY>").append("<KEY name=\"idnumber\">")
+					.append("<VALUE>").append(moodleUser.getIdnumber()).append("</VALUE></KEY>")
+					.append("<KEY name=\"interests\">").append("<VALUE>").append(moodleUser.getInterests())
+					.append("</VALUE></KEY>").append("<KEY name=\"firstaccess\">").append("<VALUE>")
+					.append(moodleUser.getFirstaccess().getTime() / 1000l).append("</VALUE></KEY>")
+					.append("<KEY name=\"lastaccess\">").append("<VALUE>")
+					.append(moodleUser.getLastaccess().getTime() / 1000l).append("</VALUE></KEY>")
+					.append("<KEY name=\"auth\">").append("<VALUE>").append(moodleUser.getAuth())
+					.append("</VALUE></KEY>").append("<KEY name=\"confirmed\">").append("<VALUE>")
+					.append(moodleUser.isConfirmed() ? "1" : "0").append("</VALUE></KEY>").append("<KEY name=\"lang\">")
+					.append("<VALUE>").append(moodleUser.getLang()).append("</VALUE></KEY>")
+					.append("<KEY name=\"calendartype\">").append("<VALUE>").append(moodleUser.getCalendartype())
+					.append("</VALUE></KEY>").append("<KEY name=\"theme\">").append("<VALUE>")
+					.append(moodleUser.getTheme()).append("</VALUE></KEY>").append("<KEY name=\"timezone\">")
+					.append("<VALUE>").append(moodleUser.getTimezone()).append("</VALUE></KEY>")
+					.append("<KEY name=\"mailformat\">").append("<VALUE>").append(moodleUser.getMailformat())
+					.append("</VALUE></KEY>").append("<KEY name=\"description\">").append("<VALUE>")
+					.append(moodleUser.getDescription()).append("</VALUE></KEY>")
+					.append("<KEY name=\"descriptionformat\">").append("<VALUE>")
+					.append(moodleUser.getDescriptionformat()).append("</VALUE></KEY>").append("<KEY name=\"city\">")
+					.append("<VALUE>").append(moodleUser.getCity()).append("</VALUE></KEY>")
+					.append("<KEY name=\"url\">").append("<VALUE>").append(moodleUser.getUrl()).append("</VALUE></KEY>")
+					.append("<KEY name=\"country\">").append("<VALUE>").append(moodleUser.getCountry())
+					.append("</VALUE></KEY>").append("<KEY name=\"profileimageurlsmall\">").append("<VALUE>")
+					.append(moodleUser.getProfileimageurlsmall()).append("</VALUE></KEY>")
+					.append("<KEY name=\"profileimageurl\">").append("<VALUE>").append(moodleUser.getProfileimageurl())
+					.append("</VALUE></KEY>").append("<KEY name=\"customfields\">").append("<MULTIPLE>");
 
 			Set<MoodleUser.CustomField> customfields = moodleUser.getCustomfields();
 			for (CustomField customField : customfields) {
@@ -381,6 +400,96 @@ public class UsersFixture implements TemplateLoader {
 	 */
 	public void setWarnings(Set<MoodleUser.Warning> warnings) {
 		this.warnings = warnings;
+	}
+
+	public Set<String> getFieldValues() {
+		Set<String> ids = new HashSet<String>();
+		for (MoodleUser moodleUser : mdlUsers) {
+			ids.add(String.valueOf(moodleUser.getId()));
+		}
+
+		return ids;
+	}
+
+	public Document getGetUsersByIdRespone() throws ParserConfigurationException, SAXException, IOException {
+		StringBuffer usrResponse = new StringBuffer();
+		usrResponse.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>").append("<RESPONSE>").append("<MULTIPLE>");
+
+		for (MoodleUser moodleUser : mdlUsers) {
+			usrResponse.append("<SINGLE>").append("<KEY name=\"id\">").append("<VALUE>").append(moodleUser.getId())
+					.append("</VALUE></KEY>").append("<KEY name=\"username\">").append("<VALUE>")
+					.append(moodleUser.getUsername()).append("</VALUE></KEY>").append("<KEY name=\"firstname\">")
+					.append("<VALUE>").append(moodleUser.getFirstname()).append("</VALUE></KEY>")
+					.append("<KEY name=\"lastname\">").append("<VALUE>").append(moodleUser.getLastname())
+					.append("</VALUE></KEY>").append("<KEY name=\"fullname\">").append("<VALUE>")
+					.append(moodleUser.getFullname()).append("</VALUE></KEY>").append("<KEY name=\"email\">")
+					.append("<VALUE>").append(moodleUser.getEmail()).append("</VALUE></KEY>")
+					.append("<KEY name=\"address\">").append("<VALUE>").append(moodleUser.getAddress())
+					.append("</VALUE></KEY>").append("<KEY name=\"phone1\">").append("<VALUE>")
+					.append(moodleUser.getPhone1()).append("</VALUE></KEY>").append("<KEY name=\"phone2\">")
+					.append("<VALUE>").append(moodleUser.getPhone2()).append("</VALUE></KEY>")
+					.append("<KEY name=\"icq\">").append("<VALUE>").append(moodleUser.getIcq()).append("</VALUE></KEY>")
+					.append("<KEY name=\"skype\">").append("<VALUE>").append(moodleUser.getSkype())
+					.append("</VALUE></KEY>").append("<KEY name=\"yahoo\">").append("<VALUE>")
+					.append(moodleUser.getYahoo()).append("</VALUE></KEY>").append("<KEY name=\"aim\">")
+					.append("<VALUE>").append(moodleUser.getAim()).append("</VALUE></KEY>").append("<KEY name=\"msn\">")
+					.append("<VALUE>").append(moodleUser.getMsn()).append("</VALUE></KEY>")
+					.append("<KEY name=\"department\">").append("<VALUE>").append(moodleUser.getDepartment())
+					.append("</VALUE></KEY>").append("<KEY name=\"institution\">").append("<VALUE>")
+					.append(moodleUser.getInstitution()).append("</VALUE></KEY>").append("<KEY name=\"idnumber\">")
+					.append("<VALUE>").append(moodleUser.getIdnumber()).append("</VALUE></KEY>")
+					.append("<KEY name=\"interests\">").append("<VALUE>").append(moodleUser.getInterests())
+					.append("</VALUE></KEY>").append("<KEY name=\"firstaccess\">").append("<VALUE>")
+					.append(moodleUser.getFirstaccess().getTime() / 1000l).append("</VALUE></KEY>")
+					.append("<KEY name=\"lastaccess\">").append("<VALUE>")
+					.append(moodleUser.getLastaccess().getTime() / 1000l).append("</VALUE></KEY>")
+					.append("<KEY name=\"auth\">").append("<VALUE>").append(moodleUser.getAuth())
+					.append("</VALUE></KEY>").append("<KEY name=\"confirmed\">").append("<VALUE>")
+					.append(moodleUser.isConfirmed() ? "1" : "0").append("</VALUE></KEY>").append("<KEY name=\"lang\">")
+					.append("<VALUE>").append(moodleUser.getLang()).append("</VALUE></KEY>")
+					.append("<KEY name=\"calendartype\">").append("<VALUE>").append(moodleUser.getCalendartype())
+					.append("</VALUE></KEY>").append("<KEY name=\"theme\">").append("<VALUE>")
+					.append(moodleUser.getTheme()).append("</VALUE></KEY>").append("<KEY name=\"timezone\">")
+					.append("<VALUE>").append(moodleUser.getTimezone()).append("</VALUE></KEY>")
+					.append("<KEY name=\"mailformat\">").append("<VALUE>").append(moodleUser.getMailformat())
+					.append("</VALUE></KEY>").append("<KEY name=\"description\">").append("<VALUE>")
+					.append(moodleUser.getDescription()).append("</VALUE></KEY>")
+					.append("<KEY name=\"descriptionformat\">").append("<VALUE>")
+					.append(moodleUser.getDescriptionformat()).append("</VALUE></KEY>").append("<KEY name=\"city\">")
+					.append("<VALUE>").append(moodleUser.getCity()).append("</VALUE></KEY>")
+					.append("<KEY name=\"url\">").append("<VALUE>").append(moodleUser.getUrl()).append("</VALUE></KEY>")
+					.append("<KEY name=\"country\">").append("<VALUE>").append(moodleUser.getCountry())
+					.append("</VALUE></KEY>").append("<KEY name=\"profileimageurlsmall\">").append("<VALUE>")
+					.append(moodleUser.getProfileimageurlsmall()).append("</VALUE></KEY>")
+					.append("<KEY name=\"profileimageurl\">").append("<VALUE>").append(moodleUser.getProfileimageurl())
+					.append("</VALUE></KEY>").append("<KEY name=\"customfields\">").append("<MULTIPLE>");
+
+			Set<MoodleUser.CustomField> customfields = moodleUser.getCustomfields();
+			for (CustomField customField : customfields) {
+				usrResponse.append("<SINGLE>").append("<KEY name=\"type\">").append("<VALUE>")
+						.append(customField.getType()).append("</VALUE></KEY>").append("<KEY name=\"value\">")
+						.append("<VALUE>").append(customField.getValue()).append("</VALUE></KEY>")
+						.append("<KEY name=\"name\">").append("<VALUE>").append(customField.getName())
+						.append("</VALUE></KEY>").append("<KEY name=\"shortname\">").append("<VALUE>")
+						.append(customField.getShortname()).append("</VALUE></KEY>").append("</SINGLE>");
+			}
+			usrResponse.append("</MULTIPLE></KEY>").append("<KEY name=\"preferences\">").append("<MULTIPLE>");
+
+			Set<MoodleUser.Preference> preferences = moodleUser.getPreferences();
+			for (Preference preference : preferences) {
+				usrResponse.append("<SINGLE>").append("<KEY name=\"name\">").append("<VALUE>")
+						.append(preference.getName()).append("</VALUE></KEY>").append("<KEY name=\"value\">")
+						.append("<VALUE>").append(preference.getValue()).append("</VALUE></KEY>").append("</SINGLE>");
+			}
+			usrResponse.append("</MULTIPLE></KEY>").append("</SINGLE>");
+		}
+
+		usrResponse.append("</MULTIPLE></RESPONSE>");
+
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = builderFactory.newDocumentBuilder();
+
+		return builder.parse(new ByteArrayInputStream(usrResponse.toString().getBytes()));
 	}
 
 }

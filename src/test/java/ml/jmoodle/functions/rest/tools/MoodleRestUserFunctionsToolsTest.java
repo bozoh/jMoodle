@@ -17,6 +17,8 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.functions.rest.MoodleRestGetUsers;
+import ml.jmoodle.functions.rest.MoodleRestGetUsersByFields;
+import ml.jmoodle.functions.rest.MoodleRestGetUsersByFields.Field;
 import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.functions.rest.fixtures.UsersFixture;
 import ml.jmoodle.tools.MoodleTools;
@@ -75,6 +77,32 @@ public class MoodleRestUserFunctionsToolsTest {
 	}
 
 	@Test
+	public final void testSerliazeUserFields() throws Exception {
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersByFieldsResponse");
+
+		MoodleRestGetUsersByFields.Field field = MoodleRestGetUsersByFields.Field.ID;
+		Set<String> values = usersFixture.getFieldValues();
+		String userFieldsStr = uft.serliazeFields(field, values);
+		int i = 0;
+		for (String value : values) {
+			assertUserFields(field, userFieldsStr, value, i);
+			i++;
+		}
+	}
+
+	private void assertUserFields(Field field, String userFieldsStr, String value, int i)
+			throws UnsupportedEncodingException {
+		// field= str
+		// values[0]=
+
+		Assert.assertThat(userFieldsStr,
+				containsString(MoodleTools.encode("field") + "=" + MoodleTools.encode(field.toString())));
+		Assert.assertThat(userFieldsStr,
+				containsString(MoodleTools.encode("values[" + i + "]") + "=" + MoodleTools.encode(value)));
+
+	}
+
+	@Test
 	public final void testUnSerializeUsers() throws Exception {
 		Assert.fail("not implemented");
 
@@ -95,7 +123,7 @@ public class MoodleRestUserFunctionsToolsTest {
 	}
 
 	private void assertUserIds(String userIdsStr, MoodleUser user, int i) throws UnsupportedEncodingException {
-		//userids[0] = int
+		// userids[0] = int
 		Assert.assertThat(userIdsStr, containsString(
 				MoodleTools.encode("userids[" + i + "]") + "=" + MoodleTools.encode(String.valueOf(user.getId()))));
 
@@ -180,9 +208,9 @@ public class MoodleRestUserFunctionsToolsTest {
 
 	public static void main(String[] args) throws Exception {
 		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
-		List users = Fixture.from(MoodleUser.class).gimme(3, "MoodleRestDeleteUsersFunction");
+		UsersFixture users = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersByFieldsResponse");
 		MoodleRestUserFunctionsTools uft = new MoodleRestUserFunctionsTools();
-		System.out.println(uft.serliazeUsersIds(new HashSet<MoodleUser>(users)));
+		System.out.println(uft.serliazeFields(Field.ID, users.getFieldValues()));
 		// M
 	}
 
