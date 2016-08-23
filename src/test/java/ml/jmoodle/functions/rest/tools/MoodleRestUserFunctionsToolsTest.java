@@ -3,6 +3,7 @@ package ml.jmoodle.functions.rest.tools;
 import static org.hamcrest.CoreMatchers.containsString;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -76,6 +77,27 @@ public class MoodleRestUserFunctionsToolsTest {
 	@Test
 	public final void testUnSerializeUsers() throws Exception {
 		Assert.fail("not implemented");
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public final void testSerializeUserIds() throws Exception {
+		Set<MoodleUser> users = new HashSet(Fixture.from(MoodleUser.class).gimme(3, "MoodleRestDeleteUsersFunction"));
+
+		String userIdsStr = uft.serliazeUsersIds(users);
+		int i = 0;
+		for (MoodleUser user : users) {
+			assertUserIds(userIdsStr, user, i);
+			i++;
+		}
+
+	}
+
+	private void assertUserIds(String userIdsStr, MoodleUser user, int i) throws UnsupportedEncodingException {
+		//userids[0] = int
+		Assert.assertThat(userIdsStr, containsString(
+				MoodleTools.encode("userids[" + i + "]") + "=" + MoodleTools.encode(String.valueOf(user.getId()))));
 
 	}
 
@@ -156,18 +178,12 @@ public class MoodleRestUserFunctionsToolsTest {
 		// users[0][customfields][0][value]= string
 	}
 
-	@Test
-	public final void testUnSerializeUser() {
-		Assert.fail("not implemented");
+	public static void main(String[] args) throws Exception {
+		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
+		List users = Fixture.from(MoodleUser.class).gimme(3, "MoodleRestDeleteUsersFunction");
+		MoodleRestUserFunctionsTools uft = new MoodleRestUserFunctionsTools();
+		System.out.println(uft.serliazeUsersIds(new HashSet<MoodleUser>(users)));
+		// M
 	}
-
-	// public static void main(String[] args) throws Exception {
-	// FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
-	// MoodleUser moodleUser =
-	// Fixture.from(MoodleUser.class).gimme("MoodleRestUserFunctionsToolsTestUser1");
-	// MoodleRestUserFunctionsTools uft = new MoodleRestUserFunctionsTools();
-	// System.out.println(uft.serializeUser(moodleUser));
-	//// M
-	// }
 
 }

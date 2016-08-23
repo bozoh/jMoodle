@@ -1,5 +1,14 @@
 package ml.jmoodle.functions.exceptions;
 
+/**
+ * Create User(s) Function
+ *
+ *
+ * @author Carlos Alexandre S. da Fonseca
+ * @copyrigth © 2016 Carlos Alexandre S. da Fonseca
+ * @license https://opensource.org/licenses/MIT - MIT License
+ *
+ */
 public class MoodleRestUpdateUsersException extends MoodleWSFucntionException {
 
 	public MoodleRestUpdateUsersException() {

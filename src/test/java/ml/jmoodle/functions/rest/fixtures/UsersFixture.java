@@ -62,6 +62,31 @@ public class UsersFixture implements TemplateLoader {
 
 			}
 		});
+		
+		Fixture.of(MoodleUser.class).addTemplate("MoodleRestDeleteUsersFunction", new Rule() {
+			{
+				add("id", regex("\\d{3,5}"));
+				add("firstname", firstName());
+				add("lastname", lastName());
+				add("username", "${firstname}-${lastname}");
+				add("email", "${username}@email.test");
+				add("password", random("asasa", "awe2", "2332"));
+				add("idnumber", regex("\\d{15}"));
+				add("lang", random("pt_br", "en_us", "ch"));
+				add("theme", random("aasas", "errr", "asa"));
+				add("timezone", random("-3", "-2", "Sao_Paulo"));
+				add("description", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("city", name());
+				add("country", "$lang");
+				add("firstnamephonetic", random("/asiu/", "/AskII/", "/qwwsss/"));
+				add("lastnamephonetic", random("/asiu/", "/AskII/", "/qwwsss/"));
+				add("middlename", lastName());
+				add("alternatename", name());
+				add("preferences", has(2).of(MoodleUser.Preference.class, "MoodleUserPreferences"));
+				add("customfields", has(2).of(MoodleUser.CustomField.class, "MoodleUserCustomFields"));
+
+			}
+		});
 
 		Fixture.of(MoodleUser.class).addTemplate("MoodleRestCreateUserFunctionUser", new Rule() {
 			{

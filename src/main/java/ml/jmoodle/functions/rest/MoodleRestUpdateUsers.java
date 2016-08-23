@@ -18,6 +18,15 @@ import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
+/**
+ * Update User(s) Function
+ *
+ *
+ * @author Carlos Alexandre S. da Fonseca
+ * @copyrigth © 2016 Carlos Alexandre S. da Fonseca
+ * @license https://opensource.org/licenses/MIT - MIT License
+ *
+ */
 @MoodleWSFunction(names = { "core_user_update_users", "moodle_user_update_users" })
 public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 
@@ -34,13 +43,11 @@ public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getUsers().isEmpty()) {
-			throw new MoodleRestUpdateUsersException("No users is set");
+			throw new MoodleRestUpdateUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Users"));
 		}
 		try {
-			StringBuilder fnctData = new StringBuilder();
-			fnctData.append(MoodleTools.encode(MOODLE_FUNTION_NAME_PARAM)).append("=")
-					.append(MoodleTools.encode(getFunctionName())).append("&")
-					.append(getUserFuntionsTools().serliazeUsers(getUsers()));
+			StringBuilder fnctData = new StringBuilder(super.getFunctionData());
+			fnctData.append(getUserFuntionsTools().serliazeUsers(getUsers()));
 			return fnctData.toString();
 		} catch (UnsupportedEncodingException e) {
 			throw new MoodleRestUpdateUsersException(e);

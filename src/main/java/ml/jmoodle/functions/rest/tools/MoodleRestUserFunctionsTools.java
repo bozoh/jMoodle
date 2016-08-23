@@ -176,4 +176,18 @@ public class MoodleRestUserFunctionsTools {
 		return returnData.substring(0, returnData.length() - 1);
 	}
 
+	public String serliazeUsersIds(Set<MoodleUser> users) throws UnsupportedEncodingException {
+		return serliazeUsersIds(users.toArray(new MoodleUser[users.size()]));
+	}
+
+	private String serliazeUsersIds(MoodleUser[] users) throws UnsupportedEncodingException {
+		//userids[0]=
+		StringBuilder returnData = new StringBuilder();
+		for (int i = 0; i < users.length; i++) {
+			returnData.append(MoodleTools.encode("userids[")).append(i).append(MoodleTools.encode("]"))
+			.append("=").append(users[i].getId()).append("&");
+		}
+		return returnData.substring(0, returnData.length() - 1);
+	}
+
 }
