@@ -794,62 +794,25 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		return !this.warnings.isEmpty();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		result = prime * result + ((aim == null) ? 0 : aim.hashCode());
-		result = prime * result + ((alternatename == null) ? 0 : alternatename.hashCode());
-		result = prime * result + ((auth == null) ? 0 : auth.hashCode());
-		result = prime * result + ((city == null) ? 0 : city.hashCode());
-		result = prime * result + (confirmed ? 1231 : 1237);
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((customfields == null) ? 0 : customfields.hashCode());
-		result = prime * result + ((department == null) ? 0 : department.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + descriptionformat;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((firstaccess == null) ? 0 : firstaccess.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((firstnamephonetic == null) ? 0 : firstnamephonetic.hashCode());
-		result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
-		result = prime * result + ((icq == null) ? 0 : icq.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((idnumber == null) ? 0 : idnumber.hashCode());
-		result = prime * result + ((institution == null) ? 0 : institution.hashCode());
-		result = prime * result + ((interests == null) ? 0 : interests.hashCode());
-		result = prime * result + ((lang == null) ? 0 : lang.hashCode());
-		result = prime * result + ((lastaccess == null) ? 0 : lastaccess.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
-		result = prime * result + ((lastnamephonetic == null) ? 0 : lastnamephonetic.hashCode());
-		result = prime * result + mailformat;
-		result = prime * result + ((middlename == null) ? 0 : middlename.hashCode());
-		result = prime * result + ((msn == null) ? 0 : msn.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((phone1 == null) ? 0 : phone1.hashCode());
-		result = prime * result + ((phone2 == null) ? 0 : phone2.hashCode());
-		result = prime * result + ((preferences == null) ? 0 : preferences.hashCode());
-		result = prime * result + ((profileimageurl == null) ? 0 : profileimageurl.hashCode());
-		result = prime * result + ((profileimageurlsmall == null) ? 0 : profileimageurlsmall.hashCode());
-		result = prime * result + ((skype == null) ? 0 : skype.hashCode());
-		result = prime * result + ((theme == null) ? 0 : theme.hashCode());
-		result = prime * result + ((timezone == null) ? 0 : timezone.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		result = prime * result + ((warnings == null) ? 0 : warnings.hashCode());
-		result = prime * result + ((yahoo == null) ? 0 : yahoo.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -858,87 +821,18 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof MoodleUser))
 			return false;
 		MoodleUser other = (MoodleUser) obj;
-		if (address == null) {
-			if (other.address != null)
-				return false;
-		} else if (!address.equals(other.address))
-			return false;
-		if (aim == null) {
-			if (other.aim != null)
-				return false;
-		} else if (!aim.equals(other.aim))
-			return false;
-		if (alternatename == null) {
-			if (other.alternatename != null)
-				return false;
-		} else if (!alternatename.equals(other.alternatename))
-			return false;
-		if (auth == null) {
-			if (other.auth != null)
-				return false;
-		} else if (!auth.equals(other.auth))
-			return false;
-		if (city == null) {
-			if (other.city != null)
-				return false;
-		} else if (!city.equals(other.city))
-			return false;
-		if (confirmed != other.confirmed)
-			return false;
-		if (country == null) {
-			if (other.country != null)
-				return false;
-		} else if (!country.equals(other.country))
-			return false;
-		if (customfields == null) {
-			if (other.customfields != null)
-				return false;
-		} else if (!customfields.equals(other.customfields))
-			return false;
-		if (department == null) {
-			if (other.department != null)
-				return false;
-		} else if (!department.equals(other.department))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (descriptionformat != other.descriptionformat)
-			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (firstaccess == null) {
-			if (other.firstaccess != null)
-				return false;
-		} else if (!firstaccess.equals(other.firstaccess))
-			return false;
 		if (firstname == null) {
 			if (other.firstname != null)
 				return false;
 		} else if (!firstname.equals(other.firstname))
-			return false;
-		if (firstnamephonetic == null) {
-			if (other.firstnamephonetic != null)
-				return false;
-		} else if (!firstnamephonetic.equals(other.firstnamephonetic))
-			return false;
-		if (fullname == null) {
-			if (other.fullname != null)
-				return false;
-		} else if (!fullname.equals(other.fullname))
-			return false;
-		if (icq == null) {
-			if (other.icq != null)
-				return false;
-		} else if (!icq.equals(other.icq))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -950,112 +844,15 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 				return false;
 		} else if (!idnumber.equals(other.idnumber))
 			return false;
-		if (institution == null) {
-			if (other.institution != null)
-				return false;
-		} else if (!institution.equals(other.institution))
-			return false;
-		if (interests == null) {
-			if (other.interests != null)
-				return false;
-		} else if (!interests.equals(other.interests))
-			return false;
-		if (lang == null) {
-			if (other.lang != null)
-				return false;
-		} else if (!lang.equals(other.lang))
-			return false;
-		if (lastaccess == null) {
-			if (other.lastaccess != null)
-				return false;
-		} else if (!lastaccess.equals(other.lastaccess))
-			return false;
 		if (lastname == null) {
 			if (other.lastname != null)
 				return false;
 		} else if (!lastname.equals(other.lastname))
 			return false;
-		if (lastnamephonetic == null) {
-			if (other.lastnamephonetic != null)
-				return false;
-		} else if (!lastnamephonetic.equals(other.lastnamephonetic))
-			return false;
-		if (mailformat != other.mailformat)
-			return false;
-		if (middlename == null) {
-			if (other.middlename != null)
-				return false;
-		} else if (!middlename.equals(other.middlename))
-			return false;
-		if (msn == null) {
-			if (other.msn != null)
-				return false;
-		} else if (!msn.equals(other.msn))
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (phone1 == null) {
-			if (other.phone1 != null)
-				return false;
-		} else if (!phone1.equals(other.phone1))
-			return false;
-		if (phone2 == null) {
-			if (other.phone2 != null)
-				return false;
-		} else if (!phone2.equals(other.phone2))
-			return false;
-		if (preferences == null) {
-			if (other.preferences != null)
-				return false;
-		} else if (!preferences.equals(other.preferences))
-			return false;
-		if (profileimageurl == null) {
-			if (other.profileimageurl != null)
-				return false;
-		} else if (!profileimageurl.equals(other.profileimageurl))
-			return false;
-		if (profileimageurlsmall == null) {
-			if (other.profileimageurlsmall != null)
-				return false;
-		} else if (!profileimageurlsmall.equals(other.profileimageurlsmall))
-			return false;
-		if (skype == null) {
-			if (other.skype != null)
-				return false;
-		} else if (!skype.equals(other.skype))
-			return false;
-		if (theme == null) {
-			if (other.theme != null)
-				return false;
-		} else if (!theme.equals(other.theme))
-			return false;
-		if (timezone == null) {
-			if (other.timezone != null)
-				return false;
-		} else if (!timezone.equals(other.timezone))
-			return false;
-		if (url == null) {
-			if (other.url != null)
-				return false;
-		} else if (!url.equals(other.url))
-			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
 		} else if (!username.equals(other.username))
-			return false;
-		if (warnings == null) {
-			if (other.warnings != null)
-				return false;
-		} else if (!warnings.equals(other.warnings))
-			return false;
-		if (yahoo == null) {
-			if (other.yahoo != null)
-				return false;
-		} else if (!yahoo.equals(other.yahoo))
 			return false;
 		return true;
 	}

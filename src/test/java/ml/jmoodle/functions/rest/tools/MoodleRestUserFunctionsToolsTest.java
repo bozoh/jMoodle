@@ -221,6 +221,10 @@ public class MoodleRestUserFunctionsToolsTest {
 		UsersFixture users = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersByFieldsResponse");
 		MoodleRestUserFunctionsTools uft = new MoodleRestUserFunctionsTools();
 		System.out.println(uft.serliazeFields(Field.ID, users.getFieldValues()));
+		
+		
+		String test="text";
+		System.out.println(MoodleUser.CustomFieldType.valueOf(test.toUpperCase()).name());
 		// M
 	}
 

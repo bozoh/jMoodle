@@ -229,7 +229,7 @@ public class MoodleRestUserFunctionsTools {
 		if (valuesMap.containsKey("descriptionformat"))
 			user.setDescriptionformat(Integer.parseInt((String) valuesMap.get("descriptionformat")));
 		if (valuesMap.containsKey("firstaccess"))
-			user.setFirstaccess(Long.valueOf((String) valuesMap.get("firstaccess")));
+			user.setFirstaccess(Long.valueOf((String) valuesMap.get("firstaccess"))*1000l);
 
 		if (valuesMap.containsKey("firstnamephonetic"))
 			user.setFirstnamephonetic((String) valuesMap.get("firstnamephonetic"));
@@ -252,7 +252,7 @@ public class MoodleRestUserFunctionsTools {
 			user.setLang("en");
 
 		if (valuesMap.containsKey("lastaccess"))
-			user.setLastaccess(Long.valueOf((String) valuesMap.get("lastaccess")));
+			user.setLastaccess(Long.valueOf((String) valuesMap.get("lastaccess"))*1000l);
 		if (valuesMap.containsKey("lastnamephonetic"))
 			user.setLastnamephonetic((String) valuesMap.get("lastnamephonetic"));
 		if (valuesMap.containsKey("mailformat"))
@@ -266,9 +266,9 @@ public class MoodleRestUserFunctionsTools {
 		if (valuesMap.containsKey("phone1"))
 			user.setPhone1((String) valuesMap.get("phone1"));
 		if (valuesMap.containsKey("phone2"))
-			user.setPhone1((String) valuesMap.get("phone2"));
+			user.setPhone2((String) valuesMap.get("phone2"));
 		if (valuesMap.containsKey("profileimageurl"))
-			user.setPhone1((String) valuesMap.get("profileimageurl"));
+			user.setProfileimageurl((String) valuesMap.get("profileimageurl"));
 		if (valuesMap.containsKey("profileimageurlsmall"))
 			user.setProfileimageurlsmall((String) valuesMap.get("profileimageurlsmall"));
 		if (valuesMap.containsKey("skype"))
@@ -280,7 +280,7 @@ public class MoodleRestUserFunctionsTools {
 		if (valuesMap.containsKey("url"))
 			user.setUrl((String) valuesMap.get("url"));
 		if (valuesMap.containsKey("yahoo"))
-			user.setUrl((String) valuesMap.get("yahoo"));
+			user.setYahoo((String) valuesMap.get("yahoo"));
 
 		///The Multiple values
 		if (valuesMap.containsKey("preferences")) {
@@ -293,7 +293,7 @@ public class MoodleRestUserFunctionsTools {
 			Set<Map<String, Object>> customfields = (Set<Map<String, Object>>) valuesMap.get("customfields");
 			for (Map<String, Object> customfield : customfields) {
 				String type = (String) customfield.get("type");
-				user.addCustomfields(CustomFieldType.valueOf(type), (String) customfield.get("value"),
+				user.addCustomfields(CustomFieldType.valueOf(type.toUpperCase()), (String) customfield.get("value"),
 						(String) customfield.get("name"), (String) customfield.get("shortname"));
 			}
 		}

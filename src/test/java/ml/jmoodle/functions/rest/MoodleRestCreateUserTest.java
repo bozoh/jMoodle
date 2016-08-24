@@ -327,6 +327,9 @@ public class MoodleRestCreateUserTest implements MoodleRestFunctionsCommonsTest 
 				.getFunction(MoodleWSFunctions.CORE_USER_CREATE_USERS, configMck);
 
 		Set<MoodleUser> usersToAdd = usersFixture.getMdlUsers();
+		for (MoodleUser moodleUser : usersToAdd) {
+			moodleUser.setId(null);
+		}
 		assertThat(usersToAdd.size(), equalTo(3));
 		for (MoodleUser moodleUser : usersToAdd) {
 			assertThat(moodleUser.getId(), nullValue());

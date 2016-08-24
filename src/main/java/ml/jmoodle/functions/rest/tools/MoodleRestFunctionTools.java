@@ -32,7 +32,7 @@ public class MoodleRestFunctionTools {
 				Set<Map<String,Object>> multipleValues=new HashSet<Map<String,Object>>();
 				NodeList singlesNode=key.getFirstChild().getChildNodes();
 				for (int j = 0; j < singlesNode.getLength(); j++) {
-					multipleValues.add(getSingleAttributes(singlesNode.item(j).getFirstChild()));
+					multipleValues.add(getSingleAttributes(singlesNode.item(j)));
 				}
 				returnMap.put(nodeKey.getAttribute("name"), multipleValues);
 			}
