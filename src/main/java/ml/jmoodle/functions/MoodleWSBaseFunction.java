@@ -1,7 +1,10 @@
 package ml.jmoodle.functions;
 
+import java.io.UnsupportedEncodingException;
+
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
+import ml.jmoodle.functions.exceptions.MoodleRestDeleteUsersException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -33,6 +36,17 @@ public abstract class MoodleWSBaseFunction implements MoodleWSFunction {
 						+ "], but your moodle version is [" + moodleVersion + "]");
 			}
 		} catch (MoodleConfigException e) {
+			throw new MoodleWSFucntionException(e);
+		}
+	}
+
+	public String getFunctionData() throws MoodleWSFucntionException {
+		try {
+			StringBuilder fnctData = new StringBuilder();
+			fnctData.append(MoodleTools.encode(MOODLE_FUNTION_NAME_PARAM)).append("=")
+					.append(MoodleTools.encode(getFunctionName())).append("&");
+			return fnctData.toString();
+		} catch (UnsupportedEncodingException e) {
 			throw new MoodleWSFucntionException(e);
 		}
 	}

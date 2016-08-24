@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertThat;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,6 +20,8 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.functions.rest.MoodleRestGetUsers;
+import ml.jmoodle.functions.rest.MoodleRestGetUsersByFields;
+import ml.jmoodle.functions.rest.MoodleRestGetUsersByFields.Field;
 import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.functions.rest.fixtures.UsersFixture;
 import ml.jmoodle.tools.MoodleTools;
@@ -77,6 +80,32 @@ public class MoodleRestUserFunctionsToolsTest {
 	}
 
 	@Test
+	public final void testSerliazeUserFields() throws Exception {
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersByFieldsResponse");
+
+		MoodleRestGetUsersByFields.Field field = MoodleRestGetUsersByFields.Field.ID;
+		Set<String> values = usersFixture.getFieldValues();
+		String userFieldsStr = uft.serliazeFields(field, values);
+		int i = 0;
+		for (String value : values) {
+			assertUserFields(field, userFieldsStr, value, i);
+			i++;
+		}
+	}
+
+	private void assertUserFields(Field field, String userFieldsStr, String value, int i)
+			throws UnsupportedEncodingException {
+		// field= str
+		// values[0]=
+
+		Assert.assertThat(userFieldsStr,
+				containsString(MoodleTools.encode("field") + "=" + MoodleTools.encode(field.toString())));
+		Assert.assertThat(userFieldsStr,
+				containsString(MoodleTools.encode("values[" + i + "]") + "=" + MoodleTools.encode(value)));
+
+	}
+
+	@Test
 	public final void testIfUnSerializeUsersReturnsUsersSet() throws Exception {
 		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
 		Document response = usersFixture.getGetUsersRespone();
@@ -86,6 +115,27 @@ public class MoodleRestUserFunctionsToolsTest {
 		for (MoodleUser moodleUser : expected) {
 			assertThat(testSet, hasItem(moodleUser));
 		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public final void testSerializeUserIds() throws Exception {
+		Set<MoodleUser> users = new HashSet(Fixture.from(MoodleUser.class).gimme(3, "MoodleRestDeleteUsersFunction"));
+
+		String userIdsStr = uft.serliazeUsersIds(users);
+		int i = 0;
+		for (MoodleUser user : users) {
+			assertUserIds(userIdsStr, user, i);
+			i++;
+		}
+
+	}
+
+	private void assertUserIds(String userIdsStr, MoodleUser user, int i) throws UnsupportedEncodingException {
+		// userids[0] = int
+		Assert.assertThat(userIdsStr, containsString(
+				MoodleTools.encode("userids[" + i + "]") + "=" + MoodleTools.encode(String.valueOf(user.getId()))));
+
 	}
 
 	public static void assertsUser(String userStr, MoodleUser moodleUser, int index)
@@ -166,14 +216,13 @@ public class MoodleRestUserFunctionsToolsTest {
 	}
 
 
+	public static void main(String[] args) throws Exception {
+		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
+		UsersFixture users = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersByFieldsResponse");
+		MoodleRestUserFunctionsTools uft = new MoodleRestUserFunctionsTools();
+		System.out.println(uft.serliazeFields(Field.ID, users.getFieldValues()));
+		// M
+	}
 
-	// public static void main(String[] args) throws Exception {
-	// FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
-	// MoodleUser moodleUser =
-	// Fixture.from(MoodleUser.class).gimme("MoodleRestUserFunctionsToolsTestUser1");
-	// MoodleRestUserFunctionsTools uft = new MoodleRestUserFunctionsTools();
-	// System.out.println(uft.serializeUser(moodleUser));
-	//// M
-	// }
 
 }

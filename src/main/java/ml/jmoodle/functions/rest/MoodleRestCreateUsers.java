@@ -53,15 +53,13 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 	}
 
 	@Override
-	public String getFunctionData() throws MoodleRestCreateUsersException {
+	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getUsers().isEmpty()) {
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.notSet("user"));
+			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Users"));
 		}
 		try {
-			StringBuilder retVal = new StringBuilder();
-			retVal.append(MoodleTools.encode(MOODLE_FUNTION_NAME_PARAM)).append("=")
-					.append(MoodleTools.encode(getFunctionName())).append("&")
-					.append(getUserFuntionsTools().serliazeUsers(getUsers()));
+			StringBuilder retVal = new StringBuilder(super.getFunctionData());
+			retVal.append(getUserFuntionsTools().serliazeUsers(getUsers()));
 			return retVal.toString();
 		} catch (UnsupportedEncodingException e) {
 			throw new MoodleRestCreateUsersException(e);

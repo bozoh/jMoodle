@@ -61,10 +61,8 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 			throw new MoodleRestGetUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Criteria"));
 		}
 		try {
-			StringBuilder returnData = new StringBuilder();
-			returnData.append(MoodleTools.encode("wsfunction")).append("=")
-					.append(MoodleTools.encode(getFunctionName())).append("&")
-					.append(getUserFuntionsTools().serliazeCriterias(getCriterias()));
+			StringBuilder returnData = new StringBuilder(super.getFunctionData());
+			returnData.append(getUserFuntionsTools().serliazeCriterias(getCriterias()));
 			return returnData.toString();
 		} catch (UnsupportedEncodingException e) {
 			throw new MoodleRestGetUsersException(e);

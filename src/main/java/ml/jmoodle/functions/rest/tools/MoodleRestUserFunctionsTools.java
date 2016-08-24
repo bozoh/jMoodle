@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.MoodleUser.CustomFieldType;
 import ml.jmoodle.functions.rest.MoodleRestGetUsers;
+import ml.jmoodle.functions.rest.MoodleRestGetUsersByFields.Field;
 //import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -316,6 +317,36 @@ public class MoodleRestUserFunctionsTools {
 					.append("=").append(MoodleTools.encode(criterias[i].getValue())).append("&");
 		}
 
+		return returnData.substring(0, returnData.length() - 1);
+	}
+
+	public String serliazeUsersIds(Set<MoodleUser> users) throws UnsupportedEncodingException {
+		return serliazeUsersIds(users.toArray(new MoodleUser[users.size()]));
+	}
+
+	private String serliazeUsersIds(MoodleUser[] users) throws UnsupportedEncodingException {
+		// userids[0]=
+		StringBuilder returnData = new StringBuilder();
+		for (int i = 0; i < users.length; i++) {
+			returnData.append(MoodleTools.encode("userids[")).append(i).append(MoodleTools.encode("]")).append("=")
+					.append(users[i].getId()).append("&");
+		}
+		return returnData.substring(0, returnData.length() - 1);
+	}
+
+	public String serliazeFields(Field field, Set<String> values) throws UnsupportedEncodingException {
+		return serliazeFields(field, values.toArray(new String[values.size()]));
+
+	}
+
+	private String serliazeFields(Field field, String[] values) throws UnsupportedEncodingException {
+		StringBuilder returnData = new StringBuilder();
+		returnData.append(MoodleTools.encode("field")).append("=").append(MoodleTools.encode(field.toString()))
+				.append("&");
+		for (int j = 0; j < values.length; j++) {
+			returnData.append(MoodleTools.encode("values[")).append(j).append(MoodleTools.encode("]")).append("=")
+					.append(MoodleTools.encode(values[j])).append("&");
+		}
 		return returnData.substring(0, returnData.length() - 1);
 	}
 
