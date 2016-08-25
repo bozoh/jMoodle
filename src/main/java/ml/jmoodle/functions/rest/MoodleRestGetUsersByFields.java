@@ -5,7 +5,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
@@ -50,7 +56,7 @@ public class MoodleRestGetUsersByFields extends MoodleWSBaseFunction {
 	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getField() == null)
 			throw new MoodleRestGetUsersByFieldsException(MoodleRestUsersCommonsErrorMessages.notSet("Field"));
-		
+
 		if (getValues() == null || getValues().isEmpty())
 			throw new MoodleRestGetUsersByFieldsException(MoodleRestUsersCommonsErrorMessages.notSet("Field Values"));
 
@@ -76,13 +82,19 @@ public class MoodleRestGetUsersByFields extends MoodleWSBaseFunction {
 		return "core_user_get_users_by_fields";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<MoodleUser> doCall() throws MoodleWSFucntionException {
+		return (Set<MoodleUser>) super.doCall();
+	}
+
+	@Override
+	public Set<MoodleUser> processResponse(Document response) throws MoodleRestGetUsersByFieldsException {
 		try {
-			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
-			return getUserFuntionsTools().unSerializeUsers(wsFunctionCall.call(this));
-		} catch (MoodleWSFunctionCallException e) {
-			throw new MoodleRestGetUsersByFieldsException(e);
+			XPath xPath = XPathFactory.newInstance().newXPath();
+			NodeList nodeList = (NodeList) xPath.compile("/RESPONSE/MULTIPLE/SINGLE").evaluate(response,
+					XPathConstants.NODESET);
+			return getUserFuntionsTools().unSerializeUsers(nodeList);
 		} catch (XPathExpressionException e) {
 			throw new MoodleRestGetUsersByFieldsException(e);
 		}
@@ -91,8 +103,7 @@ public class MoodleRestGetUsersByFields extends MoodleWSBaseFunction {
 
 	public void addValue(String value) throws MoodleRestGetUsersByFieldsException {
 		if (value == null || value.trim().isEmpty())
-			throw new MoodleRestGetUsersByFieldsException(
-					MoodleRestUsersCommonsErrorMessages.notSet("Field Value"));
+			throw new MoodleRestGetUsersByFieldsException(MoodleRestUsersCommonsErrorMessages.notSet("Field Value"));
 		this.fieldValues.add(value);
 
 	}

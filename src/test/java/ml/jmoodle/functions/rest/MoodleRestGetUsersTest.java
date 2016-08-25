@@ -12,11 +12,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,6 +31,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
@@ -96,8 +103,7 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 	}
 
 	@Test
-	public final void testIfAddCriteriaWithoutKeyThrowsExecpiton()
-			throws Exception {
+	public final void testIfAddCriteriaWithoutKeyThrowsExecpiton() throws Exception {
 		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
 		Set<Criteria> criterias = usersFixture.getCriterias();
 		Iterator<Criteria> i = criterias.iterator();
@@ -169,8 +175,7 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 
 		StringBuilder expectedStr = new StringBuilder();
 		expectedStr.append(MoodleTools.encode("wsfunction")).append("=")
-				.append(MoodleTools.encode("core_user_get_users")).append("&")
-				.append(serializedCriterias);
+				.append(MoodleTools.encode("core_user_get_users")).append("&").append(serializedCriterias);
 		function1.setCriterias(criterias);
 		assertThat(function1.getFunctionData(), equalTo(expectedStr.toString()));
 
@@ -191,7 +196,6 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 	@Test
 	public final void testIfDoCallMethodCallsMoodleWSFunctionCallCallMethod() throws Exception {
 
-		// Document userResponse = usersFixture.getRespone();
 		MoodleWSFunctionCall wsFunctionCallMck = mock(MoodleWSFunctionCall.class);
 		// when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(null);
 		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
@@ -218,9 +222,11 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 	@Test
 	public final void testIfDoCallMethodCallsMoodleRestUserFunctionToolsUnserializeUsersMethod() throws Exception {
 
-		// Document userResponse = usersFixture.getRespone();
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+		Document userResponse = usersFixture.getGetUsersRespone();
+
 		MoodleWSFunctionCall wsFunctionCallMck = mock(MoodleWSFunctionCall.class);
-		when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(null);
+		when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(userResponse);
 		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
 		PowerMockito.when(MoodleWSFunctionCall.getInstance(any(MoodleConfig.class))).thenReturn(wsFunctionCallMck);
 
@@ -229,7 +235,6 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck));
 		// PowerMockito.doReturn(mdlUsers).when(function1, "getUsers");
 		PowerMockito.doReturn(userFunctionsTools).when(mdlfnc, "getUserFuntionsTools");
-		
 
 		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
 
@@ -243,18 +248,59 @@ public class MoodleRestGetUsersTest implements MoodleRestFunctionsCommonsTest {
 			// Null poiter is excpeted since wsFunctionCall is a mock
 		}
 
-		verify(userFunctionsTools).unSerializeUsers(null);
+		verify(userFunctionsTools).unSerializeUsers(any(NodeList.class));
 	}
-	
 
+	@Test
+	public final void testIfDoCallMethodReturnMoodleUserCollection() throws Exception {
+		// TODO test warnings
+
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+		Document userResponse = usersFixture.getGetUsersRespone();
+
+		MoodleWSFunctionCall wsFunctionCallMck = mock(MoodleWSFunctionCall.class);
+		when(wsFunctionCallMck.call(any(MoodleWSFunction.class))).thenReturn(userResponse);
+		PowerMockito.mockStatic(MoodleWSFunctionCall.class);
+		PowerMockito.when(MoodleWSFunctionCall.getInstance(any(MoodleConfig.class))).thenReturn(wsFunctionCallMck);
+
+//		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
+		MoodleRestGetUsers mdlfnc = (MoodleRestGetUsers) MoodleWSFunctionFactory
+			.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS, configMck);
+//		// PowerMockito.doReturn(mdlUsers).when(function1, "getUsers");
+//		PowerMockito.doReturn(userFunctionsTools).when(mdlfnc, "getUserFuntionsTools");
+
+		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+
+		Set<MoodleRestGetUsers.Criteria> criterias = fixture.getCriterias();
+
+		mdlfnc.setCriterias(criterias);
+		Set<MoodleUser> response = mdlfnc.doCall();
+
+		Set<MoodleUser> expectedUsers = usersFixture.getMdlUsers();
+		
+		assertEquals(expectedUsers.size(), response.size());
+		
+		for (MoodleUser moodleUser : expectedUsers) {
+			assertThat(response, hasItem(moodleUser));
+		}
+	}
 
 	public static void main(String args[])
-			throws UnsupportedEncodingException, MoodleWSFucntionException, MoodleConfigException {
-		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
-		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUserResponse");
-		Set<MoodleRestGetUsers.Criteria> criterias = fixture.getCriterias();
+			throws Exception{
 		MoodleRestUserFunctionsTools tools = new MoodleRestUserFunctionsTools();
-		System.out.println(tools.serliazeCriterias(criterias));
+		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.fixtures");
+		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
+		Document userResponse = fixture.getGetUsersRespone();
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		NodeList usersNodeList = (NodeList) xPath.compile("/RESPONSE/SINGLE/KEY[@name=\"users\"]/MULTIPLE/SINGLE")
+				.evaluate(userResponse, XPathConstants.NODESET);
+		
+		
+		Set<MoodleUser> response = tools.unSerializeUsers(usersNodeList);
+		for (MoodleUser moodleUser : response) {
+			System.out.println(moodleUser);
+		}
+		
 
 	}
 

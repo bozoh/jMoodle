@@ -4,7 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
@@ -79,17 +85,23 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 		return "core_user_get_users";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<MoodleUser> doCall() throws MoodleWSFucntionException {
+		return (Set<MoodleUser>) super.doCall();
+	}
+
+	protected Set<MoodleUser> processResponse(Document response) throws MoodleRestGetUsersException {
 		try {
-			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
-			return getUserFuntionsTools().unSerializeUsers(wsFunctionCall.call(this));
-		} catch (MoodleWSFunctionCallException e) {
-			throw new MoodleRestGetUsersException(e);
+			XPath xPath = XPathFactory.newInstance().newXPath();
+			NodeList usersNodeList = (NodeList) xPath.compile("/RESPONSE/SINGLE/KEY[@name=\"users\"]/MULTIPLE/SINGLE")
+					.evaluate(response, XPathConstants.NODESET);
+			Set<MoodleUser> users = getUserFuntionsTools().unSerializeUsers(usersNodeList);
+			return users;
+			// TODO Process Warnings
 		} catch (XPathExpressionException e) {
 			throw new MoodleRestGetUsersException(e);
 		}
-
 	}
 
 	public void addCriteria(Criteria criteria) throws MoodleRestGetUsersException {

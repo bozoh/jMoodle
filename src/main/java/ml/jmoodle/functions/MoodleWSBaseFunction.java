@@ -1,11 +1,18 @@
 package ml.jmoodle.functions;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Set;
 
+import javax.xml.xpath.XPathExpressionException;
+
+import org.w3c.dom.Document;
+
+import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
-import ml.jmoodle.functions.exceptions.MoodleRestDeleteUsersException;
+import ml.jmoodle.functions.exceptions.MoodleRestGetUsersException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
@@ -50,5 +57,21 @@ public abstract class MoodleWSBaseFunction implements MoodleWSFunction {
 			throw new MoodleWSFucntionException(e);
 		}
 	}
+
+	@Override
+	public Object doCall() throws MoodleWSFucntionException {
+		try {
+			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
+			Document response = wsFunctionCall.call(this);
+			if (response == null || response.getChildNodes().getLength() <= 0)
+				return null;
+			return processResponse(response);
+		} catch (MoodleWSFunctionCallException e) {
+			throw new MoodleRestGetUsersException(e);
+		}
+
+	}
+
+	protected abstract Object processResponse(Document response) throws MoodleWSFucntionException;
 
 }

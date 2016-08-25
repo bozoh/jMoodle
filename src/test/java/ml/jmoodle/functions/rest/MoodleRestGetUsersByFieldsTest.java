@@ -95,7 +95,7 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 
 	@Test
 	public final void testIfAddFieldWithoutValueThrowsExecpiton() throws Exception {
-		
+
 		MoodleRestGetUsersByFields function1 = (MoodleRestGetUsersByFields) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS_BY_FIELDS, configMck);
 
@@ -112,17 +112,16 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 			assertThat(e, instanceOf(MoodleRestGetUsersByFieldsException.class));
 		}
 	}
-	
+
 	@Test(expected = MoodleRestGetUsersByFieldsException.class)
 	public final void testIfAddTwoDifferentFieldsThrowsExecpiton() throws Exception {
-		
+
 		MoodleRestGetUsersByFields function1 = (MoodleRestGetUsersByFields) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS_BY_FIELDS, configMck);
 
-		
 		function1.setField(MoodleRestGetUsersByFields.Field.ID);
 		function1.setField(MoodleRestGetUsersByFields.Field.EMAIL);
-		
+
 	}
 
 	@Test(expected = MoodleRestGetUsersByFieldsException.class)
@@ -149,7 +148,7 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 
 		PowerMockito.doReturn(userFunctionsTools).when(function1, "getUserFuntionsTools");
 
-		MoodleRestGetUsersByFields.Field field= MoodleRestGetUsersByFields.Field.ID;
+		MoodleRestGetUsersByFields.Field field = MoodleRestGetUsersByFields.Field.ID;
 		function1.setField(field);
 		function1.setValues(values);
 		function1.getFunctionData();
@@ -164,7 +163,7 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 
 		Set<String> values = usersFixture.getFieldValues();
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
-		when(userFunctionsTools.serliazeFields(any(Field.class),anySet())).thenReturn(serializedFields);
+		when(userFunctionsTools.serliazeFields(any(Field.class), anySet())).thenReturn(serializedFields);
 
 		MoodleRestGetUsersByFields function1 = PowerMockito.spy((MoodleRestGetUsersByFields) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_GET_USERS_BY_FIELDS, configMck));
@@ -173,7 +172,8 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 
 		StringBuilder expectedStr = new StringBuilder();
 		expectedStr.append(MoodleTools.encode("wsfunction")).append("=")
-				.append(MoodleTools.encode("CORE_USER_GET_USERS_BY_FIELDS".toLowerCase())).append("&").append(serializedFields);
+				.append(MoodleTools.encode("CORE_USER_GET_USERS_BY_FIELDS".toLowerCase())).append("&")
+				.append(serializedFields);
 		function1.setField(Field.ID);
 		function1.setValues(values);
 		assertThat(function1.getFunctionData(), equalTo(expectedStr.toString()));
@@ -206,16 +206,12 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 
 		UsersFixture fixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersByFieldsResponse");
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Set<String> values = fixture.getFieldValues();
-		
+
 		mdlfnc.setField(Field.ID);
 		mdlfnc.setValues(values);
-		try {
-			mdlfnc.doCall();
-		} catch (NullPointerException e) {
-			// Null poiter is excpeted since wsFunctionCall is a mock
-		}
+
+		mdlfnc.doCall();
 
 		verify(wsFunctionCallMck).call(mdlfnc);
 	}
@@ -236,10 +232,10 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 		Set<MoodleUser> expetedUserResponse = usersFixture.getMdlUsers();
 
 		Set<String> values = usersFixture.getFieldValues();
-		
+
 		mdlfnc.setField(Field.ID);
 		mdlfnc.setValues(values);
-		
+
 		Set<MoodleUser> response = mdlfnc.doCall();
 		assertThat(response, notNullValue());
 		assertThat(response.size(), equalTo(3));
@@ -249,7 +245,5 @@ public class MoodleRestGetUsersByFieldsTest implements MoodleRestFunctionsCommon
 		}
 
 	}
-
-	
 
 }

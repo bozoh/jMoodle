@@ -145,17 +145,15 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 	 * @return A set of MoodleUser
 	 * @throws MoodleWSFunctionCallException
 	 */
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Set<MoodleUser> doCall() throws MoodleRestCreateUsersException {
-		MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
-		try {
-			return processResponse(wsFunctionCall.call(this));
-		} catch (MoodleWSFunctionCallException e) {
-			throw new MoodleRestCreateUsersException(e);
-		}
+	public Set<MoodleUser>  doCall() throws MoodleWSFucntionException {
+		return (Set<MoodleUser>) super.doCall();
 	}
+	
 
-	private Set<MoodleUser> processResponse(Document response) throws MoodleRestCreateUsersException {
+	 protected Set<MoodleUser> processResponse(Document response) throws MoodleRestCreateUsersException {
 		try {
 			//
 			// <?xml version="1.0" encoding="UTF-8" ?>

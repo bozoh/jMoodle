@@ -165,13 +165,8 @@ public class MoodleRestUserFunctionsTools {
 		return returnData.substring(0, returnData.length() - 1);
 	}
 
-	public Set<MoodleUser> unSerializeUsers(Document response) throws XPathExpressionException {
-		// <RESPONSE>").append("<SINGLE>")
-		// .append("<KEY name=\"users\">").append("<MULTIPLE>
+	public Set<MoodleUser> unSerializeUsers(NodeList nodeList) throws XPathExpressionException {
 		Set<MoodleUser> result = new LinkedHashSet<MoodleUser>();
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		NodeList nodeList = (NodeList) xPath.compile("/RESPONSE/SINGLE/KEY[@name=\"users\"]/MULTIPLE/SINGLE")
-				.evaluate(response, XPathConstants.NODESET);
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node singleNode = nodeList.item(i);
 			Map<String, Object> singleValuesMap = MoodleRestFunctionTools.getSingleAttributes(singleNode);

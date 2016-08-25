@@ -11,5 +11,7 @@ public interface MoodleWSFunction {
 	public String getFunctionName() throws MoodleWSFucntionException;
 
 	public Object doCall() throws MoodleWSFucntionException;
+	
+	
 
 }

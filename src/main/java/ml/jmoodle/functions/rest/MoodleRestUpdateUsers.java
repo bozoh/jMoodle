@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.w3c.dom.Document;
+
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
@@ -69,17 +71,27 @@ public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 		}
 		return "core_user_update_users";
 	}
-
+	
 	@Override
-	public Object doCall() throws MoodleWSFucntionException {
-		try {
-			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
-			wsFunctionCall.call(this);
-			return null;
-		} catch (MoodleWSFunctionCallException e) {
-			throw new MoodleRestUpdateUsersException(e);
-		}
+	public Object  doCall() throws MoodleWSFucntionException {
+		return super.doCall();
 	}
+	
+	@Override
+	protected Object processResponse(Document response) throws MoodleWSFucntionException {
+		return null;
+	}
+
+//	@Override
+//	public Object doCall() throws MoodleWSFucntionException {
+//		try {
+//			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
+//			wsFunctionCall.call(this);
+//			return null;
+//		} catch (MoodleWSFunctionCallException e) {
+//			throw new MoodleRestUpdateUsersException(e);
+//		}
+//	}
 
 	public void addUser(MoodleUser mdlUser) throws MoodleRestUpdateUsersException {
 		

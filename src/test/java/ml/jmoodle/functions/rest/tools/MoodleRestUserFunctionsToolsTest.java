@@ -11,10 +11,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
@@ -107,10 +112,12 @@ public class MoodleRestUserFunctionsToolsTest {
 
 	@Test
 	public final void testIfUnSerializeUsersReturnsUsersSet() throws Exception {
-		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersResponse");
-		Document response = usersFixture.getGetUsersRespone();
-		
-		Set<MoodleUser> testSet = uft.unSerializeUsers(response);
+		UsersFixture usersFixture = Fixture.from(UsersFixture.class).gimme("MoodleRestGetUsersByFieldsResponse");
+		Document response = usersFixture.getGetUsersByIdRespone();
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		NodeList nodeList = (NodeList) xPath.compile("/RESPONSE/MULTIPLE/SINGLE")
+				.evaluate(response, XPathConstants.NODESET);
+		Set<MoodleUser> testSet = uft.unSerializeUsers(nodeList);
 		Set<MoodleUser> expected = usersFixture.getMdlUsers();
 		for (MoodleUser moodleUser : expected) {
 			assertThat(testSet, hasItem(moodleUser));

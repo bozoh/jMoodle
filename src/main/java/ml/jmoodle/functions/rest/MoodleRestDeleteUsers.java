@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.w3c.dom.Document;
+
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
@@ -68,16 +70,19 @@ public class MoodleRestDeleteUsers extends MoodleWSBaseFunction {
 		}
 		return "core_user_delete_users";
 	}
-
+	
+	
 	@Override
-	public Object doCall() throws MoodleWSFucntionException {
-		MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
-		try {
-			return wsFunctionCall.call(this);
-		} catch (MoodleWSFunctionCallException e) {
-			throw new MoodleRestDeleteUsersException(e);
-		}
+	public Object  doCall() throws MoodleWSFucntionException {
+		return super.doCall();
 	}
+	
+	@Override
+	protected Object processResponse(Document response) throws MoodleWSFucntionException {
+		return null;
+	}
+
+	
 
 	public void setUsers(Set<MoodleUser> users) throws MoodleRestDeleteUsersException {
 		for (MoodleUser moodleUser : users) {
@@ -102,5 +107,7 @@ public class MoodleRestDeleteUsers extends MoodleWSBaseFunction {
 	private MoodleRestUserFunctionsTools getUserFuntionsTools() {
 		return usersTools;
 	}
+
+	
 
 }
