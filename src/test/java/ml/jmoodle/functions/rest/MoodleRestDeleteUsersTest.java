@@ -141,7 +141,7 @@ public class MoodleRestDeleteUsersTest implements MoodleRestFunctionsCommonsTest
 		function1.setUsers(mdlUsers);
 		function1.getFunctionData();
 
-		verify(userFunctionsTools).serliazeUsersIds(mdlUsers);
+		verify(userFunctionsTools).serliazeMoodleUsersIds(mdlUsers);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -150,7 +150,7 @@ public class MoodleRestDeleteUsersTest implements MoodleRestFunctionsCommonsTest
 		Set<MoodleUser> mdlUsers = new LinkedHashSet(
 				Fixture.from(MoodleUser.class).gimme(3, "MoodleRestDeleteUsersFunction"));
 		MoodleRestUserFunctionsTools userFunctionsTools = mock(MoodleRestUserFunctionsTools.class);
-		when(userFunctionsTools.serliazeUsersIds(anySet())).thenReturn(serializedUserIds);
+		when(userFunctionsTools.serliazeMoodleUsersIds(anySet())).thenReturn(serializedUserIds);
 
 		MoodleRestDeleteUsers function1 = PowerMockito.spy((MoodleRestDeleteUsers) MoodleWSFunctionFactory
 				.getFunction(MoodleWSFunctions.CORE_USER_DELETE_USERS, configMck));

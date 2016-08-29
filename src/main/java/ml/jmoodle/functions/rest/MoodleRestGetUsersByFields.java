@@ -17,11 +17,9 @@ import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
-import ml.jmoodle.functions.MoodleWSFunctionCall;
 import ml.jmoodle.functions.exceptions.MoodleRestGetUsersByFieldsException;
 import ml.jmoodle.functions.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
-import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
 
 /**

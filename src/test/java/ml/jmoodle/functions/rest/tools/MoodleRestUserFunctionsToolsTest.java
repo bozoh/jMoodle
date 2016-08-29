@@ -129,7 +129,7 @@ public class MoodleRestUserFunctionsToolsTest {
 	public final void testSerializeUserIds() throws Exception {
 		Set<MoodleUser> users = new HashSet(Fixture.from(MoodleUser.class).gimme(3, "MoodleRestDeleteUsersFunction"));
 
-		String userIdsStr = uft.serliazeUsersIds(users);
+		String userIdsStr = uft.serliazeMoodleUsersIds(users);
 		int i = 0;
 		for (MoodleUser user : users) {
 			assertUserIds(userIdsStr, user, i);

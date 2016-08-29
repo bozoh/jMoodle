@@ -224,7 +224,7 @@ public class MoodleRestUserFunctionsTools {
 		if (valuesMap.containsKey("descriptionformat"))
 			user.setDescriptionformat(Integer.parseInt((String) valuesMap.get("descriptionformat")));
 		if (valuesMap.containsKey("firstaccess"))
-			user.setFirstaccess(Long.valueOf((String) valuesMap.get("firstaccess"))*1000l);
+			user.setFirstaccess(Long.valueOf((String) valuesMap.get("firstaccess")) * 1000l);
 
 		if (valuesMap.containsKey("firstnamephonetic"))
 			user.setFirstnamephonetic((String) valuesMap.get("firstnamephonetic"));
@@ -247,7 +247,7 @@ public class MoodleRestUserFunctionsTools {
 			user.setLang("en");
 
 		if (valuesMap.containsKey("lastaccess"))
-			user.setLastaccess(Long.valueOf((String) valuesMap.get("lastaccess"))*1000l);
+			user.setLastaccess(Long.valueOf((String) valuesMap.get("lastaccess")) * 1000l);
 		if (valuesMap.containsKey("lastnamephonetic"))
 			user.setLastnamephonetic((String) valuesMap.get("lastnamephonetic"));
 		if (valuesMap.containsKey("mailformat"))
@@ -277,7 +277,7 @@ public class MoodleRestUserFunctionsTools {
 		if (valuesMap.containsKey("yahoo"))
 			user.setYahoo((String) valuesMap.get("yahoo"));
 
-		///The Multiple values
+		/// The Multiple values
 		if (valuesMap.containsKey("preferences")) {
 			Set<Map<String, Object>> preferences = (Set<Map<String, Object>>) valuesMap.get("preferences");
 			for (Map<String, Object> preference : preferences) {
@@ -315,19 +315,8 @@ public class MoodleRestUserFunctionsTools {
 		return returnData.substring(0, returnData.length() - 1);
 	}
 
-	public String serliazeUsersIds(Set<MoodleUser> users) throws UnsupportedEncodingException {
-		return serliazeUsersIds(users.toArray(new MoodleUser[users.size()]));
-	}
+	
 
-	private String serliazeUsersIds(MoodleUser[] users) throws UnsupportedEncodingException {
-		// userids[0]=
-		StringBuilder returnData = new StringBuilder();
-		for (int i = 0; i < users.length; i++) {
-			returnData.append(MoodleTools.encode("userids[")).append(i).append(MoodleTools.encode("]")).append("=")
-					.append(users[i].getId()).append("&");
-		}
-		return returnData.substring(0, returnData.length() - 1);
-	}
 
 	public String serliazeFields(Field field, Set<String> values) throws UnsupportedEncodingException {
 		return serliazeFields(field, values.toArray(new String[values.size()]));
@@ -341,6 +330,32 @@ public class MoodleRestUserFunctionsTools {
 		for (int j = 0; j < values.length; j++) {
 			returnData.append(MoodleTools.encode("values[")).append(j).append(MoodleTools.encode("]")).append("=")
 					.append(MoodleTools.encode(values[j])).append("&");
+		}
+		return returnData.substring(0, returnData.length() - 1);
+	}
+
+	public String serliazeUsersIds(Set<Long> ids) throws UnsupportedEncodingException {
+		return serliazeUsersIds(ids.toArray(new Long[ids.size()]));
+
+	}
+	
+	public String serliazeMoodleUsersIds(Set<MoodleUser> users) throws UnsupportedEncodingException {
+		Long[] ids = new Long[users.size()];
+		int i = 0;
+
+		for (MoodleUser moodleUser : users) {
+			ids[i] = moodleUser.getId();
+			i++;
+		}
+		return serliazeUsersIds(ids);
+	}
+
+	private String serliazeUsersIds(Long[] ids) throws UnsupportedEncodingException {
+		// userids[0]=
+		StringBuilder returnData = new StringBuilder();
+		for (int i = 0; i < ids.length; i++) {
+			returnData.append(MoodleTools.encode("userids[")).append(i).append(MoodleTools.encode("]")).append("=")
+					.append(ids[i].longValue()).append("&");
 		}
 		return returnData.substring(0, returnData.length() - 1);
 	}

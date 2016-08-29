@@ -469,4 +469,12 @@ public class UsersFixture implements TemplateLoader {
 		return builder.parse(new ByteArrayInputStream(usrResponse.toString().getBytes()));
 	}
 
+	public Set<Long> getIdsValues() {
+		Set<Long> ids= new HashSet<Long>();
+		for (MoodleUser moodleUser : mdlUsers) {
+			ids.add(moodleUser.getId());
+		}
+		return ids;
+	}
+
 }

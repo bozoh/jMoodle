@@ -48,7 +48,7 @@ public class MoodleRestDeleteUsers extends MoodleWSBaseFunction {
 			throw new MoodleRestDeleteUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Users"));
 		try {
 			StringBuilder fnctData = new StringBuilder(super.getFunctionData());
-			fnctData.append(getUserFuntionsTools().serliazeUsersIds(getUsers()));
+			fnctData.append(getUserFuntionsTools().serliazeMoodleUsersIds(getUsers()));
 			return fnctData.toString();
 		} catch (UnsupportedEncodingException e) {
 			throw new MoodleRestDeleteUsersException(e);
