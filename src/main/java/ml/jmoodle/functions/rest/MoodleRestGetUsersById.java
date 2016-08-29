@@ -8,6 +8,7 @@ import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
+import ml.jmoodle.functions.exceptions.MoodleRestGetUsersByIdException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 
@@ -59,14 +60,15 @@ public class MoodleRestGetUsersById extends MoodleWSBaseFunction {
 		return null;
 	}
 
-	public void addId(Long id) {
+	public void addId(Long id) throws MoodleRestGetUsersByIdException{
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void setIds(Set<Long> ids) {
-		// TODO Auto-generated method stub
-		
+	public void setIds(Set<Long> ids) throws MoodleRestGetUsersByIdException {
+		for (Long id : ids) {
+			this.addId(id);
+		}
 	}
 
 }
