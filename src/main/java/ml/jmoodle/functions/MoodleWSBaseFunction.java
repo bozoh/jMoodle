@@ -1,18 +1,15 @@
 package ml.jmoodle.functions;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Set;
-
-import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.Document;
 
-import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
-import ml.jmoodle.functions.exceptions.MoodleRestGetUsersException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
+import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersException;
+import ml.jmoodle.tools.MoodleParamMap;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
@@ -31,6 +28,7 @@ public abstract class MoodleWSBaseFunction implements MoodleWSFunction {
 
 	protected static MoodleConfig mdlConfig;
 	protected static final String MOODLE_FUNTION_NAME_PARAM = "wsfunction";
+	
 
 	public MoodleWSBaseFunction(MoodleConfig moodleConfig) throws MoodleWSFucntionException {
 		mdlConfig = moodleConfig;
@@ -49,29 +47,28 @@ public abstract class MoodleWSBaseFunction implements MoodleWSFunction {
 
 	public String getFunctionData() throws MoodleWSFucntionException {
 		try {
-			StringBuilder fnctData = new StringBuilder();
-			fnctData.append(MoodleTools.encode(MOODLE_FUNTION_NAME_PARAM)).append("=")
-					.append(MoodleTools.encode(getFunctionName())).append("&");
-			return fnctData.toString();
+			MoodleParamMap mpm = new MoodleParamMap();
+			mpm.put(MOODLE_FUNTION_NAME_PARAM, getFunctionName());
+			return mpm.toParamString() + "&";
 		} catch (UnsupportedEncodingException e) {
 			throw new MoodleWSFucntionException(e);
 		}
 	}
-
+	
 	@Override
 	public Object doCall() throws MoodleWSFucntionException {
 		try {
 			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
 			Document response = wsFunctionCall.call(this);
 			if (response == null || response.getChildNodes().getLength() <= 0)
-				return null;
+			return null;
 			return processResponse(response);
 		} catch (MoodleWSFunctionCallException e) {
 			throw new MoodleRestGetUsersException(e);
 		}
-
+		
 	}
-
+	
 	protected abstract Object processResponse(Document response) throws MoodleWSFucntionException;
 
 }

@@ -1,4 +1,6 @@
-package ml.jmoodle.functions.exceptions;
+package ml.jmoodle.functions.rest.user.exceptions;
+
+import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 public class MoodleRestCreateUsersException extends MoodleWSFucntionException {
 

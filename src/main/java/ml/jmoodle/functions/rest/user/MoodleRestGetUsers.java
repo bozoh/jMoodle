@@ -1,4 +1,4 @@
-package ml.jmoodle.functions.rest;
+package ml.jmoodle.functions.rest.user;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
@@ -16,13 +16,10 @@ import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
-import ml.jmoodle.functions.MoodleWSFunctionCall;
-import ml.jmoodle.functions.exceptions.MoodleRestGetUsersException;
-import ml.jmoodle.functions.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
-import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
-import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
-import ml.jmoodle.tools.MoodleTools;
+import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersException;
+import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
+import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
 
 /**
  * Get User function by criteria

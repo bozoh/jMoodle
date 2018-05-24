@@ -1,5 +1,6 @@
 package ml.jmoodle.configs;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -30,9 +31,9 @@ public class MoodleConfig {
 	 * 
 	 * Builds Basic Moodle configuration
 	 * 
-	 * @param moodleURL
-	 *            must be the same value of $CFG->wwwroot in moodle config.php
-	 *            file
+	 * @param moodleURL - must be the same value of $CFG->wwwroot in moodle config.php file
+	 * @param mdlAuth - moodle auth schema (token or usr/passwd)
+	 * @param moodleVersion - Moodle version
 	 * 
 	 * @throws MalformedURLException
 	 * @throws MoodleConfigException
@@ -41,12 +42,18 @@ public class MoodleConfig {
 	public MoodleConfig(String moodleURL, MoodleAuthentication mdlAuth, String moodleVersion) throws MoodleConfigException {
 		MoodleConfig.verifyVersion(moodleVersion);
 		this.version = moodleVersion;
-		this.mdlAuth=mdlAuth; 
+		this.mdlAuth = mdlAuth; 
 		if (!(moodleURL.trim().toLowerCase().startsWith("http://")
 				|| moodleURL.trim().toLowerCase().startsWith("https://"))) {
 			this.moodleURL.append("http://");
 		}
-		this.moodleURL.append(moodleURL).append(MOODLE_REST_ENDPOINT);
+		try {
+			this.moodleURL.append(moodleURL)
+			.append(MOODLE_REST_ENDPOINT).append("?")
+			.append(this.mdlAuth.getAuthentication());
+		} catch (UnsupportedEncodingException e) {
+			throw new MoodleConfigException(e);
+		}
 	}
 
 	/**
@@ -62,7 +69,7 @@ public class MoodleConfig {
 	 */
 
 	public URL getMoodleURL() throws MalformedURLException {
-		this.moodleURL.append(this.mdlAuth.getAuthentication());
+		
 		return new URL(this.moodleURL.toString());
 	}
 

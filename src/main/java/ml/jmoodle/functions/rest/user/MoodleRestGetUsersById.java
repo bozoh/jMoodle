@@ -1,4 +1,4 @@
-package ml.jmoodle.functions.rest;
+package ml.jmoodle.functions.rest.user;
 
 import java.util.Set;
 
@@ -8,8 +8,9 @@ import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
-import ml.jmoodle.functions.exceptions.MoodleRestGetUsersByIdException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersByIdException;
+
 
 
 /**

@@ -1,23 +1,20 @@
-package ml.jmoodle.functions.rest.tools;
+package ml.jmoodle.functions.rest.user.tools;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.MoodleUser.CustomFieldType;
-import ml.jmoodle.functions.rest.MoodleRestGetUsers;
-import ml.jmoodle.functions.rest.MoodleRestGetUsersByFields.Field;
+import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
+import ml.jmoodle.functions.rest.user.MoodleRestGetUsers;
+import ml.jmoodle.functions.rest.user.MoodleRestGetUsersByFields.Field;
 //import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.tools.MoodleTools;
 

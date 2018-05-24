@@ -1,5 +1,6 @@
 package ml.jmoodle.authentications;
 
+import java.io.UnsupportedEncodingException;
 
 /**
  * Interface for Moodle WS authentication methods
@@ -15,5 +16,5 @@ public interface MoodleAuthentication {
 	 * Get the authentication string
 	 * @return Authentication String
 	 */
-	String getAuthentication();
+	String getAuthentication() throws UnsupportedEncodingException;
 }

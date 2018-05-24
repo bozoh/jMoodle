@@ -1,6 +1,10 @@
-package ml.jmoodle.functions.exceptions;
+package ml.jmoodle.functions.rest.user.exceptions;
+
+import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 public class MoodleRestDeleteUsersException extends MoodleWSFucntionException {
+
+	private static final long serialVersionUID = 1096148060445665580L;
 
 	public MoodleRestDeleteUsersException() {
 		// TODO Auto-generated constructor stub

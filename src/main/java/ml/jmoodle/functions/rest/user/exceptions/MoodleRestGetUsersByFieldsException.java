@@ -1,8 +1,12 @@
-package ml.jmoodle.functions.exceptions;
+package ml.jmoodle.functions.rest.user.exceptions;
 
-import ml.jmoodle.functions.rest.MoodleRestGetUsersByFields.Field;
+
+import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.rest.user.MoodleRestGetUsersByFields.Field;
 
 public class MoodleRestGetUsersByFieldsException extends MoodleWSFucntionException {
+
+	private static final long serialVersionUID = -1851500159808076764L;
 
 	public MoodleRestGetUsersByFieldsException() {
 		// TODO Auto-generated constructor stub

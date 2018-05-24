@@ -2,6 +2,8 @@ package ml.jmoodle.configs.expections;
 
 public class MoodleConfigException extends Exception {
 
+	private static final long serialVersionUID = 6408362320546851723L;
+
 	public MoodleConfigException() {
 		// TODO Auto-generated constructor stub
 	}

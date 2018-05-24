@@ -1,8 +1,10 @@
-package ml.jmoodle.functions.exceptions;
+package ml.jmoodle.functions.rest.user.exceptions;
 
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 public class MoodleRestGetUsersByIdException extends MoodleWSFucntionException {
+
+	private static final long serialVersionUID = 4341778705044343923L;
 
 	public MoodleRestGetUsersByIdException() {
 		super();

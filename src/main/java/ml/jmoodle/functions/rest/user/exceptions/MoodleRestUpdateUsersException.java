@@ -1,4 +1,6 @@
-package ml.jmoodle.functions.exceptions;
+package ml.jmoodle.functions.rest.user.exceptions;
+
+import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 /**
  * Create User(s) Function
@@ -10,6 +12,9 @@ package ml.jmoodle.functions.exceptions;
  *
  */
 public class MoodleRestUpdateUsersException extends MoodleWSFucntionException {
+
+
+	private static final long serialVersionUID = -2659275638403326547L;
 
 	public MoodleRestUpdateUsersException() {
 		// TODO Auto-generated constructor stub

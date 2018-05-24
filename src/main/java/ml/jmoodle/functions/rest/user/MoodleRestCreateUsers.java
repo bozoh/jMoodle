@@ -1,4 +1,4 @@
-package ml.jmoodle.functions.rest;
+package ml.jmoodle.functions.rest.user;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
@@ -21,13 +21,12 @@ import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
-import ml.jmoodle.functions.MoodleWSFunctionCall;
-import ml.jmoodle.functions.exceptions.MoodleRestCreateUsersException;
-import ml.jmoodle.functions.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
-import ml.jmoodle.functions.rest.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.functions.rest.user.exceptions.MoodleRestCreateUsersException;
+import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
+import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
@@ -42,14 +41,14 @@ import ml.jmoodle.tools.MoodleTools;
 @MoodleWSFunction(names = { "core_user_create_users", "moodle_user_create_users" })
 public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 	private static final String SINCE_VERSION = "2.0.0";
-	private MoodleRestUserFunctionsTools userFuntionsTools;
+	private MoodleRestUserFunctionsTools userFunctionsTools;
 	// Using map insted a set to set the Users ids
 	private Map<String, MoodleUser> users;
 
 	public MoodleRestCreateUsers(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
 		super(moodleConfig);
 		this.users = new TreeMap<String, MoodleUser>();
-		this.userFuntionsTools = new MoodleRestUserFunctionsTools();
+		this.userFunctionsTools = new MoodleRestUserFunctionsTools();
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 		}
 		try {
 			StringBuilder retVal = new StringBuilder(super.getFunctionData());
-			retVal.append(getUserFuntionsTools().serliazeUsers(getUsers()));
+			retVal.append(getUserFunctionsTools().serliazeUsers(getUsers()));
 			return retVal.toString();
 		} catch (UnsupportedEncodingException e) {
 			throw new MoodleRestCreateUsersException(e);
@@ -67,8 +66,8 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 
 	}
 
-	private MoodleRestUserFunctionsTools getUserFuntionsTools() {
-		return this.userFuntionsTools;
+	private MoodleRestUserFunctionsTools getUserFunctionsTools() {
+		return this.userFunctionsTools;
 	}
 
 	/**

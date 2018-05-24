@@ -2,7 +2,7 @@ package ml.jmoodle.authentications;
 
 import java.io.UnsupportedEncodingException;
 
-import ml.jmoodle.tools.MoodleTools;
+import ml.jmoodle.tools.MoodleParamMap;
 
 
 /**
@@ -16,18 +16,17 @@ import ml.jmoodle.tools.MoodleTools;
  */
 public class TokenAuthentication implements MoodleAuthentication {
 
-	private StringBuilder authStr;
+	private MoodleParamMap mpm;
 
 	
-	public TokenAuthentication(String token) throws UnsupportedEncodingException {
-		this.authStr = new StringBuilder("?");
-		authStr.append(MoodleTools.encode("wstoken")).append("=")
-				.append(MoodleTools.encode(token));
+	public TokenAuthentication(String token) {
+		this.mpm = new MoodleParamMap();
+		mpm.put("wstoken", token);
 	}
 
 	@Override
-	public String getAuthentication(){
-		return this.authStr.toString();
+	public String getAuthentication() throws UnsupportedEncodingException{
+		return this.mpm.toParamString();
 
 	}
 

@@ -6,6 +6,7 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
+
 /**
  * 
  * Base class to create functions

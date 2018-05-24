@@ -2,6 +2,8 @@ package ml.jmoodle.functions.exceptions;
 
 public class MoodleWSFunctionCallException extends Exception {
 
+	private static final long serialVersionUID = 2701949148229366607L;
+
 	public MoodleWSFunctionCallException() {
 		// TODO Auto-generated constructor stub
 	}

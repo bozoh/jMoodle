@@ -1,4 +1,4 @@
-package ml.jmoodle.functions.exceptions;
+package ml.jmoodle.functions.rest.user.exceptions;
 
 public class MoodleRestUsersCommonsErrorMessages {
 
