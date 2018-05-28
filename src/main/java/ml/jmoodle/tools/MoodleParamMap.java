@@ -1,11 +1,8 @@
 package ml.jmoodle.tools;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import ml.jmoodle.configs.MoodleConfig;
 
 public class MoodleParamMap extends HashMap<String, String> {
 
@@ -43,9 +40,9 @@ public class MoodleParamMap extends HashMap<String, String> {
         StringBuilder sb = new StringBuilder();
         
         for(String key: keySet()) {
-            sb.append(URLEncoder.encode(key, MoodleConfig.DEFAULT_ENCODING));
+            sb.append(MoodleTools.encode(key));
             sb.append("=");
-            sb.append(URLEncoder.encode(get(key), MoodleConfig.DEFAULT_ENCODING));
+            sb.append(MoodleTools.encode(get(key)));
             sb.append("&");
         }
         return sb.substring(0, sb.length() -1);

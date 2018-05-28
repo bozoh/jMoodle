@@ -25,6 +25,23 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>ml.jmoodle</groupId>
+      <artifactId>jmoodle-annotations</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+		  <groupId>org.projectlombok</groupId>
+		  <artifactId>lombok</artifactId>
+		  <version>1.16.20</version>
+		  <scope>provided</scope>
+	  </dependency>
   </dependencies>
 
   <build>
@@ -42,6 +59,16 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.7.0</version>
+          <configuration>
+            <compilerVersion>1.8</compilerVersion>
+            <source>1.8</source>
+            <target>1.8</target>
+            <generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
+            <!-- <useIncrementalCompilation>false</useIncrementalCompilation> -->
+            <!-- <annotationProcessors>
+              <annotationProcessor>ml.jmoodle.annotations.processors.MoodleWSFunctionAnnotationProcessor</annotationProcessor>
+            </annotationProcessors> -->
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>

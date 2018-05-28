@@ -3,6 +3,7 @@ package ml.jmoodle.tools;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
@@ -16,6 +17,8 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
  *
  */
 public class MoodleTools {
+
+	public static final String MOODLE_VERSION_PATTERN = "^(\\d+)\\.(\\d+)\\.(\\d+)$";
 
 	/**
 	 * A encoder warper
@@ -39,13 +42,46 @@ public class MoodleTools {
 	 * @throws MoodleConfigException
 	 */
 	public static int compareVersion(String v1, String v2) throws MoodleConfigException {
-		Matcher v1Match = MoodleConfig.verifyVersion(v1);
-		Matcher v2Match = MoodleConfig.verifyVersion(v2);
 		
-		Double vd1 = Double.valueOf(v1Match.group(1) + "." + v1Match.group(2) + v1Match.group(3));
-		Double vd2 = Double.valueOf(v2Match.group(1) + "." + v2Match.group(2) + v2Match.group(3));
+		if (!verifyMoodleVersion(v1)) {
+			throw new MoodleConfigException("Invalid moodle version [" + v1 + "]");
+		}
+		
+		if (!verifyMoodleVersion(v2)) {
+			throw new MoodleConfigException("Invalid moodle version [" + v2 + "]");
+		}
+
+		Matcher m1 = getVersionMacher(v1);
+		Matcher m2 = getVersionMacher(v2);
+		m1.matches();
+		m2.matches();
+
+		Double vd1 = Double.valueOf(m1.group(1) + "." + m1.group(2) + m1.group(3));
+		Double vd2 = Double.valueOf(m2.group(1) + "." + m2.group(2) + m2.group(3));
 
 		return vd1.compareTo(vd2);
+	}
+
+
+	private static Matcher getVersionMacher(String v) {
+		Pattern versionPattern = Pattern.compile(MOODLE_VERSION_PATTERN);
+		return versionPattern.matcher(v);
+	}
+
+	/**
+	 * Verify the moodle version and return the moodle version regexp matcher
+	 * throw an Exception if it is a invalid moodle version
+	 * 
+	 * @param mdlVersion
+	 * @return true if is a valid version
+	 */
+	public static boolean verifyMoodleVersion(String mdlVersion) {
+		Matcher m = getVersionMacher(mdlVersion);
+		return (m.matches() && m.groupCount() == 3);
+	}
+
+	public static boolean isEmpty(String str) {
+		return (str == null || str.trim().isEmpty());
 	}
 
 }

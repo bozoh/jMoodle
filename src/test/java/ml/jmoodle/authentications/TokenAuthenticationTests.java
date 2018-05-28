@@ -7,16 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.UnsupportedEncodingException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
-import ml.jmoodle.authentications.TokenAuthentication;
 
 
 /**
@@ -30,44 +21,13 @@ import ml.jmoodle.authentications.TokenAuthentication;
  */
 public class TokenAuthenticationTests {
 	
-	@Rule
-	public MockitoRule rule = MockitoJUnit.rule();
-
-	String token = "12345";
-
 	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+	String token = "12345";
 
 	@Test
 	public void getAthenticationtest() throws UnsupportedEncodingException {
 		TokenAuthentication tokenAuthentication = new TokenAuthentication(token);
-		assertEquals("?wstoken="+token, tokenAuthentication.getAuthentication());
+		assertEquals("wstoken="+token, tokenAuthentication.getAuthentication());
 	}
 
 }

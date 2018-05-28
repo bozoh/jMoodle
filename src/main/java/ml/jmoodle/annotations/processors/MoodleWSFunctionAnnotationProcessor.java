@@ -29,7 +29,7 @@ public class MoodleWSFunctionAnnotationProcessor extends AbstractProcessor {
 
 	@Override
 	public SourceVersion getSupportedSourceVersion() {
-		return SourceVersion.RELEASE_6;
+		return SourceVersion.RELEASE_8;
 	}
 
 	@Override

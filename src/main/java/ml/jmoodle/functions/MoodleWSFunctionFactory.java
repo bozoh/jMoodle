@@ -28,15 +28,13 @@ public class MoodleWSFunctionFactory {
 	 * 
 	 * @param functionName
 	 *            Use the MoodleWSFunctions to get the right function class name
-	 * @param moodleVersion
-	 *            Moodle Version
+	 * @param moodleConfig
+	 *            Moodle Monfiguration
 	 * @return
 	 * @throws MoodleWSFucntionException
-	 * @throws MoodleConfigException
-	 * @throws MoodleToolsException
 	 */
 	public static final MoodleWSFunction getFunction(MoodleWSFunctions functionName, MoodleConfig moodleConfig)
-			throws MoodleWSFucntionException, MoodleConfigException {
+			throws MoodleWSFucntionException {
 		try {
 			MoodleWSFunction function = factory(functionName.getValue(), moodleConfig);
 			// checkVersion(function.getFunctionName(), moodleVersion,
@@ -50,7 +48,8 @@ public class MoodleWSFunctionFactory {
 
 	//To improve testability 
 	private static MoodleWSFunction factory(String className, MoodleConfig mdlConfig)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException,
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException, IllegalArgumentException,
 			SecurityException, InvocationTargetException, NoSuchMethodException {
 
 		Class<? extends MoodleWSFunction> clazz = (Class<? extends MoodleWSFunction>) Class.forName(className);

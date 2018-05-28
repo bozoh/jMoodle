@@ -1,0 +1,28 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "jmoodle",
+                "projectName": "jmoodle",
+                "workingDirectory": "/home/103615563/projetos/pessoais/jMoodle",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "jmoodle",
+                "projectName": "jmoodle",
+                "workingDirectory": "/home/103615563/projetos/pessoais/jMoodle",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

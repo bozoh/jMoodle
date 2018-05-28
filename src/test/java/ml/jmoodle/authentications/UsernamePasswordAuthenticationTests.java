@@ -22,7 +22,7 @@ public class UsernamePasswordAuthenticationTests {
 	@Test
 	public void getAuthenticationTest() throws Exception {
 		UsernamePasswordAuthentication authentication = new UsernamePasswordAuthentication(username, password);
-		assertEquals("?wsusername=" + username + "&wspassword=" + password, authentication.getAuthentication());
+		assertEquals("wsusername=" + username + "&wspassword=" + password, authentication.getAuthentication());
 	}
 
 }

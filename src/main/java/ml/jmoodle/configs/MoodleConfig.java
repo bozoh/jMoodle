@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import ml.jmoodle.authentications.MoodleAuthentication;
 
 import ml.jmoodle.configs.expections.MoodleConfigException;
+import ml.jmoodle.tools.MoodleTools;
 
 /**
  * Hold the basic configuration for sending WS request to Moodle WS API
@@ -21,7 +22,7 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 public class MoodleConfig {
 	public static final String MOODLE_REST_ENDPOINT = "/webservice/rest/server.php";
 	public static final String DEFAULT_ENCODING = "UTF-8";
-	public static final String MOODLE_VERSION_PATTERN = "^(\\d+)\\.(\\d+)\\.(\\d+)$";
+	
 
 	private StringBuilder moodleURL = new StringBuilder();
 	private MoodleAuthentication mdlAuth;
@@ -40,7 +41,9 @@ public class MoodleConfig {
 	 */
 
 	public MoodleConfig(String moodleURL, MoodleAuthentication mdlAuth, String moodleVersion) throws MoodleConfigException {
-		MoodleConfig.verifyVersion(moodleVersion);
+		if (!MoodleTools.verifyMoodleVersion(moodleVersion)) {
+			throw new MoodleConfigException("Invalid moodle version [" + moodleVersion + "]");
+		}
 		this.version = moodleVersion;
 		this.mdlAuth = mdlAuth; 
 		if (!(moodleURL.trim().toLowerCase().startsWith("http://")
@@ -69,27 +72,6 @@ public class MoodleConfig {
 	 */
 
 	public URL getMoodleURL() throws MalformedURLException {
-		
 		return new URL(this.moodleURL.toString());
 	}
-
-	/**
-	 * Verify the moodle version and return the moodle version regexp matcher
-	 * throw an Exception if it is a invalid moodle version
-	 * 
-	 * @param mdlVersion
-	 * @return the moodle version regexp matcher
-	 * @throws MoodleConfigException
-	 */
-	public static Matcher verifyVersion(String mdlVersion) throws MoodleConfigException {
-		Pattern versionPattern = Pattern.compile(MoodleConfig.MOODLE_VERSION_PATTERN);
-		Matcher matcher = versionPattern.matcher(mdlVersion);
-		boolean haveMatch = matcher.matches();
-		if (!(haveMatch && matcher.groupCount() == 3)) {
-			throw new MoodleConfigException("Invalid moodle version [" + mdlVersion + "]");
-		}
-
-		return matcher;
-	}
-
 }
