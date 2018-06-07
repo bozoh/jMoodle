@@ -20,12 +20,16 @@ package ml.jmoodle.commons;
 
 import java.io.Serializable;
 
+import ml.jmoodle.annotations.MoodleConverter;
+
 /**
  *
  * @author Bill Antonia
  */
+@MoodleConverter
 public class OptionParameter implements Serializable {
 
+	private static final long serialVersionUID = 5451314928741418992L;
 	private String name = null;
 	private String value = null;
 

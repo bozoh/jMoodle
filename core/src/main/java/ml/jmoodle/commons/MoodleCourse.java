@@ -22,7 +22,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import ml.jmoodle.annotations.MoodleConveter;
+import ml.jmoodle.annotations.MoodleConverter;
+
+
 
 /**
  * <p>
@@ -46,7 +48,7 @@ import ml.jmoodle.annotations.MoodleConveter;
  * @author carlosalexandre
  *
  */
-@MoodleConveter(name={""})
+@MoodleConverter
 public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 
 	/**
