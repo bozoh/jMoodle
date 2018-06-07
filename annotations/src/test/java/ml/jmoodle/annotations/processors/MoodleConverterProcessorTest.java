@@ -31,6 +31,7 @@ public class MoodleConverterProcessorTest  {
 				"private String testeString;",
 				"private Long testeLong;",
 				"private Integer testeInteger;",
+				"private String readOnly;",
 				"public String getTesteString() {",
 				"return this.testeString;",
 				"}",
@@ -40,6 +41,9 @@ public class MoodleConverterProcessorTest  {
 				"public Integer getTesteInteger() {",
 				"return this.testeInteger;",
 				"}",
+				"public String getReadOnly() {",
+				"return this.readOnly;",
+				"}",
 				"public void setTesteString(String s) {",
 				"this.testeString = s;",
 				"}",
@@ -48,6 +52,9 @@ public class MoodleConverterProcessorTest  {
 				"}",
 				"public void setTesteInteger(Integer i) {",
 				"this.testeInteger = i;",
+				"}",
+				"private void setReadOnly(String readOnly) {",
+				"this.readOnly = readOnly;",
 				"}",
 				"}"
 				)

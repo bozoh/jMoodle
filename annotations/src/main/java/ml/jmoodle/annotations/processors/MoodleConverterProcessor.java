@@ -58,9 +58,13 @@ public class MoodleConverterProcessor {
 			.addStatement("$T entity = new $T()", ClassName.get(e), ClassName.get(e));
 		
 		for (Element element : e.getEnclosedElements()) {
-			if (element.getKind() == ElementKind.METHOD && element.getSimpleName().toString().startsWith("get")) {
+			if (element.getKind() == ElementKind.METHOD && 
+				element.getSimpleName().toString().startsWith("set") &&
+				element.getModifiers().contains(Modifier.PUBLIC)
+			) {
+				
 				String methodName = element.getSimpleName().toString().substring(3);
-				TypeMirror returnType = ((ExecutableElement) element).getReturnType(); 
+				TypeMirror returnType = ((ExecutableElement) element).getParameters().get(0).asType(); 
 
 				if (returnType.getKind() == TypeKind.ARRAY)
 					continue;
