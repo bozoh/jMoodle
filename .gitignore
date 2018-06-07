@@ -9,3 +9,5 @@ target*
 target/*
 
 .factorypath
+annotations/src/main/resources/jmoodle-annotations-0.0.1-SNAPSHOT.jar
+.vscode
