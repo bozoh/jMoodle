@@ -1,6 +1,7 @@
 package ml.jmoodle.annotations.processors;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -9,16 +10,17 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.CodeBlock.Builder;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.CodeBlock.Builder;
 
 public class MoodleConverterProcessor {
     private static final String PACKAGE_NAME = "ml.jmoodle.functions.converters";
@@ -63,7 +65,12 @@ public class MoodleConverterProcessor {
 				element.getModifiers().contains(Modifier.PUBLIC)
 			) {
 				
+				//Ignoring 0 and multi value sets
+				if (((ExecutableElement) element).getParameters().size() != 1)
+					continue;
+
 				String methodName = element.getSimpleName().toString().substring(3);
+
 				TypeMirror returnType = ((ExecutableElement) element).getParameters().get(0).asType(); 
 
 				if (returnType.getKind() == TypeKind.ARRAY)

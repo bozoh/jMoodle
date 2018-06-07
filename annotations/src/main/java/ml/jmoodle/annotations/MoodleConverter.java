@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(value = { ElementType.TYPE })
 public @interface MoodleConverter {
-	//String[] name();
+	
 }
