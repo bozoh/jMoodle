@@ -18,15 +18,16 @@ public class MoodleWSFunctionProcessor {
 	private static final String PACKAGE_NAME = "ml.jmoodle.functions";
 	private static final String CLASS_NAME = "MoodleWSFunctions";
 
-    private ProcessingEnvironment pe;
+	private ProcessingEnvironment pe;
+	private TypeSpec.Builder codeBuilder = null;
     
 
     public MoodleWSFunctionProcessor(ProcessingEnvironment pe) {
         this.pe = pe;
     }
 
-    public void processElement(TypeElement e) throws IOException {
-		TypeSpec.Builder codeBuilder = TypeSpec.enumBuilder(CLASS_NAME)
+    public void processElement(TypeElement e) {
+		this.codeBuilder = TypeSpec.enumBuilder(CLASS_NAME)
 			.addSuperinterface(ClassName.get(Serializable.class))
 			.addModifiers(Modifier.PUBLIC);
 
@@ -48,9 +49,13 @@ public class MoodleWSFunctionProcessor {
 				.returns(String.class).build()
 		);
 		
-		JavaFile jf = JavaFile.builder(PACKAGE_NAME, codeBuilder.build()).build();
 		
-		jf.writeTo(this.pe.getFiler());
-    }
-    
+	}
+	
+	public void saveGeneratedFile() throws IOException {
+		if (this.codeBuilder != null) {
+			JavaFile jf = JavaFile.builder(PACKAGE_NAME, this.codeBuilder.build()).build();
+			jf.writeTo(this.pe.getFiler());
+		}
+	}
 }

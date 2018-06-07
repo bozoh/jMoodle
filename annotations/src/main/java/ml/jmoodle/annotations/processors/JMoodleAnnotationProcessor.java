@@ -37,17 +37,18 @@ public class JMoodleAnnotationProcessor extends AbstractProcessor {
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 	
 		MoodleWSFunctionProcessor mwsfp = new MoodleWSFunctionProcessor(processingEnv);
+
 		for (Element e : roundEnv.getElementsAnnotatedWith(MoodleWSFunction.class)) {
-			try {
 				mwsfp.processElement((TypeElement) e);
-			} catch (IOException e1) {
-				processingEnv.getMessager()
+		}
+		try {
+			mwsfp.saveGeneratedFile();
+		} catch (IOException e1) {
+			processingEnv.getMessager()
 					.printMessage(Diagnostic.Kind.ERROR, 
-					"Error in processing", e);
+					"Error in processing:\n"+e1.getLocalizedMessage());
 				e1.printStackTrace();
 				return false;
-			}
-			
 		}
 	
 		MoodleConverterProcessor mcp = new MoodleConverterProcessor(processingEnv);
