@@ -29,7 +29,9 @@ public class MoodleWSFunctionProcessor {
     public void processElement(TypeElement e) {
 		this.codeBuilder = TypeSpec.enumBuilder(CLASS_NAME)
 			.addSuperinterface(ClassName.get(Serializable.class))
-			.addModifiers(Modifier.PUBLIC);
+			.addModifiers(Modifier.PUBLIC)
+			.addJavadoc("Generated class DO NOT CHANGE")
+			.addJavadoc("\n");
 
 		MoodleWSFunction mdlWsFnc = e.getAnnotation(MoodleWSFunction.class);
 		for (String fncName : mdlWsFnc.names()) {

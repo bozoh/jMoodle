@@ -36,6 +36,8 @@ public class MoodleConverterProcessor {
         String className = e.getSimpleName() + "Converter";
 		TypeSpec.Builder codeBuilder = TypeSpec.classBuilder(className)
 			.addModifiers(Modifier.PUBLIC)
+			.addJavadoc("Generated class DO NOT CHANGE")
+			.addJavadoc("\n")
 			.addMethod(createToEntityMethod(e));
 				
 		JavaFile jf = JavaFile.builder(PACKAGE_NAME, codeBuilder.build()).build();
