@@ -78,9 +78,11 @@ public class MoodleConverterProcessor {
 				if (returnType.getKind() == TypeKind.ARRAY)
 					continue;
 
-				if (this.pe.getTypeUtils().isSameType(returnType, integertType)) {
+				if (this.pe.getTypeUtils().isSameType(returnType, integertType) 
+					|| returnType.getKind() == TypeKind.INT) {
                     cbBuilder = createCodeForInteger(cbBuilder, methodName);
-				} else if (this.pe.getTypeUtils().isSameType(returnType, longType)) {
+				} else if (this.pe.getTypeUtils().isSameType(returnType, longType)
+					|| returnType.getKind() == TypeKind.LONG) {
                     cbBuilder = createCodeForLong(cbBuilder, methodName);
 				} else if (this.pe.getTypeUtils().isSameType(returnType, stringType)) {
                     cbBuilder = createCodeForString(cbBuilder, methodName);
