@@ -2,6 +2,7 @@ package ml.jmoodle.functions.rest.course.tools;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,6 +28,10 @@ public class MoodleCourseTools extends MoodleCourseConverter {
 
 	public String serialize(MoodleCourse[] courses) throws MoodleRestCreateCoursesException {
 		return serialize(Arrays.stream(courses).collect(Collectors.toList()));
+	}
+
+	public String serialize(Set<MoodleCourse> courses) throws MoodleRestCreateCoursesException {
+		return serialize(new ArrayList<>(courses));
 	}
 
 	public String serialize(List<MoodleCourse> entities) throws MoodleRestCreateCoursesException{

@@ -13,8 +13,9 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestDeleteUsersException;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
+
 import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
@@ -42,7 +43,7 @@ public class MoodleRestDeleteUsers extends MoodleWSBaseFunction {
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getUsers().isEmpty())
-			throw new MoodleRestDeleteUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Users"));
+			throw new MoodleRestDeleteUsersException(MoodleCommonsErrorMessages.notSet("Users"));
 		try {
 			StringBuilder fnctData = new StringBuilder(super.getFunctionData());
 			fnctData.append(getUserFuntionsTools().serliazeMoodleUsersIds(getUsers()));
@@ -90,7 +91,7 @@ public class MoodleRestDeleteUsers extends MoodleWSBaseFunction {
 
 	public void addUser(MoodleUser user) throws MoodleRestDeleteUsersException {
 		if (user == null || user.getId() == null || user.getId().longValue() <= 0l)
-			throw new MoodleRestDeleteUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("id", user));
+			throw new MoodleRestDeleteUsersException(MoodleCommonsErrorMessages.mustHave("User", "id", user));
 		this.users.add(user);
 	}
 

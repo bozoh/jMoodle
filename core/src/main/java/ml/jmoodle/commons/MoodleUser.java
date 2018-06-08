@@ -23,12 +23,15 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import ml.jmoodle.annotations.MoodleConverter;
+
 /**
  * 
  * @author Carlos Alexandre S. da Fonseca
  * 
  *
  */
+@MoodleConverter
 public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 
 	private static final long serialVersionUID = 8465905725413266458L;

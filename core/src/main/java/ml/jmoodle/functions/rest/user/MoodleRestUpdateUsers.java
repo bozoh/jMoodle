@@ -13,8 +13,8 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUpdateUsersException;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
@@ -42,7 +42,7 @@ public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getUsers().isEmpty()) {
-			throw new MoodleRestUpdateUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Users"));
+			throw new MoodleRestUpdateUsersException(MoodleCommonsErrorMessages.notSet("Users"));
 		}
 		try {
 			StringBuilder fnctData = new StringBuilder(super.getFunctionData());
@@ -93,7 +93,7 @@ public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 	public void addUser(MoodleUser mdlUser) throws MoodleRestUpdateUsersException {
 		
 		if (mdlUser.getId() == null || mdlUser.getId().longValue() <= 0l)
-			throw new MoodleRestUpdateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("ID", mdlUser));
+			throw new MoodleRestUpdateUsersException(MoodleCommonsErrorMessages.mustHave("User", "ID", mdlUser));
 		
 		this.mdlUsers.add(mdlUser);
 

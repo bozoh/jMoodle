@@ -19,8 +19,8 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersByFieldsException;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 
 
 /**
@@ -54,10 +54,10 @@ public class MoodleRestGetUsersByFields extends MoodleWSBaseFunction {
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getField() == null)
-			throw new MoodleRestGetUsersByFieldsException(MoodleRestUsersCommonsErrorMessages.notSet("Field"));
+			throw new MoodleRestGetUsersByFieldsException(MoodleCommonsErrorMessages.notSet("Field"));
 
 		if (getValues() == null || getValues().isEmpty())
-			throw new MoodleRestGetUsersByFieldsException(MoodleRestUsersCommonsErrorMessages.notSet("Field Values"));
+			throw new MoodleRestGetUsersByFieldsException(MoodleCommonsErrorMessages.notSet("Field Values"));
 
 		try {
 			StringBuilder data = new StringBuilder(super.getFunctionData());
@@ -102,7 +102,7 @@ public class MoodleRestGetUsersByFields extends MoodleWSBaseFunction {
 
 	public void addValue(String value) throws MoodleRestGetUsersByFieldsException {
 		if (value == null || value.trim().isEmpty())
-			throw new MoodleRestGetUsersByFieldsException(MoodleRestUsersCommonsErrorMessages.notSet("Field Value"));
+			throw new MoodleRestGetUsersByFieldsException(MoodleCommonsErrorMessages.notSet("Field Value"));
 		this.fieldValues.add(value);
 
 	}

@@ -18,8 +18,8 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersException;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 
 /**
  * Get User function by criteria
@@ -61,7 +61,7 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getCriterias().isEmpty()) {
-			throw new MoodleRestGetUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Criteria"));
+			throw new MoodleRestGetUsersException(MoodleCommonsErrorMessages.notSet("Criteria"));
 		}
 		try {
 			StringBuilder returnData = new StringBuilder(super.getFunctionData());
@@ -103,7 +103,7 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 
 	public void addCriteria(Criteria criteria) throws MoodleRestGetUsersException {
 		if (criteria == null || criteria.getName() == null || criteria.getName().trim().isEmpty())
-			throw new MoodleRestGetUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("name", criteria));
+			throw new MoodleRestGetUsersException(MoodleCommonsErrorMessages.mustHave("Criteria", "name", criteria));
 		this.criterias.add(criteria);
 	}
 

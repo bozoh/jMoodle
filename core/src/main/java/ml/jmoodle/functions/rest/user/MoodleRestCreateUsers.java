@@ -25,8 +25,8 @@ import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestCreateUsersException;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
 import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
@@ -54,7 +54,7 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
 		if (getUsers().isEmpty()) {
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Users"));
+			throw new MoodleRestCreateUsersException(MoodleCommonsErrorMessages.notSet("Users"));
 		}
 		try {
 			StringBuilder retVal = new StringBuilder(super.getFunctionData());
@@ -97,17 +97,24 @@ public class MoodleRestCreateUsers extends MoodleWSBaseFunction {
 	 */
 	public void addUser(MoodleUser user) throws MoodleRestCreateUsersException {
 		if (user.getUsername() == null || user.getUsername().trim().isEmpty())
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("username", user));
+			throw new MoodleRestCreateUsersException(
+				MoodleCommonsErrorMessages.mustHave("User", "username", user)
+			);
 
 		if (user.getFirstname() == null || user.getFirstname().trim().isEmpty())
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("First Name", user));
+			throw new MoodleRestCreateUsersException(
+				MoodleCommonsErrorMessages.mustHave("User", "First Name", user)
+			);
 
 		if (user.getLastname() == null || user.getLastname().trim().isEmpty())
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("Last Name", user));
+			throw new MoodleRestCreateUsersException(
+				MoodleCommonsErrorMessages.mustHave("User", "Last Name", user)
+			);
 
 		if (user.getEmail() == null || user.getEmail().trim().isEmpty())
 			throw new MoodleRestCreateUsersException(
-					MoodleRestUsersCommonsErrorMessages.mustHave("Email address", user));
+				MoodleCommonsErrorMessages.mustHave("User", "Email address", user)
+			);
 		if (users.containsKey(user.getUsername()))
 			throw new MoodleRestCreateUsersException("User is already added:\n" + user.toString());
 

@@ -1,6 +1,5 @@
 package ml.jmoodle.functions.rest.course;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,101 +16,108 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.annotations.MoodleWSFunction;
-import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
+import ml.jmoodle.functions.rest.course.exceptions.MoodleRestCreateCoursesException;
+import ml.jmoodle.functions.rest.course.tools.MoodleCourseTools;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestCreateUsersException;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUsersCommonsErrorMessages;
-import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
- * Create User(s) Function
+ * Create Course(s) Function
  *
  *
  * @author Carlos Alexandre S. da Fonseca
- * @copyrigth © 2016 Carlos Alexandre S. da Fonseca
+ * @copyrigth © 2018 Carlos Alexandre S. da Fonseca
  * @license https://opensource.org/licenses/MIT - MIT License
  *
  */
 @MoodleWSFunction(names = { "core_course_create_courses", "moodle_course_create_courses" })
 public class MoodleRestCreateCourses extends MoodleWSBaseFunction {
 	private static final String SINCE_VERSION = "2.0.0";
-	private MoodleRestUserFunctionsTools userFunctionsTools;
-	// Using map insted a set to set the Users ids
-	private Map<String, MoodleUser> users;
 
+	// Using map insted a set to store the entities ids
+	private Map<String, MoodleCourse> entities;
+	private MoodleCourseTools tool = null;
 	public MoodleRestCreateCourses(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
 		super(moodleConfig);
-		this.users = new TreeMap<String, MoodleUser>();
-		this.userFunctionsTools = new MoodleRestUserFunctionsTools();
+		this.entities = new TreeMap<String, MoodleCourse>();
+		tool = new MoodleCourseTools();
+	}
+
+	/**
+	 * @return the Courses
+	 */
+	public Set<MoodleCourse> getCourses() {
+		return new HashSet<MoodleCourse>(entities.values());
+	}
+
+	/**
+	 * Add a set of courses
+	 * 
+	 * @param entities the courses set
+	 * @throws MoodleRestCreateCoursesException
+	 */
+	public void setCourses(Set<MoodleCourse> entities) throws MoodleRestCreateCoursesException  {
+		for (Iterator<MoodleCourse> iterator = entities.iterator(); iterator.hasNext();) {
+			MoodleCourse MoodleCourse = (MoodleCourse) iterator.next();
+			addCourse(MoodleCourse);
+		}
+	}
+
+	/**
+	 * Add a single course in course set
+	 * 
+	 * @param entity the course
+	 * @throws MoodleRestCreateCoursesException
+	 */
+	public void addCourse(MoodleCourse entity) throws MoodleRestCreateCoursesException {
+		verifyEntity(entity);		
+		this.entities.put(entity.getShortname(), entity);
+	}
+
+	
+
+	/**
+	 * Checks "must have" properties
+	 */
+	private void verifyEntity(MoodleCourse entity) throws MoodleRestCreateCoursesException{
+		
+		if (MoodleTools.isEmpty(entity.getShortname()))
+			throw new MoodleRestCreateCoursesException(MoodleCommonsErrorMessages
+				.mustHave("Course", "shortname", entity));
+		
+		if (MoodleTools.isEmpty(entity.getFullname()))
+			throw new MoodleRestCreateCoursesException(MoodleCommonsErrorMessages
+				.mustHave("Course", "fullname", entity));
+		
+		if (MoodleTools.isEmpty(entity.getCategoryId()))
+			throw new MoodleRestCreateCoursesException(MoodleCommonsErrorMessages
+				.mustHave("Course", "categoryid", entity));
+
 	}
 
 	@Override
-	public String getFunctionData() throws MoodleWSFucntionException {
-		if (getUsers().isEmpty()) {
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.notSet("Users"));
+	public String getFunctionData() throws MoodleRestCreateCoursesException {
+		Set<MoodleCourse> entities = getCourses();
+		if (entities.isEmpty()) {
+			throw new MoodleRestCreateCoursesException(
+				MoodleCommonsErrorMessages.notSet("Couses")
+			);
 		}
 		try {
 			StringBuilder retVal = new StringBuilder(super.getFunctionData());
-			retVal.append(getUserFunctionsTools().serliazeUsers(getUsers()));
+			retVal.append(tool.serialize(entities));
 			return retVal.toString();
-		} catch (UnsupportedEncodingException e) {
-			throw new MoodleRestCreateUsersException(e);
+		} catch (MoodleWSFucntionException e) {
+			throw new MoodleRestCreateCoursesException(e);
 		}
 
-	}
-
-	private MoodleRestUserFunctionsTools getUserFunctionsTools() {
-		return this.userFunctionsTools;
-	}
-
-	/**
-	 * @return the users
-	 */
-	public Set<MoodleUser> getUsers() {
-		return new HashSet<MoodleUser>(users.values());
-	}
-
-	/**
-	 * @param users
-	 *            the users to set
-	 * @throws MoodleRestCreateUsersException
-	 */
-	public void setUsers(Set<MoodleUser> users) throws MoodleRestCreateUsersException {
-		for (Iterator<MoodleUser> iterator = users.iterator(); iterator.hasNext();) {
-			MoodleUser moodleUser = (MoodleUser) iterator.next();
-			addUser(moodleUser);
-		}
-	}
-
-	/**
-	 * 
-	 * @param user
-	 * @throws MoodleRestCreateUsersException
-	 *             If a user is already added
-	 */
-	public void addUser(MoodleUser user) throws MoodleRestCreateUsersException {
-		if (user.getUsername() == null || user.getUsername().trim().isEmpty())
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("username", user));
-
-		if (user.getFirstname() == null || user.getFirstname().trim().isEmpty())
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("First Name", user));
-
-		if (user.getLastname() == null || user.getLastname().trim().isEmpty())
-			throw new MoodleRestCreateUsersException(MoodleRestUsersCommonsErrorMessages.mustHave("Last Name", user));
-
-		if (user.getEmail() == null || user.getEmail().trim().isEmpty())
-			throw new MoodleRestCreateUsersException(
-					MoodleRestUsersCommonsErrorMessages.mustHave("Email address", user));
-		if (users.containsKey(user.getUsername()))
-			throw new MoodleRestCreateUsersException("User is already added:\n" + user.toString());
-
-		this.users.put(user.getUsername(), user);
 	}
 
 	@Override
@@ -119,40 +125,32 @@ public class MoodleRestCreateCourses extends MoodleWSBaseFunction {
 		return SINCE_VERSION;
 	}
 
-	/**
-	 * Get the right function name, this functions changes the name in 2.2.0
-	 * 
-	 * @throws MoodleRestCreateUsersException
-	 * 
-	 * @throws MoodleConfigException
-	 */
 	@Override
-	public String getFunctionName() throws MoodleRestCreateUsersException {
+	public String getFunctionName() throws MoodleRestCreateCoursesException {
 		// this funtcions changes the name in 2.2.0
 		try {
-			if ((MoodleTools.compareVersion(mdlConfig.getVersion(), "2.2.0") < 0))
-				return "moodle_user_create_users";
+			if ((MoodleTools.compareVersion(mdlConfig.getVersion(), SINCE_VERSION) < 0))
+				return "moodle_course_create_courses";
 		} catch (MoodleConfigException e) {
-			throw new MoodleRestCreateUsersException(e);
+			throw new MoodleRestCreateCoursesException(e);
 		}
-		return "core_user_create_users";
+		return "core_course_create_courses";
 	}
 
 	/**
-	 * Call Create User WS Function
+	 * Call Create Course WS Function
 	 * 
-	 * @return A set of MoodleUser
+	 * @return A set of MoodleCourse
 	 * @throws MoodleWSFunctionCallException
 	 */
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<MoodleUser>  doCall() throws MoodleWSFucntionException {
-		return (Set<MoodleUser>) super.doCall();
+	public Set<MoodleCourse> doCall() throws MoodleWSFucntionException {
+		return (Set<MoodleCourse>) super.doCall();
 	}
-	
 
-	 protected Set<MoodleUser> processResponse(Document response) throws MoodleRestCreateUsersException {
+	protected Set<MoodleCourse> processResponse(Document response) throws MoodleRestCreateCoursesException {
 		try {
 			//
 			// <?xml version="1.0" encoding="UTF-8" ?>
@@ -162,7 +160,7 @@ public class MoodleRestCreateCourses extends MoodleWSBaseFunction {
 			// <KEY name="id">
 			// <VALUE>int</VALUE>
 			// </KEY>
-			// <KEY name="username">
+			// <KEY name="shortname">
 			// <VALUE>string</VALUE>
 			// </KEY>
 			// </SINGLE>
@@ -175,16 +173,16 @@ public class MoodleRestCreateCourses extends MoodleWSBaseFunction {
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node singleNode = nodeList.item(i);
 				Map<String, Object> singleValuesMap = MoodleRestFunctionTools.getSingleAttributes(singleNode);
-				MoodleUser moodleUser = users.get(singleValuesMap.get("username"));
-				moodleUser.setId(Long.parseLong((String)singleValuesMap.get("id")));
+				MoodleCourse MoodleCourse = entities.get(singleValuesMap.get("shortname"));
+				MoodleCourse.setId(Long.parseLong((String) singleValuesMap.get("id")));
 			}
 
 		} catch (XPathExpressionException e) {
-			throw new MoodleRestCreateUsersException(
+			throw new MoodleRestCreateCoursesException(
 					MoodleWSFucntionException.errorProcessingResponseMsg(response.toString()));
 		}
 
-		return getUsers();
+		return getCourses();
 	}
 
 }
