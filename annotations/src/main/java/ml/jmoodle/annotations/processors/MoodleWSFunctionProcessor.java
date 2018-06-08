@@ -27,35 +27,34 @@ public class MoodleWSFunctionProcessor {
     }
 
     public void processElement(TypeElement e) {
-		this.codeBuilder = TypeSpec.enumBuilder(CLASS_NAME)
-			.addSuperinterface(ClassName.get(Serializable.class))
-			.addModifiers(Modifier.PUBLIC)
-			.addJavadoc("Generated class DO NOT CHANGE")
-			.addJavadoc("\n");
-
+		if (this.codeBuilder == null) {
+			this.codeBuilder = TypeSpec.enumBuilder(CLASS_NAME)
+				.addSuperinterface(ClassName.get(Serializable.class))
+				.addModifiers(Modifier.PUBLIC)
+				.addJavadoc("Generated class DO NOT CHANGE")
+				.addJavadoc("\n")
+				.addField(String.class, "className", Modifier.PRIVATE, Modifier.FINAL);
+		}
 		MoodleWSFunction mdlWsFnc = e.getAnnotation(MoodleWSFunction.class);
 		for (String fncName : mdlWsFnc.names()) {
 			codeBuilder.addEnumConstant(fncName.toUpperCase(), 
 				TypeSpec.anonymousClassBuilder("$S", e.getQualifiedName()).build());
 		}
-		
-		codeBuilder.addField(String.class, "className", Modifier.PRIVATE, Modifier.FINAL)
-			.addMethod(MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PRIVATE)
-				.addParameter(String.class, "className")
-				.addStatement("this.$N = $N", "className", "className").build()
-			)
-			.addMethod(MethodSpec.methodBuilder("getValue")
-				.addModifiers(Modifier.PUBLIC)
-				.addStatement("return this.$N", "className")
-				.returns(String.class).build()
-		);
-		
-		
 	}
 	
 	public void saveGeneratedFile() throws IOException {
 		if (this.codeBuilder != null) {
+			codeBuilder
+				.addMethod(MethodSpec.constructorBuilder()
+					.addModifiers(Modifier.PRIVATE)
+					.addParameter(String.class, "className")
+					.addStatement("this.$N = $N", "className", "className").build()
+				)
+				.addMethod(MethodSpec.methodBuilder("getValue")
+					.addModifiers(Modifier.PUBLIC)
+					.addStatement("return this.$N", "className")
+					.returns(String.class).build()
+				);
 			JavaFile jf = JavaFile.builder(PACKAGE_NAME, this.codeBuilder.build()).build();
 			jf.writeTo(this.pe.getFiler());
 		}
