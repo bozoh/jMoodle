@@ -61,7 +61,7 @@ public abstract class MoodleWSBaseFunction implements MoodleWSFunction {
 			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
 			Document response = wsFunctionCall.call(this);
 			if (response == null || response.getChildNodes().getLength() <= 0)
-			return null;
+				return null;
 			return processResponse(response);
 		} catch (MoodleWSFunctionCallException e) {
 			throw new MoodleRestGetUsersException(e);

@@ -129,7 +129,7 @@ public class MoodleRestCreateCourses extends MoodleWSBaseFunction {
 	public String getFunctionName() throws MoodleRestCreateCoursesException {
 		// this funtcions changes the name in 2.2.0
 		try {
-			if ((MoodleTools.compareVersion(mdlConfig.getVersion(), SINCE_VERSION) < 0))
+			if ((MoodleTools.compareVersion(mdlConfig.getVersion(), "2.2.0") < 0))
 				return "moodle_course_create_courses";
 		} catch (MoodleConfigException e) {
 			throw new MoodleRestCreateCoursesException(e);
@@ -152,21 +152,7 @@ public class MoodleRestCreateCourses extends MoodleWSBaseFunction {
 
 	protected Set<MoodleCourse> processResponse(Document response) throws MoodleRestCreateCoursesException {
 		try {
-			//
-			// <?xml version="1.0" encoding="UTF-8" ?>
-			// <RESPONSE>
-			// <MULTIPLE>
-			// <SINGLE>
-			// <KEY name="id">
-			// <VALUE>int</VALUE>
-			// </KEY>
-			// <KEY name="shortname">
-			// <VALUE>string</VALUE>
-			// </KEY>
-			// </SINGLE>
-			// </MULTIPLE>
-			// </RESPONSE>
-
+			
 			XPath xPath = XPathFactory.newInstance().newXPath();
 			NodeList nodeList = (NodeList) xPath.compile("/RESPONSE/MULTIPLE/SINGLE").evaluate(response,
 					XPathConstants.NODESET);
