@@ -45,7 +45,7 @@ public class MoodleRestFunctionTools {
 
 	}
 
-	public static MoodleParamMap Entity2MoodleParamMap(Object entity, String parentName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static MoodleParamMap entity2MoodleParamMap(Object entity, String parentName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		MoodleParamMap map = new MoodleParamMap();
 		
 		Method[] methods = entity.getClass().getDeclaredMethods();
@@ -67,7 +67,7 @@ public class MoodleRestFunctionTools {
 				for (int i=0; i < nestedEntities.length; i++) {
 					String nestedMethodName = methodName+"["+i+"]";
 					map.put(nestedMethodName, 
-						Entity2MoodleParamMap(nestedEntities[i], ""));
+						entity2MoodleParamMap(nestedEntities[i], ""));
 				}
 				continue;
 			}

@@ -17,39 +17,35 @@ import org.w3c.dom.NodeList;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.functions.converters.MoodleCourseConverter;
 import ml.jmoodle.functions.converters.OptionParameterConverter;
-import ml.jmoodle.functions.rest.course.exceptions.MoodleRestCreateCoursesException;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.tools.MoodleParamMap;
+import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleCourseTools extends MoodleCourseConverter {
-	public String serialize(MoodleCourse course) throws MoodleRestCreateCoursesException {
+	public String serialize(MoodleCourse course) {
 		return serialize(new MoodleCourse[]{course});
 	}
 
-	public String serialize(MoodleCourse[] courses) throws MoodleRestCreateCoursesException {
+	public String serialize(MoodleCourse[] courses) {
 		return serialize(Arrays.stream(courses).collect(Collectors.toList()));
 	}
 
-	public String serialize(Set<MoodleCourse> courses) throws MoodleRestCreateCoursesException {
+	public String serialize(Set<MoodleCourse> courses) {
 		return serialize(new ArrayList<>(courses));
 	}
 
-	public String serialize(List<MoodleCourse> entities) throws MoodleRestCreateCoursesException{
-		try {
-			return IntStream.range(0, entities.size()).boxed()
-				.map(i -> {
-					try {
-						MoodleParamMap map = MoodleRestFunctionTools.Entity2MoodleParamMap(
-							entities.get(i), "courses["+ i +"]"
-						);
-						return map.toParamString();
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
-						throw new RuntimeException(e);
-					}
-				}).collect(Collectors.joining("\n"));
-		} catch(RuntimeException e) {
-			throw new MoodleRestCreateCoursesException(e);
-		}
+	public String serialize(List<MoodleCourse> entities) {
+		return IntStream.range(0, entities.size()).boxed()
+			.map(i -> {
+				try {
+					MoodleParamMap map = MoodleRestFunctionTools.entity2MoodleParamMap(
+						entities.get(i), "courses["+ i +"]"
+					);
+					return map.toParamString();
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
+			}).collect(Collectors.joining("\n"));
 	}
 
 	public Set<MoodleCourse> deSerialize(NodeList nodeList) {
@@ -63,7 +59,6 @@ public class MoodleCourseTools extends MoodleCourseConverter {
 
 		return result;
 	}
-
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -79,6 +74,22 @@ public class MoodleCourseTools extends MoodleCourseConverter {
 			}
 		}
 		return mc;
+	}
+
+	public String serializeCoursesId(Set<Long> coursesIds) throws UnsupportedEncodingException {
+		if (coursesIds.size() == 0)
+			return null;
+
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		
+		for (Long courseId : coursesIds) {
+			sb.append(MoodleTools.encode("options[ids]["))
+				.append(i++).append(MoodleTools.encode("]")).append("=").append(courseId)
+				.append("&");
+		}
+
+		return sb.substring(0, sb.length() - 1);
 	}
 
 }

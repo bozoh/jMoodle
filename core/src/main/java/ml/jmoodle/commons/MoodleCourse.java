@@ -486,7 +486,12 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 		case 2:
 			this.summaryformat = DescriptionFormat.PLAIN;
 			break;
-		case 3:
+	
+		// case 3: //Bug not have this value, MARKDOWN = 4
+		// 	this.summaryformat = DescriptionFormat.MARKDOWN;
+		// 	break;
+
+		case 4:
 			this.summaryformat = DescriptionFormat.MARKDOWN;
 			break;
 		}
@@ -1091,6 +1096,16 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 		if (getClass() != obj.getClass())
 			return false;
 		MoodleCourse other = (MoodleCourse) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (idnumber == null) {
+			if (other.idnumber != null)
+				return false;
+		} else if (!idnumber.equals(other.idnumber))
+			return false;
 		if (categoryid == null) {
 			if (other.categoryid != null)
 				return false;
@@ -1111,11 +1126,11 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 				return false;
 		} else if (!completionstartonenrol.equals(other.completionstartonenrol))
 			return false;
-		if (courseformatoptions == null) {
-			if (other.courseformatoptions != null)
-				return false;
-		} else if (!courseformatoptions.equals(other.courseformatoptions))
-			return false;
+		// if (courseformatoptions == null) {
+		// 	if (other.courseformatoptions != null)
+		// 		return false;
+		// } else if (!courseformatoptions.equals(other.courseformatoptions))
+		// 	return false;
 		if (defaultgroupingid == null) {
 			if (other.defaultgroupingid != null)
 				return false;
@@ -1146,7 +1161,7 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 				return false;
 		} else if (!fullname.equals(other.fullname))
 			return false;
-		if (groupmode == null) {
+			if (groupmode == null) {
 			if (other.groupmode != null)
 				return false;
 		} else if (!groupmode.equals(other.groupmode))
@@ -1160,16 +1175,6 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 			if (other.hiddensections != null)
 				return false;
 		} else if (!hiddensections.equals(other.hiddensections))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (idnumber == null) {
-			if (other.idnumber != null)
-				return false;
-		} else if (!idnumber.equals(other.idnumber))
 			return false;
 		if (lang == null) {
 			if (other.lang != null)

@@ -2,6 +2,9 @@ package ml.jmoodle.functions.rest.course;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,6 +20,7 @@ import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import ml.jmoodle.commons.DescriptionFormat;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.OptionParameter;
+import ml.jmoodle.tools.TestTools;
 
 public class MoodleCourseFixtureTemplate implements TemplateLoader {
 
@@ -93,7 +97,61 @@ public class MoodleCourseFixtureTemplate implements TemplateLoader {
 		}});
 	}
 
-	public static Document getValidResponse(Set<MoodleCourse> mcs) throws SAXException, IOException, ParserConfigurationException {
+
+	public static Document getValidResponseOnRetrive(Set<MoodleCourse> mcs) throws SAXException, IOException, ParserConfigurationException {
+		// <?xml version="1.0" encoding="UTF-8" ?>
+		// <RESPONSE>
+		// 	<MULTIPLE>
+		// 		<SINGLE>
+		// 			<KEY name="id">
+		// 				<VALUE>int</VALUE>
+		// 			</KEY>
+		// 			<KEY name="shortname">
+		// 				<VALUE>string</VALUE>
+		// 			</KEY>
+		// 			<KEY name="categoryid">
+		// 				<VALUE>int</VALUE>
+		// 			</KEY>
+		// ...
+		// 			<KEY name="forcetheme">
+		// 				<VALUE>string</VALUE>
+		// 			</KEY>
+		// 			<KEY name="courseformatoptions">
+		// 				<MULTIPLE>
+		// 					<SINGLE>
+		// 						<KEY name="name">
+		// 							<VALUE>string</VALUE>
+		// 						</KEY>
+		// 						<KEY name="value">
+		// 							<VALUE>string</VALUE>
+		// 						</KEY>
+		// 					</SINGLE>
+		// 				</MULTIPLE>
+		// 			</KEY>
+		// 		</SINGLE>
+		// 	</MULTIPLE>
+		// </RESPONSE>
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
+			.append("<RESPONSE>")
+			.append("<MULTIPLE>");
+
+		for (MoodleCourse mc : mcs) {
+			sb.append(TestTools.entityToXmlResponse(mc));
+		}
+		sb.append("</MULTIPLE>").append("</RESPONSE>");
+
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = builderFactory.newDocumentBuilder();
+		Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
+		xmlResponse.getDocumentElement().normalize();
+		return xmlResponse;
+	}
+
+	
+
+	public static Document getValidResponseOnCreate(Set<MoodleCourse> mcs) throws SAXException, IOException, ParserConfigurationException {
 		//
 			// <?xml version="1.0" encoding="UTF-8" ?>
 			// <RESPONSE>

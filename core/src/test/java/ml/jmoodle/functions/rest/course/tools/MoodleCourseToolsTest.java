@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.OptionParameter;
+import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.rest.course.exceptions.MoodleRestCreateCoursesException;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -127,6 +129,33 @@ public class MoodleCourseToolsTest {
 		assertEquals(op1.getValue(), lst.get(1).getValue());
 		
 		
+	}
+
+	@Test
+	public void serialize_courses_id_test() throws UnsupportedEncodingException{
+		Set<Long> coursesIds = new HashSet<>();
+		coursesIds.add(1l);
+		coursesIds.add(10l);
+		coursesIds.add(-1l);
+		coursesIds.add(-10l);
+		
+		assertCoursesIdsSerialization(coursesIds, 
+			URLDecoder.decode(mct.serializeCoursesId(coursesIds), MoodleConfig.DEFAULT_ENCODING)
+		);
+	}
+	
+	private void assertCoursesIdsSerialization(Set<Long> coursesIds, String serializeCoursesId) throws UnsupportedEncodingException {
+		List<Long> cids = new LinkedList<>(coursesIds);
+		for(int i=0; i< cids.size(); i++) {
+			Long courseId = cids.get(i);
+			assertTrue(serializeCoursesId.contains("options[ids]"));
+			assertTrue(serializeCoursesId.contains("options[ids][" + i + "]" +
+				"=" + courseId));
+			assertTrue(serializeCoursesId.contains("&"));
+			
+		}
+
+	
 	}
 
 }
