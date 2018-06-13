@@ -1,13 +1,15 @@
 /**
  * 
  */
-package ml.jmoodle.authentications;
+package ml.jmoodle.tests.authentications;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.UnsupportedEncodingException;
 
 import org.junit.Test;
+
+import ml.jmoodle.authentications.TokenAuthentication;
 
 
 /**

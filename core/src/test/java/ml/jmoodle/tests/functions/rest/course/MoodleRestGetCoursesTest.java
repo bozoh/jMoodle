@@ -1,4 +1,4 @@
-package ml.jmoodle.functions.rest.course;
+package ml.jmoodle.tests.functions.rest.course;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -35,6 +35,9 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.rest.course.MoodleRestGetCourses;
+import ml.jmoodle.functions.rest.course.exceptions.MoodleRestGetCoursesException;
+import ml.jmoodle.functions.rest.course.exceptions.MoodleRestUpdateCoursesException;
 
 /**
  * Create Course(s) Function
@@ -55,7 +58,7 @@ public class MoodleRestGetCoursesTest  {
 
 	@BeforeClass
 	public static void setUp() {
-		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.course");
+		FixtureFactoryLoader.loadTemplates("ml.jmoodle.tests.functions.rest.course");
 	}
 	
 	@Before
@@ -157,11 +160,15 @@ public class MoodleRestGetCoursesTest  {
 	
 	class TestMoodleFunctionWarpClass extends MoodleRestGetCourses {
 		
-			public TestMoodleFunctionWarpClass(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
-					super(moodleConfig);
-				}
-			
-			
+		public TestMoodleFunctionWarpClass(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
+				super(moodleConfig);
 			}
+		
+		public Set<MoodleCourse> processResponse(Document response) throws MoodleRestGetCoursesException  {
+			return super.processResponse(response);
+		}
+		
+			
+	}
 			
 }

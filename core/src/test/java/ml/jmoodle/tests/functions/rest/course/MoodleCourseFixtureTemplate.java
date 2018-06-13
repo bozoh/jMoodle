@@ -1,10 +1,7 @@
-package ml.jmoodle.functions.rest.course;
+package ml.jmoodle.tests.functions.rest.course;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,7 +17,7 @@ import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import ml.jmoodle.commons.DescriptionFormat;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.OptionParameter;
-import ml.jmoodle.tools.TestTools;
+import ml.jmoodle.tests.tools.TestTools;
 
 public class MoodleCourseFixtureTemplate implements TemplateLoader {
 

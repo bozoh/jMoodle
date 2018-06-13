@@ -1,14 +1,13 @@
-package ml.jmoodle.tools;
+package ml.jmoodle.tests.tools;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import org.junit.Test;
+
+import ml.jmoodle.tools.MoodleParamMap;
 
 /**
  * MoodleTools a set of commons tools

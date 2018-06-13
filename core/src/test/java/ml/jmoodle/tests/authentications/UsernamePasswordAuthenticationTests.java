@@ -1,4 +1,4 @@
-package ml.jmoodle.authentications;
+package ml.jmoodle.tests.authentications;
 
 import static org.junit.Assert.*;
 

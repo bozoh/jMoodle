@@ -1,4 +1,4 @@
-package ml.jmoodle.functions.rest.course.tools;
+package ml.jmoodle.tests.functions.rest.course.tools;
 
 import static org.junit.Assert.assertEquals;
 // import static com.google.common.truth.Truth8.assertThat;
@@ -27,6 +27,7 @@ import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.OptionParameter;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.rest.course.exceptions.MoodleRestCreateCoursesException;
+import ml.jmoodle.functions.rest.course.tools.MoodleCourseTools;
 import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleCourseToolsTest {

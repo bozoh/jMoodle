@@ -1,4 +1,4 @@
-package ml.jmoodle.configs;
+package ml.jmoodle.tests.configs;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -18,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import ml.jmoodle.authentications.MoodleAuthentication;
 import ml.jmoodle.commons.MoodleCourse;
+import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 
 /**
