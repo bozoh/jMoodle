@@ -52,6 +52,9 @@ public class MoodleConverterProcessor {
 			.getTypeElement(Long.class.getCanonicalName()).asType();
 		TypeMirror stringType = this.pe.getElementUtils()
 			.getTypeElement(String.class.getCanonicalName()).asType();
+		TypeMirror booleanType = this.pe.getElementUtils()
+			.getTypeElement(Boolean.class.getCanonicalName()).asType();
+
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("toEntity")
 			.addModifiers(Modifier.PUBLIC)
 			.addParameter(ParameterizedTypeName
@@ -83,7 +86,10 @@ public class MoodleConverterProcessor {
                     cbBuilder = createCodeForInteger(cbBuilder, methodName);
 				} else if (this.pe.getTypeUtils().isSameType(returnType, longType)
 					|| returnType.getKind() == TypeKind.LONG) {
-                    cbBuilder = createCodeForLong(cbBuilder, methodName);
+					cbBuilder = createCodeForLong(cbBuilder, methodName);
+				} else if (this.pe.getTypeUtils().isSameType(returnType, booleanType)
+					|| returnType.getKind() == TypeKind.BOOLEAN) {
+					cbBuilder = createCodeForBoolean(cbBuilder, methodName);
 				} else if (this.pe.getTypeUtils().isSameType(returnType, stringType)) {
                     cbBuilder = createCodeForString(cbBuilder, methodName);
 				}
@@ -94,6 +100,15 @@ public class MoodleConverterProcessor {
 
 		return builder.build();
 	}
+
+	private CodeBlock.Builder createCodeForBoolean(Builder cbBuilder, String methodName) {
+        return cbBuilder
+			.beginControlFlow("if (valuesMap.containsKey($S))", methodName.toLowerCase())
+			.addStatement("entity.set$L($S.equals((String) valuesMap.get($S)))", 
+				methodName, "1", methodName.toLowerCase())
+			.endControlFlow();
+    }
+
 
 	private CodeBlock.Builder createCodeForInteger(Builder cbBuilder, String methodName) {
         return cbBuilder
