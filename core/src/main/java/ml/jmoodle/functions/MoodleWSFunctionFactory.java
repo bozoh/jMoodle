@@ -3,7 +3,6 @@ package ml.jmoodle.functions;
 import java.lang.reflect.InvocationTargetException;
 
 import ml.jmoodle.configs.MoodleConfig;
-import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 
@@ -47,6 +46,7 @@ public class MoodleWSFunctionFactory {
 	}
 
 	//To improve testability 
+	@SuppressWarnings("unchecked")
 	private static MoodleWSFunction factory(String className, MoodleConfig mdlConfig)
 			throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException, IllegalArgumentException,

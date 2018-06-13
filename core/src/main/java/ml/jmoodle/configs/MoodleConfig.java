@@ -3,10 +3,8 @@ package ml.jmoodle.configs;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import ml.jmoodle.authentications.MoodleAuthentication;
 
+import ml.jmoodle.authentications.MoodleAuthentication;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.tools.MoodleTools;
 

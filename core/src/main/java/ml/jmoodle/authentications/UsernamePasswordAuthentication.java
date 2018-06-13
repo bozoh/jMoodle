@@ -3,7 +3,6 @@ package ml.jmoodle.authentications;
 import java.io.UnsupportedEncodingException;
 
 import ml.jmoodle.tools.MoodleParamMap;
-import ml.jmoodle.tools.MoodleTools;
 
 /**
  * Moodle Username and password authetication for WS services

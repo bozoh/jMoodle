@@ -1,7 +1,6 @@
 package ml.jmoodle.functions.rest.course;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.course.exceptions.MoodleRestGetCoursesException;
 import ml.jmoodle.functions.rest.course.tools.MoodleCourseTools;
-import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;
 
 /**
