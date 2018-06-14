@@ -76,7 +76,7 @@ public class MoodleCourseTools extends MoodleCourseConverter {
 		return mc;
 	}
 
-	public String serializeCoursesId(Set<Long> coursesIds) throws UnsupportedEncodingException {
+	public String serializeCoursesId(String prefix, Set<Long> coursesIds) throws UnsupportedEncodingException {
 		if (coursesIds.size() == 0)
 			return null;
 
@@ -84,7 +84,7 @@ public class MoodleCourseTools extends MoodleCourseConverter {
 		int i = 0;
 		
 		for (Long courseId : coursesIds) {
-			sb.append(MoodleTools.encode("options[ids]["))
+			sb.append(MoodleTools.encode(prefix)).append(MoodleTools.encode("["))
 				.append(i++).append(MoodleTools.encode("]")).append("=").append(courseId)
 				.append("&");
 		}
