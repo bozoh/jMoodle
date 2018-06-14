@@ -1,16 +1,21 @@
 package ml.jmoodle.functions.rest.tools;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.tools.MoodleParamMap;
 
 /**
@@ -75,6 +80,22 @@ public class MoodleRestFunctionTools {
 		}
 
 		return map;
+	}
+
+	public static String serializeCriterias(List<Criteria> criterias) {
+		// criteria[0][key]= string
+		// criteria[0][value]= string		
+		return IntStream.range(0, criterias.size()).boxed()
+			.map(i -> {
+				try {
+					MoodleParamMap map = entity2MoodleParamMap(
+						criterias.get(i), "criteria["+ i +"]"
+					);
+					return map.toParamString();
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
+					throw new RuntimeException(e);
+				}
+			}).collect(Collectors.joining(""));
 	}
 
 }

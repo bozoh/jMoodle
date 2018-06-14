@@ -141,7 +141,7 @@ public class MoodleCourseToolsTest {
 		coursesIds.add(-10l);
 		
 		assertCoursesIdsSerialization(coursesIds, 
-			URLDecoder.decode(mct.serializeCoursesId(coursesIds), MoodleConfig.DEFAULT_ENCODING)
+			URLDecoder.decode(mct.serializeCoursesId("options[ids]", coursesIds), MoodleConfig.DEFAULT_ENCODING)
 		);
 	}
 	
