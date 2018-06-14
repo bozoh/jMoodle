@@ -53,7 +53,7 @@ public class MoodleRestGetCourses extends MoodleWSBaseFunction {
 		try {
 			StringBuilder returnData = new StringBuilder(super.getFunctionData());
 			if (this.coursesIds.size() > 0) {
-				returnData.append(mct.serializeCoursesId(this.coursesIds));
+				returnData.append(mct.serializeCoursesId("options[ids]", this.coursesIds));
 			}
 			return returnData.toString();
 		} catch (UnsupportedEncodingException e) {

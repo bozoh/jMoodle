@@ -4,7 +4,7 @@ import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 
 public class MoodleRestUpdateCoursesException extends MoodleWSFucntionException {
 
-	private static final long serialVersionUID = -7533993255887602430L;
+	private static final long serialVersionUID = 398170208804793380L;
 
 	public MoodleRestUpdateCoursesException() {
 		// TODO Auto-generated constructor stub

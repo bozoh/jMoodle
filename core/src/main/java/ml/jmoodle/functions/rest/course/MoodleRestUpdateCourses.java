@@ -18,7 +18,6 @@ import org.w3c.dom.NodeList;
 import ml.jmoodle.annotations.MoodleWSFunction;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.MoodleWarning;
-import ml.jmoodle.commons.MoodleUser.Warning;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
@@ -114,7 +113,7 @@ public class MoodleRestUpdateCourses extends MoodleWSBaseFunction {
 		Set<MoodleCourse> entities = getCourses();
 		if (entities.isEmpty()) {
 			throw new MoodleRestUpdateCoursesException(
-				MoodleCommonsErrorMessages.notSet("Couses")
+				MoodleCommonsErrorMessages.notSet("Courses")
 			);
 		}
 		try {
