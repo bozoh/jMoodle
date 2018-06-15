@@ -95,7 +95,11 @@ public class MoodleRestGetCourseCategoriesTest  {
 	
 
 	@Test
+<<<<<<< HEAD
 	public void verify_function_name_test () throws MoodleWSFucntionException {
+=======
+	public void verify_function_name_if_version_is_bigger_or_equal_2_2_0_test () throws MoodleWSFucntionException {
+>>>>>>> daed983baaf3f04d7ebde5d2c37518bdadaf6264
 		
 		MoodleRestGetCourseCategories cc = (MoodleRestGetCourseCategories) MoodleWSFunctionFactory.getFunction(
 			MoodleWSFunctions.CORE_COURSE_GET_CATEGORIES, mc
