@@ -37,7 +37,7 @@ public class MoodleCourseToolsTest {
 
 	@BeforeClass
 	public static void setUp() {
-		FixtureFactoryLoader.loadTemplates("ml.jmoodle.functions.rest.course");
+		FixtureFactoryLoader.loadTemplates("ml.jmoodle.test");
 	}
 	@Before
 	public void beforeEach() {

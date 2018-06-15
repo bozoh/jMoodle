@@ -899,8 +899,12 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 	 * 
 	 * @return visible boolean
 	 */
-	public Boolean getVisible() {
+	public Boolean isVisible() {
 		return visible;
+	}
+
+	public Integer getVisible() {
+		return visible ? 1 : 0;
 	}
 
 	/**
@@ -965,8 +969,12 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 	 * 
 	 * @return enablecompletion boolean
 	 */
-	public Boolean getEnableCompletion() {
+	public Boolean isEnableCompletion() {
 		return enablecompletion;
+	}
+
+	public Integer getEnableCompletion() {
+		return enablecompletion ? 1 : 0;
 	}
 
 	/**
@@ -975,8 +983,12 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 	 * 
 	 * @return completionstartonenrol boolean
 	 */
-	public Boolean getCompletionStartOnEnrol() {
+	public Boolean isCompletionStartOnEnrol() {
 		return completionstartonenrol;
+	}
+
+	public Integer getCompletionStartOnEnrol() {
+		return completionstartonenrol ? 1 : 0;
 	}
 
 	/**
@@ -984,8 +996,13 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 	 * 
 	 * @return completionnotify boolean
 	 */
-	public Boolean getCompletionNotify() {
+	public Boolean isCompletionNotify() {
 		return completionnotify;
+	}
+
+
+	public Integer getCompletionNotify() {
+		return completionnotify ? 1 : 0;
 	}
 
 	/**
