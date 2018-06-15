@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class MoodleCourseCategoryTools extends MoodleCourseCategoryConverter {
 		return serialize(Arrays.stream(courses).collect(Collectors.toList()));
 	}
 
-	public String serialize(Set<MoodleCourseCategory> courses) {
+	public String serialize(Collection<MoodleCourseCategory> courses) {
 		return serialize(new ArrayList<>(courses));
 	}
 

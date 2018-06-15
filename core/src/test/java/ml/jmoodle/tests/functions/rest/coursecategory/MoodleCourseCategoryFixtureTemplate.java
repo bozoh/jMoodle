@@ -93,19 +93,20 @@ public class MoodleCourseCategoryFixtureTemplate implements TemplateLoader {
 
 	public static Document getValidResponseOnCreate(Set<MoodleCourseCategory> entities) throws SAXException, IOException, ParserConfigurationException {
 		//
-			// <?xml version="1.0" encoding="UTF-8" ?>
-			// <RESPONSE>
-			// <MULTIPLE>
-			// <SINGLE>
-			// <KEY name="id">
-			// <VALUE>int</VALUE>
-			// </KEY>
-			// <KEY name="shortname">
-			// <VALUE>string</VALUE>
-			// </KEY>
-			// </SINGLE>
-			// </MULTIPLE>
-			// </RESPONSE>
+		// <?xml version="1.0" encoding="UTF-8" ?>
+		// <RESPONSE>
+		// 	<MULTIPLE>
+		// 		<SINGLE>
+		// 			<KEY name="id">
+		// 				<VALUE>int</VALUE>
+		// 			</KEY>
+		// 			<KEY name="name">
+		// 				<VALUE>string</VALUE>
+		// 			</KEY>
+		// 		</SINGLE>
+		// 	</MULTIPLE>
+		// </RESPONSE>
+		
 			StringBuilder sb = new StringBuilder();
 			sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>")
 				.append("<RESPONSE>")
@@ -116,8 +117,8 @@ public class MoodleCourseCategoryFixtureTemplate implements TemplateLoader {
 					.append("<KEY name=\"id\">")
 					.append("<VALUE>").append(i++).append("</VALUE>")
 					.append("</KEY>")
-					.append("<KEY name=\"shortname\">")
-					// .append("<VALUE>").append(entity.getShortname()).append("</VALUE>")
+					.append("<KEY name=\"name\">")
+					.append("<VALUE>").append(entity.getName()).append("</VALUE>")
 					.append("</KEY>")
 					.append("</SINGLE>");
 			}

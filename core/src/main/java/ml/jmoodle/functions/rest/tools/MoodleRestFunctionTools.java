@@ -76,7 +76,11 @@ public class MoodleRestFunctionTools {
 				}
 				continue;
 			}
+			if (m.getReturnType().equals(Boolean.class)) {
+				o = ((Boolean) o) ? 1 : 0;
+			} 
 			map.put(methodName, o);
+			
 		}
 
 		return map;
