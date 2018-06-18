@@ -45,6 +45,8 @@ public class MoodleCourseCategoryFixtureTemplate implements TemplateLoader {
 				MoodleCourseCategory.CATEGORY_VISIBLE_YES,
 				MoodleCourseCategory.CATEGORY_VISIBLE_NO
 			));
+			add("newParent", random(Long.class));
+			add("recursive", random(Boolean.class));
 			add("timemodified", random(Long.class));
 			add("depth", random(Integer.class));
 			add("path", regex("\\w{3,5}"));

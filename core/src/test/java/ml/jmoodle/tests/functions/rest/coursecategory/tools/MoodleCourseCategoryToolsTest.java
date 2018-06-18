@@ -26,6 +26,7 @@ import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleCourseCategory;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.rest.coursecategory.tools.MoodleCourseCategoryTools;
+import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleCourseCategoryToolsTest {
 	MoodleCourseCategory mc;
@@ -90,32 +91,33 @@ public class MoodleCourseCategoryToolsTest {
 	}
 
 	
-	@Ignore
 	@Test
-	public void serialize_courses_id_test() throws UnsupportedEncodingException{
-		Set<Long> coursesIds = new HashSet<>();
-		coursesIds.add(1l);
-		coursesIds.add(10l);
-		coursesIds.add(-1l);
-		coursesIds.add(-10l);
+	public void serialize_to_delete_test() throws UnsupportedEncodingException{
 		
-		assertCourseCategoriesIdsSerialization(coursesIds, 
-			URLDecoder.decode(tool.serializeCourseCategorysId("category", coursesIds), MoodleConfig.DEFAULT_ENCODING)
+		assertCourseCategoriesDeleteSerialization(mcs, 
+			URLDecoder.decode(tool.serializeToDelete(mcs), MoodleConfig.DEFAULT_ENCODING)
 		);
 	}
 	
-	private void assertCourseCategoriesIdsSerialization(Set<Long> coursesIds, String serializeCourseCategoriesId) throws UnsupportedEncodingException {
-		List<Long> cids = new LinkedList<>(coursesIds);
+	private void assertCourseCategoriesDeleteSerialization(Set<MoodleCourseCategory> coursesIds, String dataString) throws UnsupportedEncodingException {
+		List<MoodleCourseCategory> cids = new LinkedList<>(coursesIds);
+		
 		for(int i=0; i< cids.size(); i++) {
-			Long courseId = cids.get(i);
-			assertTrue(serializeCourseCategoriesId.contains("options[ids]"));
-			assertTrue(serializeCourseCategoriesId.contains("options[ids][" + i + "]" +
-				"=" + courseId));
-			assertTrue(serializeCourseCategoriesId.contains("&"));
-			
-		}
+			MoodleCourseCategory entity = cids.get(i);
+			assertTrue(dataString.contains("categories["+ i +"][id]="));
+			assertTrue(dataString.contains(entity.getId().toString()));
+			if (!MoodleTools.isEmpty(entity.getNewParent())) {
+				assertTrue(dataString.contains("categories["+ i +"][newparent]="));
+				assertTrue(dataString.contains(entity.getNewParent().toString()));
+			}
 
-	
+			if (entity.isRecursive()) {
+				assertTrue(dataString.contains("categories["+ i +"][recursive]="));
+				assertTrue(dataString.contains(entity.getRecursive().toString()));
+			}
+			i++;
+		}
+		assertTrue(dataString.contains("&"));
 	}
 
 }

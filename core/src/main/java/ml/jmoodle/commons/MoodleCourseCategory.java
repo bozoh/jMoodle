@@ -272,6 +272,10 @@ public class MoodleCourseCategory implements Serializable, Comparable<MoodleCour
 		return recursive;
 	}
 
+	public Integer getRecursive() {
+		return (recursive ? 1 : 0);
+	}
+
 	public void setRecursive(Boolean recursive) {
 		this.recursive = recursive;
 	}

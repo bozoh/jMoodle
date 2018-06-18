@@ -93,4 +93,40 @@ public class MoodleCourseCategoryTools extends MoodleCourseCategoryConverter {
 		return sb.substring(0, sb.length() - 1);
 	}
 
+	public String serializeToDelete(Set<MoodleCourseCategory> entities) throws UnsupportedEncodingException {
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		for (MoodleCourseCategory entity : entities) {
+			sb.append(MoodleTools.encode("categories["))
+				.append(i)
+				.append(MoodleTools.encode("]"))
+				.append(MoodleTools.encode("[id]"))
+				.append("=")
+				.append(entity.getId())
+				.append("&");
+			
+			if (!MoodleTools.isEmpty(entity.getNewParent())) {
+				sb.append(MoodleTools.encode("categories["))
+					.append(i)
+					.append(MoodleTools.encode("]"))
+					.append(MoodleTools.encode("[newparent]"))
+					.append("=")
+					.append(entity.getNewParent())
+					.append("&");
+			}
+
+			if (entity.isRecursive()) {
+				sb.append(MoodleTools.encode("categories["))
+					.append(i)
+					.append(MoodleTools.encode("]"))
+					.append(MoodleTools.encode("[recursive]"))
+					.append("=")
+					.append(entity.getRecursive())
+					.append("&");
+			}
+			i++;
+		}
+		return sb.substring(0, sb.length() - 1 );
+	}
+
 }
