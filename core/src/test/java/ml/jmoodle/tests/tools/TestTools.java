@@ -37,6 +37,9 @@ public class TestTools {
 								sb.append(
 									((Boolean) value).booleanValue() ? "1" : "0"
 								);
+							} else if (mtd.getReturnType().isEnum()) {
+								Method enumMethod = value.getClass().getMethod("getValue");
+								sb.append(enumMethod.invoke(value));
 							} else {
 								sb.append(value);
 							}
@@ -44,7 +47,7 @@ public class TestTools {
 						}
 						sb.append("</KEY>");
 					}
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					throw new RuntimeException(e);
 				}
 		});

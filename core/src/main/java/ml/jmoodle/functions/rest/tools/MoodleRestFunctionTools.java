@@ -50,7 +50,7 @@ public class MoodleRestFunctionTools {
 
 	}
 
-	public static MoodleParamMap entity2MoodleParamMap(Object entity, String parentName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static MoodleParamMap entity2MoodleParamMap(Object entity, String parentName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		MoodleParamMap map = new MoodleParamMap();
 		
 		Method[] methods = entity.getClass().getDeclaredMethods();
@@ -79,6 +79,13 @@ public class MoodleRestFunctionTools {
 			if (m.getReturnType().equals(Boolean.class)) {
 				o = ((Boolean) o) ? 1 : 0;
 			} 
+
+			if (m.getReturnType().isEnum()) {
+				Method enumMethod = o.getClass().getMethod("getValue");
+				o = enumMethod.invoke(o);
+				
+				
+			} 
 			map.put(methodName, o);
 			
 		}
@@ -96,7 +103,7 @@ public class MoodleRestFunctionTools {
 						criterias.get(i), "criteria["+ i +"]"
 					);
 					return map.toParamString();
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException | NoSuchMethodException | SecurityException e) {
 					throw new RuntimeException(e);
 				}
 			}).collect(Collectors.joining(""));

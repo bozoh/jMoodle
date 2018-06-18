@@ -22,7 +22,7 @@ public enum DescriptionFormat implements Serializable {
 		this.value = value;
 	}
 
-	public Integer toInt() {
+	public Integer getValue() {
 		return value;
 	}
 
