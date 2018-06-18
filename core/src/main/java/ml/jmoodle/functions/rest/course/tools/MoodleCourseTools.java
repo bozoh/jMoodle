@@ -42,7 +42,7 @@ public class MoodleCourseTools extends MoodleCourseConverter {
 						entities.get(i), "courses["+ i +"]"
 					);
 					return map.toParamString();
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException e) {
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException | NoSuchMethodException | SecurityException e) {
 					throw new RuntimeException(e);
 				}
 			}).collect(Collectors.joining("\n"));

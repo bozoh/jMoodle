@@ -141,7 +141,7 @@ public class MoodleRestCreateCourseCategoriesTest  {
 
 	private void doVerifyFunctionDataAssertions(Set<MoodleCourseCategory> entities, String dataString) {
 		int i = 0;
-
+		System.err.println(dataString);
 		for (MoodleCourseCategory e : entities) {
 			assertTrue("Not contains Name", dataString.contains("categories["+ i +"][name]"));
 			assertTrue("Not contains "+e.getName(), dataString.contains(e.getName()));
@@ -152,7 +152,7 @@ public class MoodleRestCreateCourseCategoriesTest  {
 			assertTrue("Not contains description", dataString.contains("categories["+ i +"][description]"));
 			assertTrue("Not contains "+e.getDescription(), dataString.contains(e.getDescription()));
 			assertTrue("Not contains descriptionformat", dataString.contains("categories["+ i +"][descriptionformat]"));
-			assertTrue("Not contains "+e.getDescriptionFormat(), dataString.contains(e.getDescriptionFormat().toString()));
+			assertTrue("Not contains "+e.getDescriptionFormat(), dataString.contains(e.getDescriptionFormat().getValue().toString()));
 			assertTrue("Not contains theme", dataString.contains("categories["+ i +"][theme]"));
 			assertTrue("Not contains "+e.getTheme(), dataString.contains(e.getTheme()));
 			i++;	

@@ -37,7 +37,6 @@ import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.course.MoodleRestGetCourses;
 import ml.jmoodle.functions.rest.course.exceptions.MoodleRestGetCoursesException;
-import ml.jmoodle.functions.rest.course.exceptions.MoodleRestUpdateCoursesException;
 
 /**
  * Create Course(s) Function

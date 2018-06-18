@@ -106,11 +106,8 @@ public class MoodleCourseCategory implements Serializable, Comparable<MoodleCour
 		return description;
 	}
 
-	public Integer getDescriptionFormat() {
-		return descriptionformat.toInt();
-	}
-
-	public DescriptionFormat getDescriptionFormatObj() {
+	
+	public DescriptionFormat getDescriptionFormat() {
 		return descriptionformat;
 	}
 
