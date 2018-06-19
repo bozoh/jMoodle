@@ -1,6 +1,7 @@
 package ml.jmoodle.functions.rest.user;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,12 +14,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.annotations.MoodleWSFunction;
+import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersException;
 import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.functions.rest.user.tools.MoodleUserTools;
 import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 
 /**
@@ -26,7 +31,7 @@ import ml.jmoodle.tools.MoodleCommonsErrorMessages;
  *
  *
  * @author Carlos Alexandre S. da Fonseca
- * @copyrigth © 2016 Carlos Alexandre S. da Fonseca
+ * @copyrigth © 2018 Carlos Alexandre S. da Fonseca
  * @license https://opensource.org/licenses/MIT - MIT License
  *
  */
@@ -34,40 +39,29 @@ import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 
 	private static final String SINCE_VERSION = "2.5.0";
-	private MoodleRestUserFunctionsTools userFuntionsTools;
+	private MoodleUserTools tool;
 	// Using map instead a set to set the Users ids
 	private Set<Criteria> criterias;
+	private Set<MoodleWarning> warnings = null;
 
-	/**
-	 * @return the userFuntionsTools
-	 */
-	private MoodleRestUserFunctionsTools getUserFuntionsTools() {
-		return userFuntionsTools;
-	}
 
-	/**
-	 * @return the criterias
-	 */
-	public Set<Criteria> getCriterias() {
-		return criterias;
-	}
-
+	
 	public MoodleRestGetUsers(MoodleConfig moodleConfig) throws MoodleWSFucntionException {
 		super(moodleConfig);
-		this.criterias = new HashSet<MoodleRestGetUsers.Criteria>();
-		this.userFuntionsTools = new MoodleRestUserFunctionsTools();
+		this.criterias = new HashSet<Criteria>();
+		this.tool = new MoodleUserTools();
 	}
 
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
-		if (getCriterias().isEmpty()) {
+		if (criterias.isEmpty()) {
 			throw new MoodleRestGetUsersException(MoodleCommonsErrorMessages.notSet("Criteria"));
 		}
 		try {
 			StringBuilder returnData = new StringBuilder(super.getFunctionData());
-			returnData.append(getUserFuntionsTools().serliazeCriterias(getCriterias()));
+			returnData.append(MoodleRestFunctionTools.serializeCriterias(criterias));
 			return returnData.toString();
-		} catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new MoodleRestGetUsersException(e);
 		}
 	}
@@ -93,66 +87,42 @@ public class MoodleRestGetUsers extends MoodleWSBaseFunction {
 			XPath xPath = XPathFactory.newInstance().newXPath();
 			NodeList usersNodeList = (NodeList) xPath.compile("/RESPONSE/SINGLE/KEY[@name=\"users\"]/MULTIPLE/SINGLE")
 					.evaluate(response, XPathConstants.NODESET);
-			Set<MoodleUser> users = getUserFuntionsTools().unSerializeUsers(usersNodeList);
+			Set<MoodleUser> users = tool.deSerialize(usersNodeList);
+
+			//Processing Warnings
+			NodeList warningNodeList = (NodeList) xPath.compile("/RESPONSE/SINGLE/KEY[@name=\"warnings\"]/MULTIPLE/SINGLE")
+				.evaluate(response, XPathConstants.NODESET);
+			this.warnings = MoodleRestFunctionTools.deSerializeWarnings(warningNodeList);
+			
 			return users;
-			// TODO Process Warnings
 		} catch (XPathExpressionException e) {
 			throw new MoodleRestGetUsersException(e);
 		}
 	}
 
 	public void addCriteria(Criteria criteria) throws MoodleRestGetUsersException {
-		if (criteria == null || criteria.getName() == null || criteria.getName().trim().isEmpty())
-			throw new MoodleRestGetUsersException(MoodleCommonsErrorMessages.mustHave("Criteria", "name", criteria));
+		verifyEntity(criteria);
 		this.criterias.add(criteria);
 	}
 
-	public void setCriterias(Set<Criteria> citerias) throws MoodleRestGetUsersException {
-		for (Criteria criteria : citerias) {
+	private void verifyEntity(Criteria criteria) throws MoodleRestGetUsersException {
+		if (criteria == null || criteria.getKey() == null || criteria.getKey().trim().isEmpty())
+			throw new MoodleRestGetUsersException(MoodleCommonsErrorMessages.mustHave("Criteria", "key", criteria));
+	}
+
+	public void setCriterias(Set<Criteria> criterias) throws MoodleRestGetUsersException {
+		for (Criteria criteria : criterias) {
 			this.addCriteria(criteria);
 		}
 
 	}
 
-	public class Criteria {
+	public Set<MoodleWarning> getWarnings() {
+		return warnings;
+	}
 
-		private String name;
-		private String value;
-
-		public Criteria(String name, String value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		/**
-		 * @return the name
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * @param name
-		 *            the name to set
-		 */
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		/**
-		 * @return the value
-		 */
-		public String getValue() {
-			return value;
-		}
-
-		/**
-		 * @param value
-		 *            the value to set
-		 */
-		public void setValue(String value) {
-			this.value = value;
-		}
+	public boolean hasWarnings() {
+		return (warnings != null && !warnings.isEmpty());
 	}
 
 }

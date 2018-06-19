@@ -24,7 +24,7 @@ public class MoodleWarningFixtureTemplate implements TemplateLoader {
 	public void load() {
 		Fixture.of(MoodleWarning.class).addTemplate("valid", new Rule(){{
 			add("item", regex("[A-Za-z0-9_ ]{3,10}"));
-			add("itemid", random(Integer.class));
+			add("itemid", random(Integer.class, range(1, 500)));
 			add("warningcode", regex("[A-Za-z0-9_ ]{3,50}"));
 			add("message", regex("[A-Za-z0-9_ ]{3,150}"));
 		}});

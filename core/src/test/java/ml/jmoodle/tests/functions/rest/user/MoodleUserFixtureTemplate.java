@@ -136,17 +136,7 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			}
 		});
 
-		// MoodleUserWarnings
-		Fixture.of(MoodleWarning.class).addTemplate("MoodleUserWarnings", new Rule() {
-			{
-				add("item", random("lorem ipsum", "ipsum lorem", "foo bar"));
-				add("itemid", random(Long.class, range(0L, 147L)));
-				add("message", random("lorem ipsum", "ipsum lorem", "foo bar"));
-				add("warningcode", random("lorem ipsum", "ipsum lorem", "foo bar"));
-
-			}
-		});
-
+		
 		Fixture.of(UserPreference.class).addTemplate("MoodleUserPreferences", new Rule() {
 			{
 				add("value", random("maildigest", "editorformat", "datefrmt"));
@@ -168,8 +158,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 
 		Fixture.of(Criteria.class).addTemplate("MoodleRestGetUsersCriteria", new Rule() {
 			{
-				add("name", random("firstname", "lastname", "username", "idnumer", "id", "email"));
-				add("value", "${name}");
+				add("key", random("firstname", "lastname", "username", "idnumer", "id", "email"));
+				add("value", "${key}");
 			}
 
 		});
@@ -224,9 +214,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 
 	}
 
-	public Document getGetUsersRespone() throws ParserConfigurationException, SAXException, IOException {
+	public static Document getGetUsersRespone(List<MoodleUser> mdlUsers, List<MoodleWarning> warnings) throws ParserConfigurationException, SAXException, IOException {
 
-		List<MoodleWarning> warnings = Fixture.from(MoodleWarning.class).gimme(2, "MoodleUserWarnings");
 		StringBuffer usrResponse = new StringBuffer();
 		usrResponse.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>").append("<RESPONSE>").append("<SINGLE>")
 				.append("<KEY name=\"users\">").append("<MULTIPLE>");
@@ -298,7 +287,7 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			for (MoodleWarning warning : warnings) {
 				usrResponse.append("<SINGLE>").append("<KEY name=\"item\">").append("<VALUE>").append(warning.getItem())
 						.append("</VALUE></KEY>").append("<KEY name=\"itemid\">").append("<VALUE>")
-						.append(warning.getItem()).append("</VALUE></KEY>").append("<KEY name=\"warningcode\">")
+						.append(warning.getItemId()).append("</VALUE></KEY>").append("<KEY name=\"warningcode\">")
 						.append("<VALUE>").append(warning.getWarningCode()).append("</VALUE></KEY>")
 						.append("<KEY name=\"message\">").append("<VALUE>").append(warning.getMessage())
 						.append("</VALUE></KEY>").append("</SINGLE>");
