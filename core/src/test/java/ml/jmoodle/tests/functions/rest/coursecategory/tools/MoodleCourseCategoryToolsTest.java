@@ -1,15 +1,13 @@
 package ml.jmoodle.tests.functions.rest.coursecategory.tools;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-// import static com.google.common.truth.Truth8.assertThat;
-// import static com.google.testing.compile.CompilationSubject.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import br.com.six2six.fixturefactory.Fixture;
@@ -56,17 +53,17 @@ public class MoodleCourseCategoryToolsTest {
 		for(int i=0; i< entities.size(); i++) {
 			MoodleCourseCategory entity = entities.get(i);
 		
-			assertTrue(serializedString.contains("categories[" + i +"]"));
-			
-			assertTrue(serializedString.contains("categories["+i+"][name]="+entity.getName()));
-			assertTrue(serializedString.contains("categories["+i+"][idnumber]="+entity.getIdNumber()));
-			assertTrue(serializedString.contains("categories["+i+"][parent]="+entity.getParent()));
-			assertTrue(serializedString.contains("categories["+i+"][sortorder]="+entity.getSortOrder()));
-			assertTrue(serializedString.contains("categories["+i+"][description]="+entity.getDescription()));
-			assertTrue(serializedString.contains("categories["+i+"][descriptionformat]="+entity.getDescriptionFormat()));
-			assertTrue(serializedString.contains("categories["+i+"][theme]="+entity.getTheme()));
+			assertThat(serializedString).contains("categories[" + i +"]");
+			assertThat(serializedString).contains("categories[" + i +"][id]="+entity.getId());
+			assertThat(serializedString).contains("categories["+i+"][name]="+entity.getName());
+			assertThat(serializedString).contains("categories["+i+"][idnumber]="+entity.getIdNumber());
+			assertThat(serializedString).contains("categories["+i+"][parent]="+entity.getParent());
+			assertThat(serializedString).contains("categories["+i+"][sortorder]="+entity.getSortOrder());
+			assertThat(serializedString).contains("categories["+i+"][description]="+entity.getDescription());
+			assertThat(serializedString).contains("categories["+i+"][descriptionformat]="+entity.getDescriptionFormat().getValue());
+			assertThat(serializedString).contains("categories["+i+"][theme]="+entity.getTheme());
 		};
-		assertTrue(serializedString.contains("&"));
+		assertThat(serializedString).contains("&");
 	}
 
 		

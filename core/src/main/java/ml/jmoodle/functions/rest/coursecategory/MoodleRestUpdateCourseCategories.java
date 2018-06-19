@@ -70,10 +70,6 @@ public class MoodleRestUpdateCourseCategories extends MoodleWSBaseFunction {
 
 	public void addCatrgory(MoodleCourseCategory entity) throws MoodleRestUpdateCourseCategoriesException {
 		verifyEntity(entity);
-		entity.setId(null);
-		if (MoodleTools.isEmpty(entity.getParent())) {
-			entity.setParent(0l);
-		}
 		this.entities.add(entity);
 	}
 

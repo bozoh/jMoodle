@@ -1,5 +1,6 @@
 package ml.jmoodle.tests.functions.rest.coursecategory;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -133,33 +134,12 @@ public class MoodleRestCreateCourseCategoriesTest  {
 		cc.setCategories(entities);
 		String dataString = URLDecoder.decode(cc.getFunctionData(), MoodleConfig.DEFAULT_ENCODING);
 		
-		assertTrue(dataString.contains("wsfunction="+cc.getFunctionName()));
-		doVerifyFunctionDataAssertions(entities, dataString);
+		
+		assertThat(dataString).contains("wsfunction="+cc.getFunctionName());
+		assertThat(dataString).doesNotContain("[id]=");
 		
 	}
 
-
-	private void doVerifyFunctionDataAssertions(Set<MoodleCourseCategory> entities, String dataString) {
-		int i = 0;
-		System.err.println(dataString);
-		for (MoodleCourseCategory e : entities) {
-			assertTrue("Not contains Name", dataString.contains("categories["+ i +"][name]"));
-			assertTrue("Not contains "+e.getName(), dataString.contains(e.getName()));
-			assertTrue("Not contains Parent", dataString.contains("categories["+ i +"][parent]"));
-			assertTrue("Not contains "+e.getParent(), dataString.contains(e.getParent().toString()));
-			assertTrue("Not contains IdNumber", dataString.contains("categories["+ i +"][idnumber]"));
-			assertTrue("Not contains "+e.getIdNumber(), dataString.contains(e.getIdNumber()));
-			assertTrue("Not contains description", dataString.contains("categories["+ i +"][description]"));
-			assertTrue("Not contains "+e.getDescription(), dataString.contains(e.getDescription()));
-			assertTrue("Not contains descriptionformat", dataString.contains("categories["+ i +"][descriptionformat]"));
-			assertTrue("Not contains "+e.getDescriptionFormat(), dataString.contains(e.getDescriptionFormat().getValue().toString()));
-			assertTrue("Not contains theme", dataString.contains("categories["+ i +"][theme]"));
-			assertTrue("Not contains "+e.getTheme(), dataString.contains(e.getTheme()));
-			i++;	
-		}
-		assertTrue(dataString.contains("="));
-		assertTrue(dataString.contains("&"));
-	}
 
 	@Test
 	public void verify_process_respose_test() throws MoodleWSFucntionException, MoodleConfigException, SAXException, IOException, ParserConfigurationException {

@@ -1,8 +1,7 @@
 package ml.jmoodle.tests.functions.rest.course.tools;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-// import static com.google.common.truth.Truth8.assertThat;
-// import static com.google.testing.compile.CompilationSubject.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
@@ -28,7 +27,6 @@ import ml.jmoodle.commons.OptionParameter;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.rest.course.exceptions.MoodleRestCreateCoursesException;
 import ml.jmoodle.functions.rest.course.tools.MoodleCourseTools;
-import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleCourseToolsTest {
 	MoodleCourse mc;
@@ -37,7 +35,7 @@ public class MoodleCourseToolsTest {
 
 	@BeforeClass
 	public static void setUp() {
-		FixtureFactoryLoader.loadTemplates("ml.jmoodle.test");
+		FixtureFactoryLoader.loadTemplates("ml.jmoodle.tests");
 	}
 	@Before
 	public void beforeEach() {
@@ -47,7 +45,10 @@ public class MoodleCourseToolsTest {
 	}
 	@Test
 	public void test_serialize() throws MoodleRestCreateCoursesException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UnsupportedEncodingException {
-		assertMoodleCourse(mct.serialize(mcs), mcs);
+		assertMoodleCourse(
+			URLDecoder.decode(mct.serialize(mcs), MoodleConfig.DEFAULT_ENCODING),
+			mcs
+		);
 	}
 
 	private void assertMoodleCourse(String serializedString, Set<MoodleCourse> mcs) throws UnsupportedEncodingException {
@@ -55,35 +56,34 @@ public class MoodleCourseToolsTest {
 		for(int i=0; i< courses.size(); i++) {
 			MoodleCourse course = courses.get(i);
 		
-			assertTrue(serializedString.contains("courses%5B" + i +"%5D"));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bformat%5D="+MoodleTools.encode(course.getFormat())));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bshortname%5D="+MoodleTools.encode(course.getShortname())));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bcategoryid%5D="+course.getCategoryId()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bcategorysortorder%5D="+course.getCategorySortOrder()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bfullname%5D="+MoodleTools.encode(course.getFullname())));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bsummaryformat%5D="+course.getSummaryFormat()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bsummarydescriptionformat%5D="+course.getSummaryDescriptionFormat()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bsummary%5D="+MoodleTools.encode(course.getSummary())));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bidnumber%5D="+MoodleTools.encode(course.getIdNumber())));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bshowgrades%5D="+course.getShowGrades()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bnewsitems%5D="+course.getNewsItems()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bstartdate%5D="+course.getStartDate()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bnumsections%5D="+course.getNumSections()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bmaxbytes%5D="+course.getMaxBytes()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bshowreports%5D="+course.getShowReports()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bvisible%5D="+course.getVisible()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bhiddensections%5D="+course.getHiddenSections()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bgroupmode%5D="+course.getGroupMode()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bgroupmodeforce%5D="+course.getGroupModeForce()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bdefaultgroupingid%5D="+course.getDefaultGroupingId()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Btimecreated%5D="+course.getTimeCreated()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Btimemodified%5D="+course.getTimeModified()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Benablecompletion%5D="+course.getEnableCompletion()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bcompletionstartonenrol%5D="+course.getCompletionStartOnEnrol()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bcompletionnotify%5D="+course.getCompletionNotify()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bid%5D="+course.getId()));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Blang%5D="+MoodleTools.encode(course.getLang())));
-			assertTrue(serializedString.contains("courses%5B"+i+"%5D%5Bforcetheme%5D="+MoodleTools.encode(course.getForceTheme())));
+			assertThat(serializedString).contains("courses[" + i +"]");
+			assertThat(serializedString).contains("courses["+i+"][format]="+course.getFormat());
+			assertThat(serializedString).contains("courses["+i+"][shortname]="+course.getShortname());
+			assertThat(serializedString).contains("courses["+i+"][categoryid]="+course.getCategoryId());
+			assertThat(serializedString).contains("courses["+i+"][categorysortorder]="+course.getCategorySortOrder());
+			assertThat(serializedString).contains("courses["+i+"][fullname]="+course.getFullname());
+			assertThat(serializedString).contains("courses["+i+"][summaryformat]="+course.getSummaryFormat().getValue());
+			assertThat(serializedString).contains("courses["+i+"][summary]="+course.getSummary());
+			assertThat(serializedString).contains("courses["+i+"][idnumber]="+course.getIdNumber());
+			assertThat(serializedString).contains("courses["+i+"][showgrades]="+course.getShowGrades());
+			assertThat(serializedString).contains("courses["+i+"][newsitems]="+course.getNewsItems());
+			assertThat(serializedString).contains("courses["+i+"][startdate]="+course.getStartDate());
+			assertThat(serializedString).contains("courses["+i+"][numsections]="+course.getNumSections());
+			assertThat(serializedString).contains("courses["+i+"][maxbytes]="+course.getMaxBytes());
+			assertThat(serializedString).contains("courses["+i+"][showreports]="+course.getShowReports());
+			assertThat(serializedString).contains("courses["+i+"][visible]="+course.getVisible());
+			assertThat(serializedString).contains("courses["+i+"][hiddensections]="+course.getHiddenSections());
+			assertThat(serializedString).contains("courses["+i+"][groupmode]="+course.getGroupMode());
+			assertThat(serializedString).contains("courses["+i+"][groupmodeforce]="+course.getGroupModeForce());
+			assertThat(serializedString).contains("courses["+i+"][defaultgroupingid]="+course.getDefaultGroupingId());
+			assertThat(serializedString).contains("courses["+i+"][timecreated]="+course.getTimeCreated());
+			assertThat(serializedString).contains("courses["+i+"][timemodified]="+course.getTimeModified());
+			assertThat(serializedString).contains("courses["+i+"][enablecompletion]="+course.getEnableCompletion());
+			assertThat(serializedString).contains("courses["+i+"][completionstartonenrol]="+course.getCompletionStartOnEnrol());
+			assertThat(serializedString).contains("courses["+i+"][completionnotify]="+course.getCompletionNotify());
+			assertThat(serializedString).contains("courses["+i+"][id]="+course.getId());
+			assertThat(serializedString).contains("courses["+i+"][lang]="+course.getLang());
+			assertThat(serializedString).contains("courses["+i+"][forcetheme]="+course.getForceTheme());
 		};
 	}
 

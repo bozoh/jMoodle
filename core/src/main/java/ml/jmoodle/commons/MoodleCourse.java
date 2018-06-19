@@ -806,11 +806,7 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 	 * 
 	 * @return summaryformat int
 	 */
-	public Integer getSummaryFormat() {
-		return summaryformat.toInt();
-	}
-
-	public DescriptionFormat getSummaryDescriptionFormat() {
+	public DescriptionFormat getSummaryFormat() {
 		return summaryformat;
 	}
 

@@ -69,28 +69,5 @@ public class MoodleConfigTest {
 		new MoodleConfig("http://test.com", mdlAuthMock, "3.1-RC"); 
 	}
 
-	@Test
-	public final void MoodleConfigVerifyVersionInvalidTest() throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		MoodleCourse mc = new MoodleCourse();
-        mc.setId(1l);   
-        mc.setFullname("fullname");
-        mc.setShortname("shortname");
-        mc.setStartDate(Calendar.getInstance().getTimeInMillis()/1000l);
-		Method[] allMethods = mc.getClass().getDeclaredMethods();
-        for (Method m : allMethods) {
-            if (m.getName().startsWith("get")) {
-				System.out.println(m.getName().toLowerCase().substring(3)+" = "+m.invoke(mc));
-			}
-		}
-
-		Map<String, Object> map =  new HashMap<>();
-		map.put("id", 1);
-		map.put("fullname", "fullname");
-		map.put("shortname", "shortname");
-		map.put("startdate", String.valueOf(Calendar.getInstance().getTimeInMillis()/1000l));
-		MoodleCourse mc1 = new MoodleCourse();
-		
-		System.out.println(mc1);
-
-	}
+	
 }

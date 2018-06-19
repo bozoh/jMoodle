@@ -135,7 +135,7 @@ public class MoodleRestDeleteCourseCategoriesTest  {
 
 	private void doVerifyFunctionDataAssertions(Set<MoodleCourseCategory> mcs, String dataString) {
 		int i = 0;
-		System.err.println(dataString);
+		
 		for (MoodleCourseCategory c : mcs) {
 			assertTrue(dataString.contains("categories["+ i +"][id]="));
 			assertTrue(dataString.contains(c.getId().toString()));
