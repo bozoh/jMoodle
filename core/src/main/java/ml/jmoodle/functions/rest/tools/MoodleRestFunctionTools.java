@@ -3,8 +3,10 @@ package ml.jmoodle.functions.rest.tools;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +18,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.commons.Criteria;
+import ml.jmoodle.commons.MoodleWarning;
+import ml.jmoodle.functions.converters.MoodleWarningConverter;
 import ml.jmoodle.tools.MoodleParamMap;
 
 /**
@@ -93,20 +97,30 @@ public class MoodleRestFunctionTools {
 		return map;
 	}
 
-	public static String serializeCriterias(List<Criteria> criterias) {
+	public static String serializeCriterias(Collection<Criteria> criterias) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UnsupportedEncodingException {
 		// criteria[0][key]= string
-		// criteria[0][value]= string		
-		return IntStream.range(0, criterias.size()).boxed()
-			.map(i -> {
-				try {
-					MoodleParamMap map = entity2MoodleParamMap(
-						criterias.get(i), "criteria["+ i +"]"
-					);
-					return map.toParamString();
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | UnsupportedEncodingException | NoSuchMethodException | SecurityException e) {
-					throw new RuntimeException(e);
-				}
-			}).collect(Collectors.joining(""));
+		// criteria[0][value]= string
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		for (Criteria c : criterias) {
+			MoodleParamMap map = entity2MoodleParamMap(c, "criteria["+ i +"]");
+			sb.append(map.toParamString());
+			sb.append("&");
+			i++;
+		}
+		return sb.substring(0, sb.length() - 1);
+	}
+
+	public static Set<MoodleWarning> deSerializeWarnings(NodeList nodeList) {
+		Set<MoodleWarning> result = new LinkedHashSet<MoodleWarning>();
+		MoodleWarningConverter mwc = new MoodleWarningConverter();
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node singleNode = nodeList.item(i);
+			Map<String, Object> singleValuesMap = getSingleAttributes(singleNode);
+			result.add(mwc.toEntity(singleValuesMap));
+		}
+
+		return result;
 	}
 
 }

@@ -1,5 +1,7 @@
 package ml.jmoodle.functions.rest.coursecategory;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +55,11 @@ public class MoodleRestGetCourseCategories extends MoodleWSBaseFunction {
 			throw new MoodleRestGetCourseCategoriesException(MoodleCommonsErrorMessages.notSet("Criteria"));
 		}
 		StringBuilder returnData = new StringBuilder(super.getFunctionData());
-			returnData.append(MoodleRestFunctionTools.serializeCriterias(this.criterias));
+			try {
+				returnData.append(MoodleRestFunctionTools.serializeCriterias(this.criterias));
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | UnsupportedEncodingException e) {
+				throw new MoodleRestGetCourseCategoriesException(e);
+			}
 			return returnData.toString();
 	}
 

@@ -3,6 +3,7 @@ package ml.jmoodle.tests.functions.rest.tools;
 import static org.junit.Assert.assertTrue;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 public class MoodleRestFunctionToolsTest {
 
 	@Test
-	public void serialize_criterias_teste() throws UnsupportedEncodingException {
+	public void serialize_criterias_teste() throws UnsupportedEncodingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		// criteria[0][key]= string
 		// criteria[0][value]= string		
 		List<Criteria> criterias = new ArrayList<>();
