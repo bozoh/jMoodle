@@ -95,4 +95,41 @@ public class MoodleWarning implements Serializable {
 		this.warningcode = warningcode;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+		return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof MoodleWarning))
+			return false;
+
+		MoodleWarning other = (MoodleWarning) obj;
+
+		if (item == null) {
+			if (other.item != null)
+				return false;
+		} else if (!item.equals(other.item))
+			return false;
+
+		if (itemid == null) {
+			if (other.itemid != null)
+				return false;
+		} else if (!itemid.equals(other.itemid))
+			return false;
+
+		if (warningcode == null) {
+			if (other.warningcode != null)
+				return false;
+		} else if (!warningcode.equals(other.warningcode))
+			return false;
+
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
+		
+		return true;
+	}
 }
