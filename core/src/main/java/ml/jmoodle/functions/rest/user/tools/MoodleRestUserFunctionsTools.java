@@ -11,7 +11,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.commons.MoodleUser;
-import ml.jmoodle.commons.MoodleUser.CustomFieldType;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.user.MoodleRestGetUsers;
 import ml.jmoodle.functions.rest.user.MoodleRestGetUsersByFields.Field;
@@ -134,27 +133,27 @@ public class MoodleRestUserFunctionsTools {
 						.append(MoodleTools.encode("1")).append("&");
 			}
 
-			Set<MoodleUser.CustomField> customFields = moodleUsers[i].getCustomfields();
-			if (customFields != null && !customFields.isEmpty()) {
-				MoodleUser.CustomField[] fields = customFields.toArray(new MoodleUser.CustomField[customFields.size()]);
-				for (int j = 0; j < fields.length; j++) {
-					returnData.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][type]")).append("=")
-							.append(MoodleTools.encode(fields[j].getName())).append("&")
-							.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][value]")).append("=")
-							.append(MoodleTools.encode(fields[j].getValue())).append("&");
-				}
-			}
+			// Set<MoodleUser.CustomField> customFields = moodleUsers[i].getCustomfields();
+			// if (customFields != null && !customFields.isEmpty()) {
+			// 	MoodleUser.CustomField[] fields = customFields.toArray(new MoodleUser.CustomField[customFields.size()]);
+			// 	for (int j = 0; j < fields.length; j++) {
+			// 		returnData.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][type]")).append("=")
+			// 				.append(MoodleTools.encode(fields[j].getName())).append("&")
+			// 				.append(MoodleTools.encode("users[" + i + "][customfields][" + j + "][value]")).append("=")
+			// 				.append(MoodleTools.encode(fields[j].getValue())).append("&");
+			// 	}
+			// }
 
-			Set<MoodleUser.Preference> preferences = moodleUsers[i].getPreferences();
-			if (preferences != null && !preferences.isEmpty()) {
-				MoodleUser.Preference[] prefs = preferences.toArray(new MoodleUser.Preference[preferences.size()]);
-				for (int j = 0; j < prefs.length; j++) {
-					returnData.append(MoodleTools.encode("users[" + i + "][preferences][" + j + "][type]")).append("=")
-							.append(MoodleTools.encode(prefs[j].getName())).append("&")
-							.append(MoodleTools.encode("users[" + i + "][preferences][" + j + "][value]")).append("=")
-							.append(MoodleTools.encode(prefs[j].getValue())).append("&");
-				}
-			}
+			// Set<MoodleUser.Preference> preferences = moodleUsers[i].getPreferences();
+			// if (preferences != null && !preferences.isEmpty()) {
+			// 	MoodleUser.Preference[] prefs = preferences.toArray(new MoodleUser.Preference[preferences.size()]);
+			// 	for (int j = 0; j < prefs.length; j++) {
+			// 		returnData.append(MoodleTools.encode("users[" + i + "][preferences][" + j + "][type]")).append("=")
+			// 				.append(MoodleTools.encode(prefs[j].getName())).append("&")
+			// 				.append(MoodleTools.encode("users[" + i + "][preferences][" + j + "][value]")).append("=")
+			// 				.append(MoodleTools.encode(prefs[j].getValue())).append("&");
+			// 	}
+			// }
 
 		}
 
@@ -274,21 +273,21 @@ public class MoodleRestUserFunctionsTools {
 		if (valuesMap.containsKey("yahoo"))
 			user.setYahoo((String) valuesMap.get("yahoo"));
 
-		/// The Multiple values
-		if (valuesMap.containsKey("preferences")) {
-			Set<Map<String, Object>> preferences = (Set<Map<String, Object>>) valuesMap.get("preferences");
-			for (Map<String, Object> preference : preferences) {
-				user.addPreferences((String) preference.get("name"), (String) preference.get("value"));
-			}
-		}
-		if (valuesMap.containsKey("customfields")) {
-			Set<Map<String, Object>> customfields = (Set<Map<String, Object>>) valuesMap.get("customfields");
-			for (Map<String, Object> customfield : customfields) {
-				String type = (String) customfield.get("type");
-				user.addCustomfields(CustomFieldType.valueOf(type.toUpperCase()), (String) customfield.get("value"),
-						(String) customfield.get("name"), (String) customfield.get("shortname"));
-			}
-		}
+		// /// The Multiple values
+		// if (valuesMap.containsKey("preferences")) {
+		// 	Set<Map<String, Object>> preferences = (Set<Map<String, Object>>) valuesMap.get("preferences");
+		// 	for (Map<String, Object> preference : preferences) {
+		// 		user.addPreferences((String) preference.get("name"), (String) preference.get("value"));
+		// 	}
+		// }
+		// if (valuesMap.containsKey("customfields")) {
+		// 	Set<Map<String, Object>> customfields = (Set<Map<String, Object>>) valuesMap.get("customfields");
+		// 	for (Map<String, Object> customfield : customfields) {
+		// 		String type = (String) customfield.get("type");
+		// 		user.addCustomfields(CustomFieldType.valueOf(type.toUpperCase()), (String) customfield.get("value"),
+		// 				(String) customfield.get("name"), (String) customfield.get("shortname"));
+		// 	}
+		// }
 
 		return user;
 	}

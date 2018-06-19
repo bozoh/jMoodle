@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import ml.jmoodle.annotations.MoodleConverter;
+import ml.jmoodle.commons.UserCustomField.CustomFieldType;
 
 /**
  * 
@@ -35,11 +36,28 @@ import ml.jmoodle.annotations.MoodleConverter;
 public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 
 	private static final long serialVersionUID = 8465905725413266458L;
+
 	/**
 	 * Defaulsts values
 	 */
 	public static final boolean EMAIL_FORMAT_NONE = false;
 	public static final boolean EMAIL_FORMAT_HTML = true;
+
+	public enum EmailFormat {
+		// (1 = HTML, 0 = PLAIN )
+
+		PLAIN(0), HTML(1);
+
+		int value;
+
+		private EmailFormat(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+	}
 
 	private Long id;
 	private String username;
@@ -81,19 +99,18 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private String profileimageurlsmall;
 	private String profileimageurl;
 
-	private Set<CustomField> customfields;
-	private Set<Preference> preferences;
+	private Set<UserCustomField> customfields;
+	private Set<UserPreference> preferences;
 
 	// This is not part of moodle entity, but to get some WS functions
 	// easier to implement
 	private Boolean createpassword;
-	private Set<Warning> warnings;
+	
 
 	public MoodleUser() {
-		this.customfields = new LinkedHashSet<CustomField>();
-		this.preferences = new LinkedHashSet<Preference>();
-		this.warnings = new LinkedHashSet<Warning>();
-
+		this.customfields = new LinkedHashSet<UserCustomField>();
+		this.preferences = new LinkedHashSet<UserPreference>();
+	
 		// Defualt values
 		this.createpassword = new Boolean(false);
 		this.calendartype = "gregorian";
@@ -737,8 +754,28 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	/**
 	 * @return the customfields
 	 */
-	public Set<CustomField> getCustomfields() {
-		return customfields;
+	public UserCustomField[] getCustomfields() {
+		UserCustomField[] results = null;
+
+		if (customfields != null) {
+			if (customfields.size() > 0) {
+				results = new UserCustomField[customfields.size()];
+				customfields.toArray(results);
+			}
+		}
+		return results;
+	}
+
+
+	/**
+	 * 
+	 * @param type
+	 * @param value
+	 * @param name
+	 * @param shortname
+	 */
+	public void addCustomfield(String type, String name, String value, String shortname) {
+		this.addCustomfield(new UserCustomField(type, value, name, shortname));
 	}
 
 	/**
@@ -748,8 +785,8 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param name
 	 * @param shortname
 	 */
-	public void addCustomfields(CustomFieldType type, String value, String name, String shortname) {
-		this.customfields.add(new CustomField(type.getValue(), value, name, shortname));
+	public void addCustomfield(CustomFieldType type, String name, String value, String shortname) {
+		this.addCustomfield(new UserCustomField(type, value, name, shortname));
 	}
 
 	/**
@@ -758,15 +795,30 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param name
 	 * @param shortname
 	 */
-	public void addCustomfields(Date value, String name, String shortname) {
-		this.customfields.add(new CustomField(value, name, shortname));
+	public void addCustomfield(Date value, String name, String shortname) {
+		this.addCustomfield(new UserCustomField(
+			CustomFieldType.DATETIME, 
+			name, 
+			String.valueOf(value.getTime()/1000), 
+			shortname));
+	}
+
+	public void addCustomfield(UserCustomField customField) {
+		this.customfields.add(customField);
 	}
 
 	/**
 	 * @return the preferences
 	 */
-	public Set<Preference> getPreferences() {
-		return preferences;
+	public UserPreference[] getPreferences() {
+		UserPreference[] results = null;
+		if (preferences != null) {
+			if (preferences.size() > 0) {
+				results = new UserPreference[preferences.size()];
+				preferences.toArray(results);
+			}
+		}
+		return results;
 	}
 
 	/**
@@ -774,29 +826,15 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param name
 	 * @param value
 	 */
-	public void addPreferences(String name, String value) {
-		this.preferences.add(new Preference(name, value));
+	public void addPreference(String name, String value) {
+		this.addPreference(new UserPreference(name, value));
 	}
 
-	/**
-	 * @return the warnings
-	 */
-	public Set<Warning> getWarnings() {
-		return warnings;
+	public void addPreference(UserPreference preference) {
+		this.preferences.add(preference);
 	}
 
-	/**
-	 * @param warnings
-	 *            the warnings to set
-	 */
-	public void addWarnings(String item, Long itemid, String warningcode, String message) {
-		this.warnings.add(new Warning(item, itemid, warningcode, message));
-	}
-
-	public boolean hasWarnings() {
-		return !this.warnings.isEmpty();
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -885,7 +923,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 				.append(city).append(", url=").append(url).append(", country=").append(country)
 				.append(", profileimageurlsmall=").append(profileimageurlsmall).append(", profileimageurl=")
 				.append(profileimageurl).append(", customfields=").append(customfields).append(", preferences=")
-				.append(preferences).append(", warnings=").append(warnings).append("]");
+				.append(preferences).append("]");
 		return builder.toString();
 	}
 
@@ -896,171 +934,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		return this.id.intValue() - o.getId().intValue();
 	}
 
-	public class CustomField {
-		private String type;
-		private String value;
-		private String name;
-		private String shortname;
-
-		public CustomField(String type, String value, String name, String shortname) {
-			this.type = type;
-			this.value = value;
-			this.name = name;
-			this.shortname = shortname;
-		}
-
-		public CustomField(Date value, String name, String shortname) {
-			this.type = CustomFieldType.DATETIME.getValue();
-			this.value = String.valueOf(value.getTime() / 1000l);
-			this.name = name;
-			this.shortname = shortname;
-		}
-
-		/**
-		 * @return the type
-		 */
-		public String getType() {
-			return type;
-		}
-
-		/**
-		 * @return the value
-		 */
-		public String getValue() {
-			return value;
-		}
-
-		/**
-		 * @return the name
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * @return the shortname
-		 */
-		public String getShortname() {
-			return shortname;
-		}
-
-	}
-
-	public class Preference {
-		private String name;
-		private String value;
-
-		public Preference(String name, String value) {
-			super();
-			this.name = name;
-			this.value = value;
-		}
-
-		/**
-		 * @return the name
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * @return the value
-		 */
-		public String getValue() {
-			return value;
-		}
-
-	}
-
-	public class Warning {
-		private String item;
-		private Long itemid;
-		private String warningcode;
-		private String message;
-
-		public Warning(String item, Long itemid, String warningcode, String message) {
-			super();
-			this.item = item;
-			this.itemid = itemid;
-			this.warningcode = warningcode;
-			this.message = message;
-		}
-
-		/**
-		 * @return the item
-		 */
-		public String getItem() {
-			return item;
-		}
-
-		/**
-		 * @return the itemid
-		 */
-		public Long getItemid() {
-			return itemid;
-		}
-
-		/**
-		 * @return the warningcode
-		 */
-		public String getWarningcode() {
-			return warningcode;
-		}
-
-		/**
-		 * @return the message
-		 */
-		public String getMessage() {
-			return message;
-		}
-	}
-
-	public enum CustomFieldType {
-		// checkbox, text, datetime, menu, textarea
-
-		CHECKBOX("checkbox"), TEXT("text"), DATETIME("datetime"), MENU("menu"), TEXTAREA("textarea");
-
-		String value;
-
-		private CustomFieldType(String value) {
-			this.value = value;
-		}
-
-		public String getValue() {
-			return value;
-		}
-	}
-
-	public enum DescriptionFormat {
-		// (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
-
-		MOODLE(0), HTML(1), PLAIN(2), MARKDOWN(4);
-
-		int value;
-
-		private DescriptionFormat(int value) {
-			this.value = value;
-		}
-
-		public int getValue() {
-			return value;
-		}
-	}
-
-	public enum EmailFormat {
-		// (1 = HTML, 0 = PLAIN )
-
-		PLAIN(0), HTML(1);
-
-		int value;
-
-		private EmailFormat(int value) {
-			this.value = value;
-		}
-
-		public int getValue() {
-			return value;
-		}
-	}
+	
+	
 
 }
