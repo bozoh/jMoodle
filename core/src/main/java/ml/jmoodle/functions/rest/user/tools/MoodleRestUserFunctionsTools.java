@@ -11,9 +11,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.commons.Criteria;
+import ml.jmoodle.commons.Field;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
-import ml.jmoodle.functions.rest.user.MoodleRestGetUsersByFields.Field;
 import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleRestUserFunctionsTools {
