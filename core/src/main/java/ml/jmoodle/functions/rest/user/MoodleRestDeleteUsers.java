@@ -12,9 +12,8 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
+import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestDeleteUsersException;
-
-import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -30,23 +29,22 @@ import ml.jmoodle.tools.MoodleTools;
 @MoodleWSFunction(names = { "core_user_delete_users", "moodle_user_delete_users" })
 public class MoodleRestDeleteUsers extends MoodleWSBaseFunction {
 
-	private Set<MoodleUser> users;
-	private MoodleRestUserFunctionsTools usersTools;
+	private Set<Long> users;
 	private static final String SINCE_VERSION = "2.0.0";
 
 	public MoodleRestDeleteUsers(MoodleConfig moodleConfig) throws MoodleWSFucntionException {
 		super(moodleConfig);
-		this.users = new HashSet<MoodleUser>();
-		this.usersTools = new MoodleRestUserFunctionsTools();
+		this.users = new HashSet<Long>();
+	
 	}
 
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
-		if (getUsers().isEmpty())
+		if (this.users==null || this.users.isEmpty())
 			throw new MoodleRestDeleteUsersException(MoodleCommonsErrorMessages.notSet("Users"));
 		try {
 			StringBuilder fnctData = new StringBuilder(super.getFunctionData());
-			fnctData.append(getUserFuntionsTools().serliazeMoodleUsersIds(getUsers()));
+			fnctData.append(MoodleRestFunctionTools.serializeEntityId("userids", this.users));
 			return fnctData.toString();
 		} catch (UnsupportedEncodingException e) {
 			throw new MoodleRestDeleteUsersException(e);
@@ -90,22 +88,20 @@ public class MoodleRestDeleteUsers extends MoodleWSBaseFunction {
 	}
 
 	public void addUser(MoodleUser user) throws MoodleRestDeleteUsersException {
-		if (user == null || user.getId() == null || user.getId().longValue() <= 0l)
-			throw new MoodleRestDeleteUsersException(MoodleCommonsErrorMessages.mustHave("User", "id", user));
-		this.users.add(user);
+		verifyEntity(user);
+		this.users.add(user.getId());
 	}
 
-	public Set<MoodleUser> getUsers() {
-		return this.users;
-	}
+	public void verifyEntity(MoodleUser entity) throws MoodleRestDeleteUsersException {
+		if (entity == null)
+			throw new MoodleRestDeleteUsersException(
+				MoodleCommonsErrorMessages.notSet("User")
+			);
 
-	/**
-	 * @return the usersTools
-	 */
-	private MoodleRestUserFunctionsTools getUserFuntionsTools() {
-		return usersTools;
+		if (MoodleTools.isEmpty(entity.getId()))
+			throw new MoodleRestDeleteUsersException(
+				MoodleCommonsErrorMessages.mustHave("User", "id", entity)
+		);
 	}
-
-	
 
 }
