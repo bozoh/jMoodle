@@ -14,7 +14,6 @@ import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.user.MoodleRestGetUsersByFields.Field;
-//import ml.jmoodle.functions.rest.MoodleRestGetUsers.Criteria;
 import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleRestUserFunctionsTools {

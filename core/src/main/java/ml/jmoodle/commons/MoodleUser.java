@@ -101,6 +101,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 
 	private Set<UserCustomField> customfields;
 	private Set<UserPreference> preferences;
+	private Set<UserEnrolledCourse> enrolledcourses;
 
 	// This is not part of moodle entity, but to get some WS functions
 	// easier to implement
@@ -110,6 +111,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	public MoodleUser() {
 		this.customfields = new LinkedHashSet<UserCustomField>();
 		this.preferences = new LinkedHashSet<UserPreference>();
+		this.enrolledcourses = new LinkedHashSet<UserEnrolledCourse>();
 	
 		// Defualt values
 		this.createpassword = new Boolean(false);
@@ -805,6 +807,34 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 
 	public void addCustomfield(UserCustomField customField) {
 		this.customfields.add(customField);
+	}
+
+	/**
+	 * @return the users enrollment
+	 */
+	public UserEnrolledCourse[] getEnrolledCourses() {
+		UserEnrolledCourse[] results = null;
+		if (this.enrolledcourses != null && !this.enrolledcourses.isEmpty()) {
+			results = new UserEnrolledCourse[this.enrolledcourses.size()];
+			this.enrolledcourses.toArray(results);
+		}
+		return results;
+	}
+
+	/**
+	 * @param id
+	 * @param fullname
+	 * @param shortname
+	 */
+	public void addEnrolledCourse(Long id, String fullname, String shortname) {
+		this.addEnrolledCourse(new UserEnrolledCourse(id, fullname, shortname));
+	}
+
+	/**
+	 * @param enrolledCourse
+	 */
+	public void addEnrolledCourse(UserEnrolledCourse enrolledCourse) {
+		this.enrolledcourses.add(enrolledCourse);
 	}
 
 	/**

@@ -7,11 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,6 +18,7 @@ import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.functions.converters.MoodleWarningConverter;
 import ml.jmoodle.tools.MoodleParamMap;
+import ml.jmoodle.tools.MoodleTools;
 
 /**
  * 
@@ -95,6 +93,22 @@ public class MoodleRestFunctionTools {
 		}
 
 		return map;
+	}
+
+	public static String serializeEntityId(String prefix, Collection<Long> entityIds) throws UnsupportedEncodingException {
+		if (entityIds.size() == 0)
+			return null;
+
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		
+		for (Long entityId : entityIds) {
+			sb.append(MoodleTools.encode(prefix)).append(MoodleTools.encode("["))
+				.append(i++).append(MoodleTools.encode("]")).append("=").append(entityId)
+				.append("&");
+		}
+
+		return sb.substring(0, sb.length() - 1);
 	}
 
 	public static String serializeCriterias(Collection<Criteria> criterias) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UnsupportedEncodingException {

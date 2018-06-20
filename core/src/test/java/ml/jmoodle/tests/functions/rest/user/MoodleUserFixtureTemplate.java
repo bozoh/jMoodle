@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,9 @@ import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.commons.UserCustomField;
+import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserCustomField.CustomFieldType;
+import ml.jmoodle.tests.tools.TestTools;
 import ml.jmoodle.commons.UserPreference;
 
 public class MoodleUserFixtureTemplate implements TemplateLoader {
@@ -85,7 +88,54 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			}
 		});
 
-		
+		Fixture.of(MoodleUser.class).addTemplate("MoodleRestGetUserByIdFunctionResponseEntities", new Rule() {
+			{
+				add("id", regex("\\d{3,10}"));
+				add("firstname", firstName());
+				add("lastname", lastName());
+				add("username", "${firstname}-${lastname}");
+				add("email", "${username}@email.test");
+				add("password", random("asasa", "awe2", "2332"));
+				add("idnumber", regex("\\d{15}"));
+				add("lang", random("pt_br", "en_us", "ch"));
+				add("theme", random("aasas", "errr", "asa"));
+				add("timezone", random("-3", "-2", "Sao_Paulo"));
+				add("description", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("city", name());
+				add("country", "${lang}");
+				add("firstnamephonetic", regex("\\w{1}"));
+				add("lastnamephonetic", regex("\\w{1}"));
+				add("middlename", lastName());
+				add("alternatename", name());
+				add("preferences", has(2).of(UserPreference.class, "MoodleUserPreferences"));
+				add("customfields", has(2).of(UserCustomField.class, "MoodleUserCustomFields"));
+				add("enrolledcourses", has(2).of(UserEnrolledCourse.class, "MoodleUserEnrolledCourse"));
+
+
+				add("fullname", "${firstname} ${lastname}");
+
+				add("address", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("phone1", regex("(\\d{2})-(\\d{5})-(\\d{4})"));
+				add("phone2", regex("(\\d{2})-(\\d{5})-(\\d{4})"));
+				add("icq", regex("\\d{6}"));
+				add("skype", name());
+				add("yahoo", "${email}");
+				add("aim", regex("\\d{6}"));
+				add("msn", "${email}");
+				add("department", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("institution", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("interests", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("firstaccess", randomDate("2011-04-15", "2016-11-07", new SimpleDateFormat("yyyy-MM-dd")));
+				add("lastaccess", randomDate("2011-04-15", "2016-11-07", new SimpleDateFormat("yyyy-MM-dd")));
+				add("auth", "manual");
+				add("confirmed", true);
+				add("description", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("descriptionformat", 1);
+				add("url", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("profileimageurlsmall", random("lorem ipsum", "ipsum lorem", "foo bar"));
+				add("profileimageurl", random("lorem ipsum", "ipsum lorem", "foo bar"));
+			}
+		});
 
 		Fixture.of(MoodleUser.class).addTemplate("MoodleRestGetUserFunctionUser", new Rule() {
 			{
@@ -136,6 +186,14 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			}
 		});
 
+		Fixture.of(UserEnrolledCourse.class).addTemplate("MoodleUserEnrolledCourse", 	new Rule() {
+			{
+				add("id", random(Long.class, range(12, 1234)));
+				add("fullname", firstName());
+				add("shortname", firstName());
+			}
+		});
+		
 		
 		Fixture.of(UserPreference.class).addTemplate("MoodleUserPreferences", new Rule() {
 			{
@@ -186,6 +244,7 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 				add("mdlUsers", has(3).of(MoodleUser.class, "MoodleRestGetUserFunctionUser"));
 			}
 		});
+
 
 		Fixture.of(MoodleUser.class).addTemplate("MoodleRestCreateUserFunctionUser", new Rule() {
 			{
@@ -368,7 +427,7 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 		return ids;
 	}
 
-	public Document getGetUsersByIdRespone() throws ParserConfigurationException, SAXException, IOException {
+	public static Document getGetUsersByIdRespone(Collection<MoodleUser> mdlUsers) throws ParserConfigurationException, SAXException, IOException {
 		StringBuffer usrResponse = new StringBuffer();
 		usrResponse.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>").append("<RESPONSE>").append("<MULTIPLE>");
 
@@ -425,6 +484,12 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 				usrResponse.append("<SINGLE>").append("<KEY name=\"name\">").append("<VALUE>")
 						.append(preference.getName()).append("</VALUE></KEY>").append("<KEY name=\"value\">")
 						.append("<VALUE>").append(preference.getValue()).append("</VALUE></KEY>").append("</SINGLE>");
+			}
+			usrResponse.append("</MULTIPLE></KEY>").append("<KEY name=\"enrolledcourses\">").append("<MULTIPLE>");
+
+			Set<UserEnrolledCourse> enrollments = new HashSet<>(Arrays.asList(moodleUser.getEnrolledCourses()));
+			for (UserEnrolledCourse enrollment : enrollments) {
+				usrResponse.append(TestTools.entityToXmlResponse(enrollment));
 			}
 			usrResponse.append("</MULTIPLE></KEY>").append("</SINGLE>");
 		}

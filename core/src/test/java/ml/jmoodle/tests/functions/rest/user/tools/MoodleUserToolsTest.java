@@ -24,6 +24,7 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.UserCustomField;
+import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserCustomField.CustomFieldType;
 import ml.jmoodle.commons.UserPreference;
 import ml.jmoodle.configs.MoodleConfig;
@@ -61,40 +62,13 @@ public class MoodleUserToolsTest {
 		m.put("auth", "1");
 		m.put("email", "e-mail");
 
-		UserPreference up1 = new UserPreference("name1", "value1");
-		UserPreference up2 = new UserPreference("name2", "value2");
-		Map<String, Object> up1map = new HashMap<>();
-		up1map.put("type", up1.getType());
-		up1map.put("value", up1.getValue());
-
-		Map<String, Object> up2map = new HashMap<>();
-		up2map.put("type", up2.getType());
-		up2map.put("value", up2.getValue());
-
-
-		Set<Map<String, Object>> upSet = new HashSet<>();
-		upSet.add(up1map);
-		upSet.add(up2map);
+		Set<Map<String, Object>> upSet = getPreferences();
+		Set<Map<String, Object>> ucfSet = getCustomfields();
+		Set<Map<String, Object>> uecSet = getEnrolledCourses();
 
 		m.put("preferences", upSet);
-
-
-		UserCustomField ucf1 = new UserCustomField("checkbox", "assas1", "asasas2", "asasas3");
-		UserCustomField ucf2 = new UserCustomField(CustomFieldType.TEXT, "assas4", "asasas5", "asasas6");
-		Map<String, Object> ucf1map = new HashMap<>();
-		ucf1map.put("type", ucf1.getType().getValue());
-		ucf1map.put("value", ucf1.getValue());
-
-		Map<String, Object> ucf2map = new HashMap<>();
-		ucf2map.put("type", ucf2.getType().getValue());
-		ucf2map.put("value", ucf2.getValue());
-
-
-		Set<Map<String, Object>> ucfSet = new HashSet<>();
-		ucfSet.add(ucf1map);
-		ucfSet.add(ucf2map);
-
 		m.put("customfields", ucfSet);
+		m.put("enrolledcourses", uecSet);
 
 		MoodleUser muTest = tool.toEntity(m);
 		assertThat(m.get("id")).isEqualTo(muTest.getId().toString());
@@ -113,9 +87,81 @@ public class MoodleUserToolsTest {
 		List<UserCustomField> customLst = Arrays.asList(muTest.getCustomfields());
 		assertThat(customLst.size()).isEqualTo(2);
 		doCustomFieldsAssertion(ucfSet, customLst);
+
+		List<UserEnrolledCourse> enrollLst = Arrays.asList(muTest.getEnrolledCourses());
+		assertThat(enrollLst.size()).isEqualTo(2);
+		doEnrolledCourseAssertion(uecSet, enrollLst);
 		
 	}
 
+	
+	private Set<Map<String, Object>> getEnrolledCourses() {
+		UserEnrolledCourse uec1 = new UserEnrolledCourse(1l,"teste 1", "t1");
+		UserEnrolledCourse uec2 = new UserEnrolledCourse(31l,"teste 2", "t2");
+
+		Map<String, Object> uec1map = new HashMap<>();
+		uec1map.put("id", uec1.getId().toString());
+		uec1map.put("fullname", uec1.getFullName());
+		uec1map.put("shortname", uec1.getShortName());
+
+		Map<String, Object> uec2map = new HashMap<>();
+		uec2map.put("id", uec2.getId().toString());
+		uec2map.put("fullname", uec2.getFullName());
+		uec2map.put("shortname", uec2.getShortName());
+
+		Set<Map<String, Object>> set = new HashSet<>();
+		set.add(uec1map);
+		set.add(uec2map);
+
+		return set;
+	}
+	private Set<Map<String, Object>> getCustomfields() {
+		UserCustomField ucf1 = new UserCustomField("checkbox", "assas1", "asasas2", "asasas3");
+		UserCustomField ucf2 = new UserCustomField(CustomFieldType.TEXT, "assas4", "asasas5", "asasas6");
+		Map<String, Object> ucf1map = new HashMap<>();
+		ucf1map.put("type", ucf1.getType().getValue());
+		ucf1map.put("value", ucf1.getValue());
+
+		Map<String, Object> ucf2map = new HashMap<>();
+		ucf2map.put("type", ucf2.getType().getValue());
+		ucf2map.put("value", ucf2.getValue());
+
+
+		Set<Map<String, Object>> set = new HashSet<>();
+		set.add(ucf1map);
+		set.add(ucf2map);
+
+		return set;
+	}
+
+	private Set<Map<String, Object>> getPreferences() {
+		UserPreference up1 = new UserPreference("name1", "value1");
+		UserPreference up2 = new UserPreference("name2", "value2");
+		Map<String, Object> up1map = new HashMap<>();
+		up1map.put("type", up1.getType());
+		up1map.put("value", up1.getValue());
+
+		Map<String, Object> up2map = new HashMap<>();
+		up2map.put("type", up2.getType());
+		up2map.put("value", up2.getValue());
+
+
+		Set<Map<String, Object>> set = new HashSet<>();
+		set.add(up1map);
+		set.add(up2map);
+
+		return set;
+	}
+
+	private void doEnrolledCourseAssertion(Set<Map<String, Object>> ucfSet, List<UserEnrolledCourse> enrollLst) {
+		for (Map<String, Object> entityMap : ucfSet) {
+			UserEnrolledCourse entity = new UserEnrolledCourse();
+			entity.setId(Long.parseLong((String) entityMap.get("id")));
+			entity.setFullName((String) entityMap.get("fullname"));
+			entity.setShortName((String) entityMap.get("shortname"));
+			assertThat(enrollLst).contains(entity);
+		}
+	}
 	private void doCustomFieldsAssertion(Set<Map<String, Object>> ucfSet, List<UserCustomField> customLst) {
 		for (Map<String, Object> ucfMap : ucfSet) {
 			UserCustomField ucf = new UserCustomField();

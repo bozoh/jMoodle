@@ -1,6 +1,5 @@
 package ml.jmoodle.functions.rest.user;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,7 +24,6 @@ import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestCreateUsersException;
-import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.functions.rest.user.tools.MoodleUserTools;
 import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;

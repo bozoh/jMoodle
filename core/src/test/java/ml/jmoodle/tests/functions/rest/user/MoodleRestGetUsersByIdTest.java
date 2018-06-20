@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,29 +25,27 @@ import org.xml.sax.SAXException;
 
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
-import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.commons.MoodleUser;
-import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
-import ml.jmoodle.functions.rest.user.MoodleRestGetUsers;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersException;
+import ml.jmoodle.functions.rest.user.MoodleRestGetUsersById;
 
 
 /**
- * Get Course Categories(s) Function
+ * Get User by id Function
  *
  *
  * @author Carlos Alexandre S. da Fonseca
  * @copyrigth © 2018 Carlos Alexandre S. da Fonseca
  * @license https://opensource.org/licenses/MIT - MIT License
  *
+ * core_user_get_users_by_id()moodle_user_get_users_by_id()2.0
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MoodleRestGetUsersTest  {
+public class MoodleRestGetUsersByIdTest  {
 	
 	private static final String MOODLE_TEST_URL = "http://teste.com";
 	@Mock
@@ -64,21 +61,21 @@ public class MoodleRestGetUsersTest  {
 	public void beforeEach() throws MalformedURLException {
 		URL testUrl = new URL(MOODLE_TEST_URL);
 		when(mc.getMoodleURL()).thenReturn(testUrl);
-		when(mc.getVersion()).thenReturn(new String ("2.5.0"));
+		when(mc.getVersion()).thenReturn(new String ("2.2.0"));
 	}
 	@Test
 	public void verify_since_version_test() throws MoodleWSFucntionException {
-		MoodleRestGetUsers cc = (MoodleRestGetUsers) MoodleWSFunctionFactory.getFunction(
-			MoodleWSFunctions.CORE_USER_GET_USERS, mc
+		MoodleRestGetUsersById cc = (MoodleRestGetUsersById) MoodleWSFunctionFactory.getFunction(
+			MoodleWSFunctions.CORE_USER_GET_USERS_BY_ID, mc
 		);
-		assertThat(cc.getSinceVersion()).isEqualTo("2.5.0");
+		assertThat(cc.getSinceVersion()).isEqualTo("2.0.0");
 	}
 
 	@Test
 	public void get_instance_without_errors_test() {
 		try {
 			MoodleWSFunctionFactory.getFunction(
-				MoodleWSFunctions.CORE_USER_GET_USERS, mc
+				MoodleWSFunctions.CORE_USER_GET_USERS_BY_ID, mc
 			);
 		} catch (MoodleWSFucntionException e) {
 			fail("An exception was throwed"+e.getMessage());
@@ -86,11 +83,11 @@ public class MoodleRestGetUsersTest  {
 	}
 
 	@Test
-	public void exception_if_moodle_version_is_lower_than_2_5_0_test () {
-		when(mc.getVersion()).thenReturn(new String ("2.4.9"));
+	public void exception_if_moodle_version_is_lower_than_2_0_0_test () {
+		when(mc.getVersion()).thenReturn(new String ("1.9.9"));
 		try {
 			MoodleWSFunctionFactory.getFunction(
-				MoodleWSFunctions.CORE_USER_GET_USERS, mc
+				MoodleWSFunctions.CORE_USER_GET_USERS_BY_ID, mc
 			);
 		} catch (MoodleWSFucntionException e) {
 			assertThat(e).isNotNull();
@@ -101,21 +98,30 @@ public class MoodleRestGetUsersTest  {
 	
 
 	@Test
-	public void verify_function_name_test () throws MoodleWSFucntionException {
+	public void verify_function_name_above_or_equal_2_2_0_test () throws MoodleWSFucntionException {
 		
-		MoodleRestGetUsers cc = (MoodleRestGetUsers) MoodleWSFunctionFactory.getFunction(
-			MoodleWSFunctions.CORE_USER_GET_USERS, mc
+		MoodleRestGetUsersById cc = (MoodleRestGetUsersById) MoodleWSFunctionFactory.getFunction(
+			MoodleWSFunctions.CORE_USER_GET_USERS_BY_ID, mc
 		);
-		assertThat(cc.getFunctionName()).isEqualTo("core_user_get_users");
+		assertThat(cc.getFunctionName()).isEqualTo("core_user_get_users_by_id");
+	}
+
+	@Test
+	public void verify_function_name_lower_2_2_0_test () throws MoodleWSFucntionException {
+		when(mc.getVersion()).thenReturn(new String ("2.1.9"));
+		MoodleRestGetUsersById cc = (MoodleRestGetUsersById) MoodleWSFunctionFactory.getFunction(
+			MoodleWSFunctions.CORE_USER_GET_USERS_BY_ID, mc
+		);
+		assertThat(cc.getFunctionName()).isEqualTo("moodle_user_get_users_by_id");
 	}
 
 		
 
 	@Test
-	public void exception_if_no_criteria_is_set_test() {
+	public void exception_if_no_user_is_set_test() {
 		try {
-			MoodleRestGetUsers cc = (MoodleRestGetUsers) MoodleWSFunctionFactory.getFunction(
-				MoodleWSFunctions.CORE_USER_GET_USERS, mc
+			MoodleRestGetUsersById cc = (MoodleRestGetUsersById) MoodleWSFunctionFactory.getFunction(
+				MoodleWSFunctions.CORE_USER_GET_USERS_BY_ID, mc
 			);
 			cc.getFunctionData();
 		} catch (MoodleWSFucntionException e) {
@@ -128,26 +134,35 @@ public class MoodleRestGetUsersTest  {
 	@Test
 	public void verify_function_data_test() throws UnsupportedEncodingException, MoodleWSFucntionException  {
 	
-		MoodleRestGetUsers cc = (MoodleRestGetUsers) MoodleWSFunctionFactory.getFunction(
-			MoodleWSFunctions.CORE_USER_GET_USERS, mc
+		MoodleRestGetUsersById cc = (MoodleRestGetUsersById) MoodleWSFunctionFactory.getFunction(
+			MoodleWSFunctions.CORE_USER_GET_USERS_BY_ID, mc
 		);
-		Set<Criteria> criterias = new HashSet<>(Fixture.from(Criteria.class).gimme(15, "MoodleRestGetUsersCriteria"));
-		cc.setCriterias(criterias);
+		Set<MoodleUser> entities = new HashSet<>(Fixture.from(MoodleUser.class).gimme(15, "MoodleRestGetUserByIdFunctionResponseEntities"));
+		cc.setUsers(entities);
 		String dataString = URLDecoder.decode(cc.getFunctionData(), MoodleConfig.DEFAULT_ENCODING);
 		
 		assertThat(dataString).contains("wsfunction="+cc.getFunctionName());
-		
+		doFuncationDataAssertions(dataString, entities);
+	}
+
+	private void doFuncationDataAssertions(String dataString, Set<MoodleUser> entities) {
+		int i = 0;
+		for (MoodleUser entity : entities) {
+			assertThat(dataString).contains("userids[" + i + "]=");
+			assertThat(dataString).contains(entity.getId().toString());
+			i++;
+		}
 	}
 
 	@Test
 	public void verify_process_respose_test() throws MoodleWSFucntionException, MoodleConfigException, SAXException, IOException, ParserConfigurationException {
-		int testSize = 12;
+		int testSize = 42;
 		TestMoodleFunctionWarpClass function = new TestMoodleFunctionWarpClass(mc);
-		Set<Criteria> criterias = new HashSet<>(Fixture.from(Criteria.class).gimme(testSize, "MoodleRestGetUsersCriteria"));
-		function.setCriterias(criterias);
 		
-		List<MoodleUser> entities = Fixture.from(MoodleUser.class).gimme(testSize, "MoodleRestGetUserFunctionUser");
-		Document response = MoodleUserFixtureTemplate.getGetUsersRespone(entities, null);
+		Set<MoodleUser> entities = new HashSet<>(Fixture.from(MoodleUser.class).gimme(testSize, "MoodleRestGetUserByIdFunctionResponseEntities"));
+		function.setUsers(entities);
+		
+		Document response = MoodleUserFixtureTemplate.getGetUsersByIdRespone(entities);
 		Set<MoodleUser> resp = function.processResponse(response);
 		assertThat(resp).hasSize(entities.size());
 		
@@ -157,32 +172,14 @@ public class MoodleRestGetUsersTest  {
 	}
 
 
-	@Test
-	public void get_warnings_test() throws MoodleWSFucntionException, MoodleConfigException, SAXException, IOException, ParserConfigurationException {
-		int testSize = 22;
-		TestMoodleFunctionWarpClass function = new TestMoodleFunctionWarpClass(mc);
-		Set<Criteria> criterias = new HashSet<>(Fixture.from(Criteria.class).gimme(testSize, "MoodleRestGetUsersCriteria"));
-		function.setCriterias(criterias);
-		
-		List<MoodleUser> entities = Fixture.from(MoodleUser.class).gimme(1, "MoodleRestGetUserFunctionUser");
-		List<MoodleWarning> warnings = Fixture.from(MoodleWarning.class).gimme(testSize, "valid");
-		Document response = MoodleUserFixtureTemplate.getGetUsersRespone(entities, warnings);
-		function.processResponse(response);
-		assertThat(function.hasWarnings()).isTrue();
-		Set<MoodleWarning> respWarns = function.getWarnings();
-		assertThat(respWarns).hasSize(testSize);
-		assertThat(respWarns).containsAll(warnings);
-		
-		
-	}
-	class TestMoodleFunctionWarpClass extends MoodleRestGetUsers {
+	class TestMoodleFunctionWarpClass extends MoodleRestGetUsersById {
 	
 		public TestMoodleFunctionWarpClass(MoodleConfig moodleConfig) throws MoodleWSFucntionException, MoodleConfigException {
 			super(moodleConfig);
 		}
 
 		
-		public Set<MoodleUser> processResponse(Document response) throws MoodleRestGetUsersException  {
+		public Set<MoodleUser> processResponse(Document response) throws MoodleWSFucntionException  {
 			return super.processResponse(response);
 		}
 	

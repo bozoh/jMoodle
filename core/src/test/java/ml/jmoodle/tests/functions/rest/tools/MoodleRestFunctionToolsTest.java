@@ -1,6 +1,7 @@
 package ml.jmoodle.tests.functions.rest.tools;
 
 import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -45,8 +46,25 @@ public class MoodleRestFunctionToolsTest {
 		assertTrue(retVal.contains("criteria[2][key]="+criterias.get(2).getKey()));
 		assertTrue(retVal.contains("criteria[2][value]="+criterias.get(2).getValue()));
 		assertTrue(retVal.contains("&"));
-		
-		
 	}
+
+	@Test
+	public void serialize_entity_ids_teste() throws UnsupportedEncodingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		List<Long> ids = new ArrayList<>();
+		ids.add(4l);
+		ids.add(5l);
+		ids.add(14l);
+		ids.add(-4l);
+
+		String retVal = URLDecoder.decode(
+			MoodleRestFunctionTools.serializeEntityId("teste", ids), MoodleConfig.DEFAULT_ENCODING
+		);
+		assertThat(retVal).contains("teste[0]=4");
+		assertThat(retVal).contains("teste[1]=5");
+		assertThat(retVal).contains("teste[2]=14");
+		assertThat(retVal).contains("teste[3]=-4");
+
+	}
+	
 
 }

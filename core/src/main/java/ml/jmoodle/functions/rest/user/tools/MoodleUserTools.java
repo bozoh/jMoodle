@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.functions.converters.MoodleUserConverter;
 import ml.jmoodle.functions.converters.UserCustomFieldConverter;
+import ml.jmoodle.functions.converters.UserEnrolledCourseConverter;
 import ml.jmoodle.functions.converters.UserPreferenceConverter;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.tools.MoodleParamMap;
@@ -80,6 +81,14 @@ public class MoodleUserTools extends MoodleUserConverter {
 			Set<Map<String, Object>> ucfs = (Set<Map<String, Object>>) valuesMap.get("customfields");
 			for (Map<String, Object> map : ucfs) {
 				entity.addCustomfield(ucfc.toEntity(map));
+			}
+		}
+
+		if (valuesMap.containsKey("enrolledcourses")){
+			UserEnrolledCourseConverter uecc = new UserEnrolledCourseConverter();
+			Set<Map<String, Object>> uecs = (Set<Map<String, Object>>) valuesMap.get("enrolledcourses");
+			for (Map<String, Object> map : uecs) {
+				entity.addEnrolledCourse(uecc.toEntity(map));
 			}
 		}
 

@@ -22,7 +22,6 @@ import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersException;
-import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
 import ml.jmoodle.functions.rest.user.tools.MoodleUserTools;
 import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 
