@@ -12,3 +12,5 @@ target
 gradle.properties
 .apt_generated
 .factorypath
+.vscode
+set-env.sh
