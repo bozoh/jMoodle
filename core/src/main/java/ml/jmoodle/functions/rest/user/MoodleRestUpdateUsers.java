@@ -1,6 +1,5 @@
 package ml.jmoodle.functions.rest.user;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.user.exceptions.MoodleRestUpdateUsersException;
-import ml.jmoodle.functions.rest.user.tools.MoodleRestUserFunctionsTools;
+import ml.jmoodle.functions.rest.user.tools.MoodleUserTools;
 import ml.jmoodle.tools.MoodleCommonsErrorMessages;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -31,26 +30,23 @@ public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 
 	private static final String SINCE_VERSION = "2.0.0";
 	private Set<MoodleUser> mdlUsers;
-	private MoodleRestUserFunctionsTools userFuntionsTools;
+	private MoodleUserTools tool;
 
 	public MoodleRestUpdateUsers(MoodleConfig moodleConfig) throws MoodleWSFucntionException {
 		super(moodleConfig);
 		this.mdlUsers = new HashSet<MoodleUser>();
-		this.userFuntionsTools = new MoodleRestUserFunctionsTools();
+		this.tool = new MoodleUserTools();
 	}
 
 	@Override
 	public String getFunctionData() throws MoodleWSFucntionException {
-		if (getUsers().isEmpty()) {
+		if (mdlUsers.isEmpty()) {
 			throw new MoodleRestUpdateUsersException(MoodleCommonsErrorMessages.notSet("Users"));
 		}
-		try {
-			StringBuilder fnctData = new StringBuilder(super.getFunctionData());
-			fnctData.append(getUserFuntionsTools().serliazeUsers(getUsers()));
-			return fnctData.toString();
-		} catch (UnsupportedEncodingException e) {
-			throw new MoodleRestUpdateUsersException(e);
-		}
+		
+		StringBuilder fnctData = new StringBuilder(super.getFunctionData());
+		fnctData.append(tool.serialize(mdlUsers));
+		return fnctData.toString();
 	}
 
 	@Override
@@ -79,22 +75,8 @@ public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 		return null;
 	}
 
-//	@Override
-//	public Object doCall() throws MoodleWSFucntionException {
-//		try {
-//			MoodleWSFunctionCall wsFunctionCall = MoodleWSFunctionCall.getInstance(mdlConfig);
-//			wsFunctionCall.call(this);
-//			return null;
-//		} catch (MoodleWSFunctionCallException e) {
-//			throw new MoodleRestUpdateUsersException(e);
-//		}
-//	}
-
 	public void addUser(MoodleUser mdlUser) throws MoodleRestUpdateUsersException {
-		
-		if (mdlUser.getId() == null || mdlUser.getId().longValue() <= 0l)
-			throw new MoodleRestUpdateUsersException(MoodleCommonsErrorMessages.mustHave("User", "ID", mdlUser));
-		
+		verifyEntity(mdlUser);		
 		this.mdlUsers.add(mdlUser);
 
 	}
@@ -106,18 +88,13 @@ public class MoodleRestUpdateUsers extends MoodleWSBaseFunction {
 
 	}
 
-	/**
-	 * @return the mdlUsers
-	 */
-	public Set<MoodleUser> getUsers() {
-		return mdlUsers;
-	}
+	private void verifyEntity(MoodleUser entity) throws MoodleRestUpdateUsersException {
+		if (entity == null) 
+			throw new MoodleRestUpdateUsersException(MoodleCommonsErrorMessages.notSet("User"));
+		
+		if (MoodleTools.isEmpty(entity.getId()))
+			throw new MoodleRestUpdateUsersException(MoodleCommonsErrorMessages.mustHave("User", "ID", entity));
 
-	/**
-	 * @return the userFuntionsTools
-	 */
-	private MoodleRestUserFunctionsTools getUserFuntionsTools() {
-		return userFuntionsTools;
 	}
 
 }
