@@ -34,8 +34,8 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
-import ml.jmoodle.functions.rest.course.MoodleRestUpdateCourses;
-import ml.jmoodle.functions.rest.course.exceptions.MoodleRestUpdateCoursesException;
+import ml.jmoodle.functions.rest.core.course.MoodleRestUpdateCourses;
+import ml.jmoodle.functions.rest.core.course.exceptions.MoodleRestUpdateCoursesException;
 import ml.jmoodle.tests.tools.MoodleWarningFixtureTemplate;
 
 /**

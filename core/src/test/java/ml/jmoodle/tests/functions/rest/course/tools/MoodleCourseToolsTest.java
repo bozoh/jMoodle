@@ -25,8 +25,8 @@ import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.OptionParameter;
 import ml.jmoodle.configs.MoodleConfig;
-import ml.jmoodle.functions.rest.course.exceptions.MoodleRestCreateCoursesException;
-import ml.jmoodle.functions.rest.course.tools.MoodleCourseTools;
+import ml.jmoodle.functions.rest.core.course.exceptions.MoodleRestCreateCoursesException;
+import ml.jmoodle.functions.rest.core.course.tools.MoodleCourseTools;
 
 public class MoodleCourseToolsTest {
 	MoodleCourse mc;

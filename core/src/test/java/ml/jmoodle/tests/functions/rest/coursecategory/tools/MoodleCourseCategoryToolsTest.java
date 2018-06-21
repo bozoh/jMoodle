@@ -22,7 +22,7 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleCourseCategory;
 import ml.jmoodle.configs.MoodleConfig;
-import ml.jmoodle.functions.rest.coursecategory.tools.MoodleCourseCategoryTools;
+import ml.jmoodle.functions.rest.core.coursecategory.tools.MoodleCourseCategoryTools;
 import ml.jmoodle.tools.MoodleTools;
 
 public class MoodleCourseCategoryToolsTest {

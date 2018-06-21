@@ -16,7 +16,7 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleUserRoleContext;
 import ml.jmoodle.configs.MoodleConfig;
-import ml.jmoodle.functions.rest.role.tools.MoodleUserRoleContextTools;
+import ml.jmoodle.functions.rest.core.role.tools.MoodleUserRoleContextTools;
 
 public class MoodleUserRoleContextToolsTest {
 	MoodleUserRoleContext entity;

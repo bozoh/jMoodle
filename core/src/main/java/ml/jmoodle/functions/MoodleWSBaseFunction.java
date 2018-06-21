@@ -8,7 +8,6 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.exceptions.MoodleWSFunctionCallException;
-import ml.jmoodle.functions.rest.user.exceptions.MoodleRestGetUsersException;
 import ml.jmoodle.tools.MoodleParamMap;
 import ml.jmoodle.tools.MoodleTools;
 
@@ -64,7 +63,7 @@ public abstract class MoodleWSBaseFunction implements MoodleWSFunction {
 				return null;
 			return processResponse(response);
 		} catch (MoodleWSFunctionCallException e) {
-			throw new MoodleRestGetUsersException(e);
+			throw new MoodleWSFucntionException(e);
 		}
 		
 	}

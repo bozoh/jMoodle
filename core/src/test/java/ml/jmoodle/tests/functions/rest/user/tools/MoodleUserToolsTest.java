@@ -24,12 +24,12 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.UserCustomField;
-import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserCustomField.CustomFieldType;
+import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserPreference;
 import ml.jmoodle.configs.MoodleConfig;
-import ml.jmoodle.functions.rest.course.exceptions.MoodleRestCreateCoursesException;
-import ml.jmoodle.functions.rest.user.tools.MoodleUserTools;
+import ml.jmoodle.functions.rest.core.course.exceptions.MoodleRestCreateCoursesException;
+import ml.jmoodle.functions.rest.core.user.tools.MoodleUserTools;
 
 public class MoodleUserToolsTest {
 	MoodleUser entity;

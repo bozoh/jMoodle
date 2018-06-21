@@ -27,7 +27,7 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
-import ml.jmoodle.functions.rest.coursecategory.MoodleRestDeleteCourseCategories;
+import ml.jmoodle.functions.rest.core.coursecategory.MoodleRestDeleteCourseCategories;
 import ml.jmoodle.tools.MoodleTools;
 
 /**

@@ -34,8 +34,8 @@ import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
-import ml.jmoodle.functions.rest.coursecategory.MoodleRestCreateCourseCategories;
-import ml.jmoodle.functions.rest.coursecategory.exceptions.MoodleRestCreateCourseCategoriesException;
+import ml.jmoodle.functions.rest.core.coursecategory.MoodleRestCreateCourseCategories;
+import ml.jmoodle.functions.rest.core.coursecategory.exceptions.MoodleRestCreateCourseCategoriesException;
 
 /**
  * Create Course Categories(s) Function

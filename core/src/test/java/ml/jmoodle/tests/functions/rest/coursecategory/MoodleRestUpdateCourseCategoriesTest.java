@@ -27,7 +27,7 @@ import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.MoodleWSFunctionFactory;
 import ml.jmoodle.functions.MoodleWSFunctions;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
-import ml.jmoodle.functions.rest.coursecategory.MoodleRestUpdateCourseCategories;
+import ml.jmoodle.functions.rest.core.coursecategory.MoodleRestUpdateCourseCategories;
 
 /**
  * Update Course Categories(s) Function
