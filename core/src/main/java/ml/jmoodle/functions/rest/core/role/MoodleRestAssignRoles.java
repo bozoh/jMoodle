@@ -83,19 +83,19 @@ public class MoodleRestAssignRoles extends MoodleWSBaseFunction {
 
 	
 
-	public void setRoles(Set<MoodleUserRoleContext> entities) throws MoodleRestAssignRolesException {
+	public void setRoles(Set<MoodleUserRoleContext> entities) throws MoodleWSFucntionException {
 		for (MoodleUserRoleContext moodleUser : entities) {
 			addRole(moodleUser);
 		}
 
 	}
 
-	public void addRole(MoodleUserRoleContext entity) throws MoodleRestAssignRolesException {
+	public void addRole(MoodleUserRoleContext entity) throws MoodleWSFucntionException {
 		verifyEntity(entity);
 		this.roles.add(entity);
 	}
 
-	public void verifyEntity(MoodleUserRoleContext entity) throws MoodleRestAssignRolesException {
+	protected void verifyEntity(MoodleUserRoleContext entity) throws MoodleWSFucntionException {
 		if (entity == null)
 			throw new MoodleRestAssignRolesException(
 				MoodleCommonsErrorMessages.notSet("MoodleUserRoleContext")
