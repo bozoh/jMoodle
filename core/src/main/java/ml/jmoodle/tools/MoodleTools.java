@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ml.jmoodle.commons.DescriptionFormat;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 
@@ -96,4 +97,18 @@ public class MoodleTools {
 		return (d == null || d.doubleValue() == 0d);
 	}
 
+	public static DescriptionFormat getDescriptionFormat(Integer descriptionFormat) {
+		switch (descriptionFormat) {
+			case 0:
+				return DescriptionFormat.MOODLE;
+			case 1:
+				return DescriptionFormat.HTML;
+			case 2:
+				return DescriptionFormat.PLAIN;
+	
+			case 4:
+				return DescriptionFormat.MARKDOWN;
+		}
+		return null;
+	}
 }

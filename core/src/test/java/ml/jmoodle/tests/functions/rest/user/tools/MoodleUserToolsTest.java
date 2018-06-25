@@ -22,6 +22,9 @@ import org.junit.Test;
 
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
+import ml.jmoodle.commons.DescriptionFormat;
+import ml.jmoodle.commons.MoodleGroup;
+import ml.jmoodle.commons.MoodleRole;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.UserCustomField;
 import ml.jmoodle.commons.UserCustomField.CustomFieldType;
@@ -65,10 +68,14 @@ public class MoodleUserToolsTest {
 		Set<Map<String, Object>> upSet = getPreferences();
 		Set<Map<String, Object>> ucfSet = getCustomfields();
 		Set<Map<String, Object>> uecSet = getEnrolledCourses();
+		Set<Map<String, Object>> grpsSet = getGroups();
+		Set<Map<String, Object>> rlsSet = getRoles();
 
 		m.put("preferences", upSet);
 		m.put("customfields", ucfSet);
 		m.put("enrolledcourses", uecSet);
+		m.put("roles", rlsSet);
+		m.put("groups", grpsSet);
 
 		MoodleUser muTest = tool.toEntity(m);
 		assertThat(m.get("id")).isEqualTo(muTest.getId().toString());
@@ -91,28 +98,85 @@ public class MoodleUserToolsTest {
 		List<UserEnrolledCourse> enrollLst = Arrays.asList(muTest.getEnrolledCourses());
 		assertThat(enrollLst.size()).isEqualTo(2);
 		doEnrolledCourseAssertion(uecSet, enrollLst);
+
+		List<MoodleGroup> grpLst = Arrays.asList(muTest.getGroups());
+		assertThat(grpLst.size()).isEqualTo(2);
+		doGroupAssertion(grpsSet, grpLst);
+
+		List<MoodleRole> roleLst = Arrays.asList(muTest.getRoles());
+		assertThat(roleLst.size()).isEqualTo(2);
+		doRoleAssertion(rlsSet, roleLst);
 		
 	}
 
+	private Set<Map<String, Object>> getGroups() {
+		MoodleGroup mg1 = new MoodleGroup(23l, 12l, "asjkne", "asjwkl qd kd kqj", "");
+		
+		MoodleGroup mg2 = new MoodleGroup(45l, 142l, "asgvgjkne", "afevsjwkl fffqd kd kqj", "");
+		
+		
+		Map<String, Object> mg1map = new HashMap<>();
+		mg1map.put("id", mg1.getId().toString());
+		mg1map.put("courseid", mg1.getCourseId().toString());
+		mg1map.put("name", mg1.getName());
+		mg1map.put("description", mg1.getDescription());
+		mg1map.put("descriptionformat", DescriptionFormat.MOODLE.getValue().toString());
+		
+		Map<String, Object> mg2map = new HashMap<>();
+		mg2map.put("id", mg2.getId().toString());
+		mg2map.put("courseid", mg2.getCourseId().toString());
+		mg2map.put("name", mg2.getName());
+		mg2map.put("description", mg2.getDescription());
+		mg2map.put("descriptionformat", DescriptionFormat.MARKDOWN.getValue().toString());
+		
+		Set<Map<String, Object>> set = new HashSet<>();
+		set.add(mg1map);
+		set.add(mg2map);
+		
+		return set;
+	}
+	
+	private Set<Map<String, Object>> getRoles() {
+		MoodleRole mg1 = new MoodleRole(12l, "asjkne", "asjwkl qd kd kqj", 3);
+		MoodleRole mg2 = new MoodleRole(142l, "asgvgjkne", "afevsjwkl fffqd kd kqj", 8);
+		
+		Map<String, Object> mg1map = new HashMap<>();
+		mg1map.put("roleid", mg1.getRoleId().toString());
+		mg1map.put("name", mg1.getName());
+		mg1map.put("shortname", mg1.getShortName());
+		mg1map.put("sortorder", mg1.getSortOrder().toString());
+		
+		Map<String, Object> mg2map = new HashMap<>();
+		mg2map.put("roleid", mg2.getRoleId().toString());
+		mg2map.put("name", mg2.getName());
+		mg2map.put("shortname", mg2.getShortName());
+		mg2map.put("sortorder", mg2.getSortOrder().toString());
+		
+		Set<Map<String, Object>> set = new HashSet<>();
+		set.add(mg1map);
+		set.add(mg2map);
+		
+		return set;
+	}
 	
 	private Set<Map<String, Object>> getEnrolledCourses() {
 		UserEnrolledCourse uec1 = new UserEnrolledCourse(1l,"teste 1", "t1");
 		UserEnrolledCourse uec2 = new UserEnrolledCourse(31l,"teste 2", "t2");
-
+		
 		Map<String, Object> uec1map = new HashMap<>();
 		uec1map.put("id", uec1.getId().toString());
 		uec1map.put("fullname", uec1.getFullName());
 		uec1map.put("shortname", uec1.getShortName());
-
+		
 		Map<String, Object> uec2map = new HashMap<>();
 		uec2map.put("id", uec2.getId().toString());
 		uec2map.put("fullname", uec2.getFullName());
 		uec2map.put("shortname", uec2.getShortName());
-
+		
 		Set<Map<String, Object>> set = new HashSet<>();
 		set.add(uec1map);
 		set.add(uec2map);
-
+		
 		return set;
 	}
 	private Set<Map<String, Object>> getCustomfields() {
@@ -121,38 +185,60 @@ public class MoodleUserToolsTest {
 		Map<String, Object> ucf1map = new HashMap<>();
 		ucf1map.put("type", ucf1.getType().getValue());
 		ucf1map.put("value", ucf1.getValue());
-
+		
 		Map<String, Object> ucf2map = new HashMap<>();
 		ucf2map.put("type", ucf2.getType().getValue());
 		ucf2map.put("value", ucf2.getValue());
-
-
+		
+		
 		Set<Map<String, Object>> set = new HashSet<>();
 		set.add(ucf1map);
 		set.add(ucf2map);
-
+		
 		return set;
 	}
-
+	
 	private Set<Map<String, Object>> getPreferences() {
 		UserPreference up1 = new UserPreference("name1", "value1");
 		UserPreference up2 = new UserPreference("name2", "value2");
 		Map<String, Object> up1map = new HashMap<>();
 		up1map.put("type", up1.getType());
 		up1map.put("value", up1.getValue());
-
+		
 		Map<String, Object> up2map = new HashMap<>();
 		up2map.put("type", up2.getType());
 		up2map.put("value", up2.getValue());
-
-
+		
+		
 		Set<Map<String, Object>> set = new HashSet<>();
 		set.add(up1map);
 		set.add(up2map);
-
+		
 		return set;
 	}
+	
+	private void doRoleAssertion(Set<Map<String, Object>> rlsSet, List<MoodleRole> roleLst) {
+		for (Map<String, Object> entityMap : rlsSet) {
+			MoodleRole entity = new MoodleRole();
+			entity.setRoleId(Long.parseLong((String) entityMap.get("roleid")));
+			entity.setShortName((String) entityMap.get("shortname"));
+			entity.setName((String) entityMap.get("name"));
+			entity.setSortOrder(Integer.parseInt((String) entityMap.get("sortorder")));
+			assertThat(roleLst).contains(entity);
+		}
+	}
 
+	private void doGroupAssertion(Set<Map<String, Object>> grpsSet, List<MoodleGroup> grpLst) {
+		for (Map<String, Object> entityMap : grpsSet) {
+			MoodleGroup entity = new MoodleGroup();
+			entity.setId(Long.parseLong((String) entityMap.get("id")));
+			entity.setCourseId(Long.parseLong((String) entityMap.get("courseid")));
+			entity.setName((String) entityMap.get("name"));
+			entity.setDescription((String) entityMap.get("description"));
+			entity.setDescriptionFormat(Integer.parseInt((String) entityMap.get("descriptionformat")));
+			assertThat(grpLst).contains(entity);
+		}
+	}
 	private void doEnrolledCourseAssertion(Set<Map<String, Object>> ucfSet, List<UserEnrolledCourse> enrollLst) {
 		for (Map<String, Object> entityMap : ucfSet) {
 			UserEnrolledCourse entity = new UserEnrolledCourse();

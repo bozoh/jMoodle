@@ -16,6 +16,7 @@ import org.w3c.dom.NodeList;
 
 import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.commons.MoodleWarning;
+import ml.jmoodle.commons.OptionParameter;
 import ml.jmoodle.functions.converters.MoodleWarningConverter;
 import ml.jmoodle.tools.MoodleParamMap;
 import ml.jmoodle.tools.MoodleTools;
@@ -118,6 +119,20 @@ public class MoodleRestFunctionTools {
 		int i = 0;
 		for (Criteria c : criterias) {
 			MoodleParamMap map = entity2MoodleParamMap(c, "criteria["+ i +"]");
+			sb.append(map.toParamString());
+			sb.append("&");
+			i++;
+		}
+		return sb.substring(0, sb.length() - 1);
+	}
+
+	public static String serializeOptionParameters(Collection<OptionParameter> options) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, UnsupportedEncodingException {
+		// options[0][name]= string
+		// options[0][value]= string
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		for (OptionParameter op : options) {
+			MoodleParamMap map = entity2MoodleParamMap(op, "options["+ i +"]");
 			sb.append(map.toParamString());
 			sb.append("&");
 			i++;

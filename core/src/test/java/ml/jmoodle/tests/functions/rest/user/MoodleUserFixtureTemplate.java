@@ -2,7 +2,6 @@ package ml.jmoodle.tests.functions.rest.user;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,10 +22,10 @@ import ml.jmoodle.commons.Criteria;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.commons.UserCustomField;
-import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserCustomField.CustomFieldType;
-import ml.jmoodle.tests.tools.TestTools;
+import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserPreference;
+import ml.jmoodle.tests.tools.TestTools;
 
 public class MoodleUserFixtureTemplate implements TemplateLoader {
 
@@ -125,8 +124,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 				add("department", random("lorem ipsum", "ipsum lorem", "foo bar"));
 				add("institution", random("lorem ipsum", "ipsum lorem", "foo bar"));
 				add("interests", random("lorem ipsum", "ipsum lorem", "foo bar"));
-				add("firstaccess", randomDate("2011-04-15", "2016-11-07", new SimpleDateFormat("yyyy-MM-dd")));
-				add("lastaccess", randomDate("2011-04-15", "2016-11-07", new SimpleDateFormat("yyyy-MM-dd")));
+				add("firstaccess", random(Long.class, range(1522947289, 1529947289)));
+				add("lastaccess", random(Long.class, range(1522947289, 1529947289)));;
 				add("auth", "manual");
 				add("confirmed", true);
 				add("description", random("lorem ipsum", "ipsum lorem", "foo bar"));
@@ -173,8 +172,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 				add("department", random("lorem ipsum", "ipsum lorem", "foo bar"));
 				add("institution", random("lorem ipsum", "ipsum lorem", "foo bar"));
 				add("interests", random("lorem ipsum", "ipsum lorem", "foo bar"));
-				add("firstaccess", randomDate("2011-04-15", "2016-11-07", new SimpleDateFormat("yyyy-MM-dd")));
-				add("lastaccess", randomDate("2011-04-15", "2016-11-07", new SimpleDateFormat("yyyy-MM-dd")));
+				add("firstaccess", random(Long.class, range(1522947289, 1529947289)));
+				add("lastaccess", random(Long.class, range(1522947289, 1529947289)));
 				add("auth", "manual");
 				add("confirmed", true);
 				add("description", random("lorem ipsum", "ipsum lorem", "foo bar"));
@@ -305,8 +304,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			.append("<KEY name=\"institution\">").append("<VALUE>").append(moodleUser.getInstitution()).append("</VALUE></KEY>")
 			.append("<KEY name=\"idnumber\">").append("<VALUE>").append(moodleUser.getIdnumber()).append("</VALUE></KEY>")
 			.append("<KEY name=\"interests\">").append("<VALUE>").append(moodleUser.getInterests()).append("</VALUE></KEY>")
-			.append("<KEY name=\"firstaccess\">").append("<VALUE>").append(moodleUser.getFirstaccess().getTime() / 1000l).append("</VALUE></KEY>")
-			.append("<KEY name=\"lastaccess\">").append("<VALUE>").append(moodleUser.getLastaccess().getTime() / 1000l).append("</VALUE></KEY>")
+			.append("<KEY name=\"firstaccess\">").append("<VALUE>").append(moodleUser.getFirstaccess() / 1000l).append("</VALUE></KEY>")
+			.append("<KEY name=\"lastaccess\">").append("<VALUE>").append(moodleUser.getLastaccess() / 1000l).append("</VALUE></KEY>")
 			.append("<KEY name=\"auth\">").append("<VALUE>").append(moodleUser.getAuth()).append("</VALUE></KEY>")
 			.append("<KEY name=\"confirmed\">").append("<VALUE>").append(moodleUser.isConfirmed() ? "1" : "0").append("</VALUE></KEY>")
 			.append("<KEY name=\"lang\">").append("<VALUE>").append(moodleUser.getLang()).append("</VALUE></KEY>")
@@ -457,8 +456,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			.append("<KEY name=\"institution\">").append("<VALUE>").append(moodleUser.getInstitution()).append("</VALUE></KEY>")
 			.append("<KEY name=\"idnumber\">").append("<VALUE>").append(moodleUser.getIdnumber()).append("</VALUE></KEY>")
 			.append("<KEY name=\"interests\">").append("<VALUE>").append(moodleUser.getInterests()).append("</VALUE></KEY>")
-			.append("<KEY name=\"firstaccess\">").append("<VALUE>").append(moodleUser.getFirstaccess().getTime() / 1000l).append("</VALUE></KEY>")
-			.append("<KEY name=\"lastaccess\">").append("<VALUE>").append(moodleUser.getLastaccess().getTime() / 1000l).append("</VALUE></KEY>")
+			.append("<KEY name=\"firstaccess\">").append("<VALUE>").append(moodleUser.getFirstaccess() / 1000l).append("</VALUE></KEY>")
+			.append("<KEY name=\"lastaccess\">").append("<VALUE>").append(moodleUser.getLastaccess() / 1000l).append("</VALUE></KEY>")
 			.append("<KEY name=\"auth\">").append("<VALUE>").append(moodleUser.getAuth()).append("</VALUE></KEY>")
 			.append("<KEY name=\"confirmed\">").append("<VALUE>").append(moodleUser.isConfirmed() ? "1" : "0").append("</VALUE></KEY>")
 			.append("<KEY name=\"lang\">").append("<VALUE>").append(moodleUser.getLang()).append("</VALUE></KEY>")
@@ -532,8 +531,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			.append("<KEY name=\"institution\">").append("<VALUE>").append(moodleUser.getInstitution()).append("</VALUE></KEY>")
 			.append("<KEY name=\"idnumber\">").append("<VALUE>").append(moodleUser.getIdnumber()).append("</VALUE></KEY>")
 			.append("<KEY name=\"interests\">").append("<VALUE>").append(moodleUser.getInterests()).append("</VALUE></KEY>")
-			.append("<KEY name=\"firstaccess\">").append("<VALUE>").append(moodleUser.getFirstaccess().getTime() / 1000l).append("</VALUE></KEY>")
-			.append("<KEY name=\"lastaccess\">").append("<VALUE>").append(moodleUser.getLastaccess().getTime() / 1000l).append("</VALUE></KEY>")
+			.append("<KEY name=\"firstaccess\">").append("<VALUE>").append(moodleUser.getFirstaccess() / 1000l).append("</VALUE></KEY>")
+			.append("<KEY name=\"lastaccess\">").append("<VALUE>").append(moodleUser.getLastaccess() / 1000l).append("</VALUE></KEY>")
 			.append("<KEY name=\"auth\">").append("<VALUE>").append(moodleUser.getAuth()).append("</VALUE></KEY>")
 			.append("<KEY name=\"confirmed\">").append("<VALUE>").append(moodleUser.isConfirmed() ? "1" : "0").append("</VALUE></KEY>")
 			.append("<KEY name=\"lang\">").append("<VALUE>").append(moodleUser.getLang()).append("</VALUE></KEY>")

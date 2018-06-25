@@ -82,8 +82,8 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private String institution;
 	private String idnumber;
 	private String interests;
-	private Date firstaccess;
-	private Date lastaccess;
+	private Long firstaccess;
+	private Long lastaccess;
 	private String auth;
 	private boolean confirmed;
 	private String lang;
@@ -102,6 +102,8 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	private Set<UserCustomField> customfields;
 	private Set<UserPreference> preferences;
 	private Set<UserEnrolledCourse> enrolledcourses;
+	private Set<MoodleGroup> groups;
+	private Set<MoodleRole> roles;
 
 	// This is not part of moodle entity, but to get some WS functions
 	// easier to implement
@@ -483,7 +485,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	/**
 	 * @return the firstaccess
 	 */
-	public Date getFirstaccess() {
+	public Long getFirstaccess() {
 		return firstaccess;
 	}
 
@@ -491,22 +493,15 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param firstaccess
 	 *            the firstaccess to set
 	 */
-	public void setFirstaccess(Date firstaccess) {
+	public void setFirstaccess(Long firstaccess) {
 		this.firstaccess = firstaccess;
 	}
 
-	/**
-	 * @param firstaccess
-	 *            the firstaccess to set
-	 */
-	public void setFirstaccess(Long firstaccess) {
-		this.firstaccess = new Date(firstaccess.longValue());
-	}
-
+	
 	/**
 	 * @return the lastaccess
 	 */
-	public Date getLastaccess() {
+	public Long getLastaccess() {
 		return lastaccess;
 	}
 
@@ -514,16 +509,8 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param lastaccess
 	 *            the lastaccess to set
 	 */
-	public void setLastaccess(Date lastaccess) {
-		this.lastaccess = lastaccess;
-	}
-
-	/**
-	 * @param lastaccess
-	 *            the lastaccess to set
-	 */
 	public void setLastaccess(Long lastaccess) {
-		this.lastaccess = new Date(lastaccess.longValue());
+		this.lastaccess = lastaccess;
 	}
 
 	/**
@@ -809,6 +796,8 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 		this.customfields.add(customField);
 	}
 
+
+	
 	/**
 	 * @return the users enrollment
 	 */
@@ -819,6 +808,43 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 			this.enrolledcourses.toArray(results);
 		}
 		return results;
+	}
+	
+	public MoodleGroup[] getGroups() {
+		MoodleGroup[] results = null;
+		if (this.groups != null && !this.groups.isEmpty()) {
+			results = new MoodleGroup[this.groups.size()];
+			this.groups.toArray(results);
+		}
+		return results;
+	}
+
+	public void addGroup(MoodleGroup group) {
+		if (this.groups == null)
+			this.groups = new LinkedHashSet<>();
+		this.groups.add(group);
+	}
+
+	public void addGroup(Long courseid, String name, String description) {
+		this.addGroup(new MoodleGroup(courseid, name, description));
+	}
+
+	public MoodleRole[] getRoles() {
+		MoodleRole[] results = null;
+		if (this.roles != null && !this.roles.isEmpty()) {
+			results = new MoodleRole[this.roles.size()];
+			this.roles.toArray(results);
+		}
+		return results;
+	}
+	public void addRole(MoodleRole role) {
+		if (this.roles == null)
+			this.roles = new LinkedHashSet<>();
+		this.roles.add(role);
+	}
+
+	public void addRole(Long roleid, String name, String shortname, Integer sortorder) {
+		this.roles.add(new MoodleRole(roleid, name, shortname, sortorder));
 	}
 
 	/**

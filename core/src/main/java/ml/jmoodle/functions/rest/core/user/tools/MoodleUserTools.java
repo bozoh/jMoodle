@@ -15,6 +15,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.functions.converters.MoodleGroupConverter;
+import ml.jmoodle.functions.converters.MoodleRoleConverter;
 import ml.jmoodle.functions.converters.MoodleUserConverter;
 import ml.jmoodle.functions.converters.UserCustomFieldConverter;
 import ml.jmoodle.functions.converters.UserEnrolledCourseConverter;
@@ -89,6 +91,22 @@ public class MoodleUserTools extends MoodleUserConverter {
 			Set<Map<String, Object>> uecs = (Set<Map<String, Object>>) valuesMap.get("enrolledcourses");
 			for (Map<String, Object> map : uecs) {
 				entity.addEnrolledCourse(uecc.toEntity(map));
+			}
+		}
+
+		if (valuesMap.containsKey("groups")){
+			MoodleGroupConverter mgc = new MoodleGroupConverter();
+			Set<Map<String, Object>> mgcs = (Set<Map<String, Object>>) valuesMap.get("groups");
+			for (Map<String, Object> map : mgcs) {
+				entity.addGroup(mgc.toEntity(map));
+			}
+		}
+
+		if (valuesMap.containsKey("roles")){
+			MoodleRoleConverter mrc = new MoodleRoleConverter();
+			Set<Map<String, Object>> mrcs = (Set<Map<String, Object>>) valuesMap.get("roles");
+			for (Map<String, Object> map : mrcs) {
+				entity.addRole(mrc.toEntity(map));
 			}
 		}
 
