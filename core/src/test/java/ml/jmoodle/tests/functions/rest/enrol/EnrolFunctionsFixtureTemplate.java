@@ -4,8 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Random;
-import java.util.PrimitiveIterator.OfInt;
-import java.util.stream.IntStream;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,6 +17,7 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.Rule;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import br.com.six2six.fixturefactory.loader.TemplateLoader;
+import ml.jmoodle.commons.Capability;
 import ml.jmoodle.commons.DescriptionFormat;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.MoodleGroup;
@@ -157,4 +157,52 @@ public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
 		xmlResponse.getDocumentElement().normalize();
 		return xmlResponse;
     }
+
+	public static Document getEnrolledUsersWithCapabilityResponse(MoodleCourse course1, Set<Capability> capabilities1,
+			Set<MoodleUser> users1, MoodleCourse course2, Set<Capability> capabilities2, Set<MoodleUser> users2) throws ParserConfigurationException, SAXException, IOException {
+
+            //     KEY name="courseid">
+            //     <VALUE>int</VALUE>
+            // </KEY>
+            // <KEY name="capability">
+            //     <VALUE>string</VALUE>
+            // </KEY>
+        StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        sb.append("<RESPONSE>").append("<MULTIPLE>");
+        for (Capability cap : capabilities1) {
+            sb.append("<SINGLE>").append("<KEY name=\"courseid\">").append("<VALUE>")
+            .append(course1.getId()).append("</VALUE>").append("</KEY>");
+            
+            sb.append("<KEY name=\"capability\">").append("<VALUE>")
+                .append(cap.getValue()).append("</VALUE>").append("</KEY>");
+
+            sb.append("<KEY name=\"users\">").append("<MULTIPLE>");
+            for (MoodleUser user : users1) {
+                sb.append(TestTools.entityToXmlResponse(user));
+            }
+            sb.append(cap.getValue()).append("</MULTIPLE>").append("</KEY>");
+            sb.append("</SINGLE>");
+        }
+        
+        for (Capability cap : capabilities2) {
+            sb.append("<SINGLE>").append("<KEY name=\"courseid\">").append("<VALUE>")
+            .append(course2.getId()).append("</VALUE>").append("</KEY>");
+            
+            sb.append("<KEY name=\"capability\">").append("<VALUE>")
+                .append(cap.getValue()).append("</VALUE>").append("</KEY>");
+
+            sb.append("<KEY name=\"users\">").append("<MULTIPLE>");
+            for (MoodleUser user : users1) {
+                sb.append(TestTools.entityToXmlResponse(user));
+            }
+            sb.append(cap.getValue()).append("</MULTIPLE>").append("</KEY>");
+            sb.append("</SINGLE>");
+        }
+        sb.append("</MULTIPLE>").append("</RESPONSE>");
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
+        xmlResponse.getDocumentElement().normalize();
+        return xmlResponse;
+	}
 }

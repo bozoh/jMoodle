@@ -24,7 +24,7 @@ public class MoodleCourseFixtureTemplate implements TemplateLoader {
 	@Override
 	public void load() {
 		Fixture.of(MoodleCourse.class).addTemplate("valid", new Rule(){{
-			add("id", random(Long.class));
+			add("id", random(Long.class, range(1, 5000)));
 			add("shortname", regex("[A-Za-z0-9_ ]{3,10}"));
 			add("categoryid", random(Long.class));
 			add("categorysortorder", random(Integer.class));

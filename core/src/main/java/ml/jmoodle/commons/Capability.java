@@ -2,9 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.beaconhillcott.moodlerest.commons;
+package ml.jmoodle.commons;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -519,6 +521,15 @@ public enum Capability implements Serializable {
     this.value=value;
   }
 
+  public static Capability fromValue(String value) {
+    for (Capability c : Capability.values()) {
+      if (c.value.equals(value)) {
+        return c;
+      }
+    }
+    return null;
+  }
+  
   
   public String getValue() {
     return value;
