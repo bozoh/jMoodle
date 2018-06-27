@@ -20,6 +20,7 @@ import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import ml.jmoodle.commons.Capability;
 import ml.jmoodle.commons.DescriptionFormat;
 import ml.jmoodle.commons.MoodleCourse;
+import ml.jmoodle.commons.MoodleEnrolmentMethod;
 import ml.jmoodle.commons.MoodleGroup;
 import ml.jmoodle.commons.MoodleRole;
 import ml.jmoodle.commons.MoodleUser;
@@ -58,6 +59,17 @@ public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
                     DescriptionFormat.HTML, DescriptionFormat.MARKDOWN,
                     DescriptionFormat.PLAIN, DescriptionFormat.MOODLE
                 ));
+            }
+        });
+
+        Fixture.of(MoodleEnrolmentMethod.class).addTemplate("getEnrolledMethods", new Rule(){
+            {
+                add("id", random(Long.class, range(1, 300)));
+                add("courseId", random(Long.class, range(1, 300)));
+                add("type", regex("\\w{3,5}"));
+                add("name", regex("\\w{3,50}"));
+                add("status", regex("\\w{3,5}"));
+                add("wsFunction", regex("\\w{5,20}"));
             }
         });
     }
@@ -200,6 +212,22 @@ public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
         }
         sb.append("</MULTIPLE>").append("</RESPONSE>");
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
+        xmlResponse.getDocumentElement().normalize();
+        return xmlResponse;
+	}
+
+	public static Document getCourseEnrolmentMethodsResponse(Set<MoodleEnrolmentMethod> mcs) throws ParserConfigurationException, SAXException, IOException {
+
+        StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        sb.append("<RESPONSE>").append("<MULTIPLE>");
+
+        for (MoodleEnrolmentMethod mem : mcs) {
+            sb.append(TestTools.entityToXmlResponse(mem));
+        }
+        sb.append("</MULTIPLE>").append("</RESPONSE>");
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
         xmlResponse.getDocumentElement().normalize();
