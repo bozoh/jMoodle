@@ -224,6 +224,11 @@ public class MoodleCourse implements Serializable, Comparable<MoodleCourse> {
 		this.categoryid = categoryid;
 	}
 
+	public MoodleCourse(Long id, String fullname, String shortname) {
+		this(shortname, fullname, 0l);
+		this.id = id;
+	}
+
 	/**
 	 * <p>
 	 * MoodleCourse object constructor setting the course id.

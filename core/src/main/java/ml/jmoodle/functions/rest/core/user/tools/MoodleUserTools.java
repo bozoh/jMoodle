@@ -15,11 +15,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.functions.converters.MoodleCourseConverter;
 import ml.jmoodle.functions.converters.MoodleGroupConverter;
 import ml.jmoodle.functions.converters.MoodleRoleConverter;
 import ml.jmoodle.functions.converters.MoodleUserConverter;
 import ml.jmoodle.functions.converters.UserCustomFieldConverter;
-import ml.jmoodle.functions.converters.UserEnrolledCourseConverter;
 import ml.jmoodle.functions.converters.UserPreferenceConverter;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
 import ml.jmoodle.tools.MoodleParamMap;
@@ -87,10 +87,10 @@ public class MoodleUserTools extends MoodleUserConverter {
 		}
 
 		if (valuesMap.containsKey("enrolledcourses")){
-			UserEnrolledCourseConverter uecc = new UserEnrolledCourseConverter();
-			Set<Map<String, Object>> uecs = (Set<Map<String, Object>>) valuesMap.get("enrolledcourses");
-			for (Map<String, Object> map : uecs) {
-				entity.addEnrolledCourse(uecc.toEntity(map));
+			MoodleCourseConverter converter = new MoodleCourseConverter();
+			Set<Map<String, Object>> entitiesMap = (Set<Map<String, Object>>) valuesMap.get("enrolledcourses");
+			for (Map<String, Object> map : entitiesMap) {
+				entity.addEnrolledCourse(converter.toEntity(map));
 			}
 		}
 

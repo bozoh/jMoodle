@@ -23,16 +23,17 @@ import org.junit.Test;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import ml.jmoodle.commons.DescriptionFormat;
+import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.MoodleGroup;
 import ml.jmoodle.commons.MoodleRole;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.UserCustomField;
 import ml.jmoodle.commons.UserCustomField.CustomFieldType;
-import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserPreference;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.functions.rest.core.course.exceptions.MoodleRestCreateCoursesException;
 import ml.jmoodle.functions.rest.core.user.tools.MoodleUserTools;
+import net.beaconhillcott.moodlerest.commons.UserEnrolledCourse;
 
 public class MoodleUserToolsTest {
 	MoodleUser entity;
@@ -95,7 +96,7 @@ public class MoodleUserToolsTest {
 		assertThat(customLst.size()).isEqualTo(2);
 		doCustomFieldsAssertion(ucfSet, customLst);
 
-		List<UserEnrolledCourse> enrollLst = Arrays.asList(muTest.getEnrolledCourses());
+		List<MoodleCourse> enrollLst = Arrays.asList(muTest.getEnrolledCourses());
 		assertThat(enrollLst.size()).isEqualTo(2);
 		doEnrolledCourseAssertion(uecSet, enrollLst);
 
@@ -239,12 +240,12 @@ public class MoodleUserToolsTest {
 			assertThat(grpLst).contains(entity);
 		}
 	}
-	private void doEnrolledCourseAssertion(Set<Map<String, Object>> ucfSet, List<UserEnrolledCourse> enrollLst) {
+	private void doEnrolledCourseAssertion(Set<Map<String, Object>> ucfSet, List<MoodleCourse> enrollLst) {
 		for (Map<String, Object> entityMap : ucfSet) {
-			UserEnrolledCourse entity = new UserEnrolledCourse();
+			MoodleCourse entity = new MoodleCourse();
 			entity.setId(Long.parseLong((String) entityMap.get("id")));
-			entity.setFullName((String) entityMap.get("fullname"));
-			entity.setShortName((String) entityMap.get("shortname"));
+			entity.setFullname((String) entityMap.get("fullname"));
+			entity.setShortname((String) entityMap.get("shortname"));
 			assertThat(enrollLst).contains(entity);
 		}
 	}

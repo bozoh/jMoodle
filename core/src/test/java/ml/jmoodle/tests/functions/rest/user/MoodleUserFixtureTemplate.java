@@ -19,11 +19,11 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.Rule;
 import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import ml.jmoodle.commons.Criteria;
+import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.commons.UserCustomField;
 import ml.jmoodle.commons.UserCustomField.CustomFieldType;
-import ml.jmoodle.commons.UserEnrolledCourse;
 import ml.jmoodle.commons.UserPreference;
 import ml.jmoodle.tests.tools.TestTools;
 
@@ -108,7 +108,7 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 				add("alternatename", name());
 				add("preferences", has(2).of(UserPreference.class, "MoodleUserPreferences"));
 				add("customfields", has(2).of(UserCustomField.class, "MoodleUserCustomFields"));
-				add("enrolledcourses", has(2).of(UserEnrolledCourse.class, "MoodleUserEnrolledCourse"));
+				add("enrolledcourses", has(2).of(MoodleCourse.class, "MoodleUserEnrolledCourse"));
 
 
 				add("fullname", "${firstname} ${lastname}");
@@ -185,7 +185,7 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			}
 		});
 
-		Fixture.of(UserEnrolledCourse.class).addTemplate("MoodleUserEnrolledCourse", 	new Rule() {
+		Fixture.of(MoodleCourse.class).addTemplate("MoodleUserEnrolledCourse", 	new Rule() {
 			{
 				add("id", random(Long.class, range(12, 1234)));
 				add("fullname", firstName());
@@ -493,8 +493,8 @@ public class MoodleUserFixtureTemplate implements TemplateLoader {
 			}
 			usrResponse.append("</MULTIPLE></KEY>").append("<KEY name=\"enrolledcourses\">").append("<MULTIPLE>");
 
-			Set<UserEnrolledCourse> enrollments = new HashSet<>(Arrays.asList(moodleUser.getEnrolledCourses()));
-			for (UserEnrolledCourse enrollment : enrollments) {
+			Set<MoodleCourse> enrollments = new HashSet<>(Arrays.asList(moodleUser.getEnrolledCourses()));
+			for (MoodleCourse enrollment : enrollments) {
 				usrResponse.append(TestTools.entityToXmlResponse(enrollment));
 			}
 			usrResponse.append("</MULTIPLE></KEY>").append("</SINGLE>");

@@ -101,7 +101,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 
 	private Set<UserCustomField> customfields;
 	private Set<UserPreference> preferences;
-	private Set<UserEnrolledCourse> enrolledcourses;
+	private Set<MoodleCourse> enrolledcourses;
 	private Set<MoodleGroup> groups;
 	private Set<MoodleRole> roles;
 
@@ -111,10 +111,7 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	
 
 	public MoodleUser() {
-		this.customfields = new LinkedHashSet<UserCustomField>();
-		this.preferences = new LinkedHashSet<UserPreference>();
-		this.enrolledcourses = new LinkedHashSet<UserEnrolledCourse>();
-	
+		
 		// Defualt values
 		this.createpassword = new Boolean(false);
 		this.calendartype = "gregorian";
@@ -793,6 +790,8 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	}
 
 	public void addCustomfield(UserCustomField customField) {
+		if (this.customfields == null)
+			this.customfields = new LinkedHashSet<UserCustomField>();
 		this.customfields.add(customField);
 	}
 
@@ -801,10 +800,10 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	/**
 	 * @return the users enrollment
 	 */
-	public UserEnrolledCourse[] getEnrolledCourses() {
-		UserEnrolledCourse[] results = null;
+	public MoodleCourse[] getEnrolledCourses() {
+		MoodleCourse[] results = null;
 		if (this.enrolledcourses != null && !this.enrolledcourses.isEmpty()) {
-			results = new UserEnrolledCourse[this.enrolledcourses.size()];
+			results = new MoodleCourse[this.enrolledcourses.size()];
 			this.enrolledcourses.toArray(results);
 		}
 		return results;
@@ -853,13 +852,15 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	 * @param shortname
 	 */
 	public void addEnrolledCourse(Long id, String fullname, String shortname) {
-		this.addEnrolledCourse(new UserEnrolledCourse(id, fullname, shortname));
+		this.addEnrolledCourse(new MoodleCourse(id, fullname, shortname));
 	}
 
 	/**
 	 * @param enrolledCourse
 	 */
-	public void addEnrolledCourse(UserEnrolledCourse enrolledCourse) {
+	public void addEnrolledCourse(MoodleCourse enrolledCourse) {
+		if (this.enrolledcourses == null)
+			this.enrolledcourses = new LinkedHashSet<MoodleCourse>();
 		this.enrolledcourses.add(enrolledCourse);
 	}
 
@@ -887,6 +888,8 @@ public class MoodleUser implements Serializable, Comparable<MoodleUser> {
 	}
 
 	public void addPreference(UserPreference preference) {
+		if (this.preferences == null)
+			this.preferences = new LinkedHashSet<UserPreference>();
 		this.preferences.add(preference);
 	}
 
