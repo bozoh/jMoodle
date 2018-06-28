@@ -25,7 +25,9 @@ import ml.jmoodle.commons.MoodleGroup;
 import ml.jmoodle.commons.MoodleManualEnrolment;
 import ml.jmoodle.commons.MoodleRole;
 import ml.jmoodle.commons.MoodleUser;
+import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.tests.tools.TestTools;
+
 
 public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
 
@@ -239,6 +241,49 @@ public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
             sb.append(TestTools.entityToXmlResponse(mem));
         }
         sb.append("</MULTIPLE>").append("</RESPONSE>");
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
+        xmlResponse.getDocumentElement().normalize();
+        return xmlResponse;
+	}
+
+	public static Document getEnrolSelfUserResponse(Collection<MoodleWarning> warns) throws ParserConfigurationException, SAXException, IOException {
+        // <?xml version="1.0" encoding="UTF-8" ?>
+        // <RESPONSE>
+        //     <SINGLE>
+        //         <KEY name="status">
+        //             <VALUE>int</VALUE>
+        //         </KEY>
+        //         <KEY name="warnings">
+        //             <MULTIPLE>
+        //                 <SINGLE>
+        //                     <KEY name="item">
+        //                         <VALUE>string</VALUE>
+        //                     </KEY>
+        //                     <KEY name="itemid">
+        //                         <VALUE>int</VALUE>
+        //                     </KEY>
+        //                     <KEY name="warningcode">
+        //                         <VALUE>string</VALUE>
+        //                     </KEY>
+        //                     <KEY name="message">
+        //                         <VALUE>string</VALUE>
+        //                     </KEY>
+        //                 </SINGLE>
+        //             </MULTIPLE>
+        //         </KEY>
+        //     </SINGLE>
+        // </RESPONSE>
+
+		StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        sb.append("<RESPONSE>").append("<SINGLE>").append("<KEY name=\"status\">")
+            .append("<VALUE>").append("1").append("</VALUE>").append("</KEY>")
+            .append("<KEY name=\"warnings\">").append("<MULTIPLE>");
+        for (MoodleWarning mem : warns) {
+            sb.append(TestTools.entityToXmlResponse(mem));
+        }
+        sb.append("</MULTIPLE>").append("</KEY>").append("</SINGLE>").append("</RESPONSE>");
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
