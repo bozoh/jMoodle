@@ -22,6 +22,7 @@ import ml.jmoodle.commons.DescriptionFormat;
 import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.commons.MoodleEnrolmentMethod;
 import ml.jmoodle.commons.MoodleGroup;
+import ml.jmoodle.commons.MoodleManualEnrolment;
 import ml.jmoodle.commons.MoodleRole;
 import ml.jmoodle.commons.MoodleUser;
 import ml.jmoodle.tests.tools.TestTools;
@@ -70,6 +71,17 @@ public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
                 add("name", regex("\\w{3,50}"));
                 add("status", regex("\\w{3,5}"));
                 add("wsFunction", regex("\\w{5,20}"));
+            }
+        });
+
+        Fixture.of(MoodleManualEnrolment.class).addTemplate("valid", new Rule(){
+            {
+                add("roleId", random(Long.class, range(1, 30)));
+                add("userId", random(Long.class, range(1, 3000)));
+                add("courseId", random(Long.class, range(1, 300)));
+                add("timeStart", random(Long.class, range(1520198751, 1530198754)));
+                add("timeEnd", random(Long.class, range(1520198751, 1530198754)));
+                add("suspend", random(Integer.class, range(0, 1)));
             }
         });
     }
