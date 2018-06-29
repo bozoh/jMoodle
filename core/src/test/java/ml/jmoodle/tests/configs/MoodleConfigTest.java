@@ -3,12 +3,7 @@ package ml.jmoodle.tests.configs;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import ml.jmoodle.authentications.MoodleAuthentication;
-import ml.jmoodle.commons.MoodleCourse;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 
