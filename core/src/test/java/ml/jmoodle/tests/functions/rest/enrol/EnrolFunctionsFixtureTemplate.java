@@ -20,6 +20,7 @@ import br.com.six2six.fixturefactory.loader.TemplateLoader;
 import ml.jmoodle.commons.Capability;
 import ml.jmoodle.commons.DescriptionFormat;
 import ml.jmoodle.commons.MoodleCourse;
+import ml.jmoodle.commons.MoodleEnrolInstanceInfo;
 import ml.jmoodle.commons.MoodleEnrolmentMethod;
 import ml.jmoodle.commons.MoodleGroup;
 import ml.jmoodle.commons.MoodleManualEnrolment;
@@ -84,6 +85,18 @@ public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
                 add("timeStart", random(Long.class, range(1520198751, 1530198754)));
                 add("timeEnd", random(Long.class, range(1520198751, 1530198754)));
                 add("suspend", random(Integer.class, range(0, 1)));
+            }
+        });
+
+        Fixture.of(MoodleEnrolInstanceInfo.class).addTemplate("valid", new Rule(){
+            {
+                add("id", random(Long.class, range(1, 5000)));
+                add("courseId", random(Long.class, range(1, 500)));
+                add("type", regex("\\w{5,10}"));
+                add("name", firstName());
+                add("status", regex("\\w{3,10}"));
+                add("enrolPassword", regex("\\w{0,8}"));
+                add("passwordRequired", random(Boolean.class, Boolean.TRUE, Boolean.FALSE));
             }
         });
     }
@@ -284,6 +297,19 @@ public class EnrolFunctionsFixtureTemplate implements TemplateLoader {
             sb.append(TestTools.entityToXmlResponse(mem));
         }
         sb.append("</MULTIPLE>").append("</KEY>").append("</SINGLE>").append("</RESPONSE>");
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
+        xmlResponse.getDocumentElement().normalize();
+        return xmlResponse;
+	}
+
+	public static Document getEnrolSelfGetInstanceInfoResponse(MoodleEnrolInstanceInfo instInfo) throws ParserConfigurationException, SAXException, IOException {
+        instInfo.setPasswordRequired(null);
+        StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        sb.append("<RESPONSE>").append(TestTools.entityToXmlResponse(instInfo));
+        sb.append("</RESPONSE>");
+
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
         Document xmlResponse = builder.parse(new ByteArrayInputStream(sb.toString().getBytes()));
