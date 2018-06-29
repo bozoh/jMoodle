@@ -146,7 +146,7 @@ public class MoodleRestGetCoursesTest  {
 	public void verify_process_respose_test() throws MoodleWSFucntionException, MoodleConfigException, SAXException, IOException, ParserConfigurationException {
 	
 		TestMoodleFunctionWarpClass cc = new TestMoodleFunctionWarpClass(mc);
-		Set<MoodleCourse> mcs = new HashSet<>(Fixture.from(MoodleCourse.class).gimme(50, "valid"));
+		Set<MoodleCourse> mcs = new HashSet<>(Fixture.from(MoodleCourse.class).gimme(5, "valid"));
 		
 		Document response = MoodleCourseFixtureTemplate.getValidResponseOnRetrive(mcs);
 		List<MoodleCourse> resp = new ArrayList<>(cc.processResponse(response));

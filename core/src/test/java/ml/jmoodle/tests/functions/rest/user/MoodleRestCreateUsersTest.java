@@ -136,7 +136,7 @@ public class MoodleRestCreateUsersTest  {
 		MoodleRestCreateUsers cc = (MoodleRestCreateUsers) MoodleWSFunctionFactory.getFunction(
 			MoodleWSFunctions.CORE_USER_CREATE_USERS, mc
 		);
-		Set<MoodleUser> entities = new HashSet<>(Fixture.from(MoodleUser.class).gimme(15, "MoodleRestCreateUserFunctionUser"));
+		Set<MoodleUser> entities = new HashSet<>(Fixture.from(MoodleUser.class).gimme(5, "MoodleRestCreateUserFunctionUser"));
 		cc.setUsers(entities);
 		String dataString = URLDecoder.decode(cc.getFunctionData(), MoodleConfig.DEFAULT_ENCODING);
 		
@@ -146,7 +146,7 @@ public class MoodleRestCreateUsersTest  {
 
 	@Test
 	public void verify_process_respose_test() throws MoodleWSFucntionException, MoodleConfigException, SAXException, IOException, ParserConfigurationException {
-		int testSize = 12;
+		int testSize = 5;
 		TestMoodleFunctionWarpClass function = new TestMoodleFunctionWarpClass(mc);
 		Set<MoodleUser> entities = new HashSet<>(Fixture.from(MoodleUser.class).gimme(testSize, "MoodleRestCreateUserFunctionUser"));
 		function.setUsers(entities);
