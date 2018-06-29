@@ -10,6 +10,12 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -151,5 +157,13 @@ public class MoodleRestFunctionTools {
 
 		return result;
 	}
+
+	public static Set<MoodleWarning> deSerializeWarnings(Document document) throws XPathExpressionException {
+		XPath xPath = XPathFactory.newInstance().newXPath();
+			NodeList nodeList = (NodeList) xPath.compile("/RESPONSE/SINGLE/KEY[@name=\"warnings\"]/MULTIPLE/SINGLE")
+				.evaluate(document, XPathConstants.NODESET);
+		return deSerializeWarnings(nodeList);
+	}	
+
 
 }

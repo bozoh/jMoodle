@@ -1,7 +1,6 @@
 package ml.jmoodle.functions.rest.enrol.self;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +19,6 @@ import ml.jmoodle.commons.MoodleWarning;
 import ml.jmoodle.configs.MoodleConfig;
 import ml.jmoodle.configs.expections.MoodleConfigException;
 import ml.jmoodle.functions.MoodleWSBaseFunction;
-import ml.jmoodle.functions.converters.MoodleWarningConverter;
 import ml.jmoodle.functions.exceptions.MoodleWSFucntionException;
 import ml.jmoodle.functions.rest.enrol.self.exceptions.MoodleRestSelfEnrolUserException;
 import ml.jmoodle.functions.rest.tools.MoodleRestFunctionTools;
@@ -89,7 +87,6 @@ public class MoodleRestSelfEnrolUser extends MoodleWSBaseFunction {
 		return (Boolean) super.doCall();
 	}
 
-	@SuppressWarnings("unchecked")
 	protected Boolean processResponse(Document response)  {
 		try {
 			XPath xPath = XPathFactory.newInstance().newXPath();
@@ -99,7 +96,7 @@ public class MoodleRestSelfEnrolUser extends MoodleWSBaseFunction {
 				Node singleNode = nodeList.item(i);
 				Map<String, Object> singleValuesMap = MoodleRestFunctionTools.getSingleAttributes(singleNode);
 				if (singleValuesMap.containsKey("warnings")) {
-					processWarnings((Set<Map<String, Object>>) singleValuesMap.get("warnings"));
+					processWarnings(response);
 				}
 				return "1".equals((String) singleValuesMap.get("status"));
 			}
@@ -109,15 +106,8 @@ public class MoodleRestSelfEnrolUser extends MoodleWSBaseFunction {
 		return null;
 	}
 
-
-	private void processWarnings(Set<Map<String, Object>> warningsMap) {
-		if (this.warnings == null) {
-			this.warnings = new HashSet<MoodleWarning>();
-		}
-		MoodleWarningConverter converter = new MoodleWarningConverter();
-		for (Map<String, Object> warningMap : warningsMap) {
-			this.warnings.add(converter.toEntity(warningMap));
-		}
+	private void processWarnings(Document response) throws XPathExpressionException {
+		this.warnings = MoodleRestFunctionTools.deSerializeWarnings(response);
 	}
 
 	public void setCourse(MoodleCourse course) throws MoodleRestSelfEnrolUserException {
